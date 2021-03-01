@@ -47,7 +47,7 @@ Atlas Atlas::from_config(const char *file_path)
         const int w = texture->width;
         const int h = texture->height;
 
-        // TODO: atlas generates inverted uv coordinates
+        // TODO(#3): atlas generates inverted uv coordinates
         const float uv_x = static_cast<float>(x) / static_cast<float>(atlas_width);
         const float uv_y = static_cast<float>(y) / static_cast<float>(atlas_height);
         const float uv_w = static_cast<float>(w) / static_cast<float>(atlas_width);
