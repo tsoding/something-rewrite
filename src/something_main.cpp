@@ -54,7 +54,7 @@ int main()
         int minor;
         SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
         SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
-        // TODO: GL compatibility code
+        // TODO(#5): GL compatibility code
         // We need to be able to identify what versions of GL are
         // available and always pick the best suited one
         println(stdout, "GL version ", major, ".", minor);
