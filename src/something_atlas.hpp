@@ -3,7 +3,7 @@
 
 #include "./something_geo.hpp"
 
-// TODO: fix texture bleeding
+// TODO(#2): fix texture bleeding
 struct Atlas {
     Texture texture;
     GL_Texture gl_texture;
