@@ -1,4 +1,3 @@
-#include "./something_sdl.hpp"
 #include "./something_game.hpp"
 
 const int SCREEN_WIDTH = 800;
@@ -34,14 +33,19 @@ int main()
     Game *game = new Game{};
     defer(delete game);
 
-    sec(SDL_Init(SDL_INIT_VIDEO));
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        panic("SDL ERROR: ", SDL_GetError());
+    }
 
     SDL_Window * const window =
-        sec(SDL_CreateWindow(
+        SDL_CreateWindow(
                 "Something 2 -- Electric Boogaloo",
                 0, 0,
                 SCREEN_WIDTH, SCREEN_HEIGHT,
-                SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL));
+                SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    if (window == NULL) {
+        panic("SDL ERROR: ", SDL_GetError());
+    }
     defer(SDL_DestroyWindow(window));
 
     SDL_GL_CreateContext(window);

@@ -1,5 +1,4 @@
 #include "./something_game.hpp"
-#include "./something_sdl.hpp"
 
 const RGBA BACKGROUND_COLOR = RGBA::from_abgr32(0x181818FF);
 
