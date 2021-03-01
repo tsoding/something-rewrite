@@ -78,7 +78,7 @@ int main()
         game->update(DELTA_TIME_SECS);
 
         {
-            // TODO: don't recompute the GL viewport on every frame
+            // TODO(#6): don't recompute the GL viewport on every frame
             int w, h;
             SDL_GetWindowSize(window, &w, &h);
 
