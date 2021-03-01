@@ -26,10 +26,9 @@ void MessageCallback(GLenum source,
             type, severity, message);
 }
 
+// TODO: hot-reloadable configuration
 int main()
 {
-    config.load_file("assets/vars.conf");
-
     // NOTE: The game object could be too big to put on the stack.
     // So we are allocating it on the heap.
     Game *game = new Game{};

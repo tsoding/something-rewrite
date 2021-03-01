@@ -18,7 +18,6 @@ typedef Uint32 Milliseconds;
 #include "./something_atlas.cpp"
 #include "./something_renderer.cpp"
 #include "./something_texture.cpp"
-#include "./something_config.cpp"
 #include "./something_game.cpp"
 #include "./something_player.cpp"
 #include "./something_main.cpp"
