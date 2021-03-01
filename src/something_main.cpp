@@ -26,7 +26,7 @@ void MessageCallback(GLenum source,
             type, severity, message);
 }
 
-// TODO: hot-reloadable configuration
+// TODO(#4): hot-reloadable configuration
 int main()
 {
     // NOTE: The game object could be too big to put on the stack.
