@@ -13,11 +13,11 @@ void Player::render(const Game *, Renderer *renderer) const
     renderer->fill_rect(
         AABB(pos + V2(PLAYER_SIZE, 0.0f), V2(PLAYER_SIZE)),
         RGBA(),
-        1);
+        3);
     renderer->fill_rect(
         AABB(pos + V2(0.0f, PLAYER_SIZE), V2(PLAYER_SIZE)),
         RGBA(),
-        2);
+        4);
 }
 
 void Player::update(Game *, Seconds dt)

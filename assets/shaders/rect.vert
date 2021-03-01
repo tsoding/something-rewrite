@@ -6,7 +6,7 @@ layout(location = 1) in vec2 vertex_position;
 layout(location = 2) in vec4 vertex_color;
 layout(location = 3) in vec2 vertex_uv;
 
-// TODO: ratio is hardcoded in rect.vert shader
+// TODO(#1): ratio is hardcoded in rect.vert shader
 #define RATIO (600.0 / 800.0)
 
 out vec4 color;
