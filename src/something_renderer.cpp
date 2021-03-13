@@ -90,7 +90,9 @@ void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLf
 
 void Renderer::init(const char *atlas_conf_path)
 {
-    atlas = Atlas::from_config(atlas_conf_path);
+    // TODO: it's impossible to build an atlas with 0 margin
+    // It triggers some asserts.
+    atlas = Atlas::from_config(atlas_conf_path, 10);
 
     println(stderr, "LOG: compiling the shader program");
     // Compiling The Shader Program
