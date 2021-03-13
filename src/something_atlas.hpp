@@ -3,13 +3,12 @@
 
 #include "./something_geo.hpp"
 
-// TODO(#2): fix texture bleeding
 struct Atlas {
     Texture texture;
     GL_Texture gl_texture;
     Dynamic_Array<AABB<float>> uvs;
 
-    static Atlas from_config(const char *file_path);
+    static Atlas from_config(const char *file_path, int margin);
 };
 
 #endif // SOMETHING_ATLAS_HPP_

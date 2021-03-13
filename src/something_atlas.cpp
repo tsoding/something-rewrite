@@ -1,7 +1,7 @@
 #include "./something_texture.hpp"
 #include "./something_atlas.hpp"
 
-Atlas Atlas::from_config(const char *file_path)
+Atlas Atlas::from_config(const char *file_path, int margin)
 {
     Atlas result = {};
 
@@ -33,37 +33,39 @@ Atlas Atlas::from_config(const char *file_path)
         atlas_width = max(atlas_width, textures.data[i].width);
         atlas_height += textures.data[i].height;
     }
+    atlas_width += 2 * margin;
+    atlas_height += 2 * margin * textures.size;
 
-    const size_t atlas_pixels_size = sizeof(RGBA32) * atlas_width * atlas_height;
-    RGBA32 *atlas_pixels = static_cast<RGBA32*>(malloc(atlas_pixels_size));
-    memset(atlas_pixels, 0, atlas_pixels_size);
+    result.texture = Texture::from_solid_color(
+                         atlas_width,
+                         atlas_height,
+                         0);
 
     int atlas_row = 0;
     for (size_t i = 0; i < textures.size; ++i) {
-        const Texture *texture = &textures.data[i];
+        result.texture.fill_texture_with_margin(
+            textures.data[i],
+            margin,
+            V2(0, atlas_row));
 
-        const int x = 0;
-        const int y = atlas_row;
-        const int w = texture->width;
-        const int h = texture->height;
+        // Compute uvs of the texture
+        {
+            const int x = margin;
+            const int y = atlas_row + margin;
+            const int w = textures.data[i].width;
+            const int h = textures.data[i].height;
 
-        // TODO(#3): atlas generates inverted uv coordinates
-        const float uv_x = static_cast<float>(x) / static_cast<float>(atlas_width);
-        const float uv_y = static_cast<float>(y) / static_cast<float>(atlas_height);
-        const float uv_w = static_cast<float>(w) / static_cast<float>(atlas_width);
-        const float uv_h = static_cast<float>(h) / static_cast<float>(atlas_height);
+            const float uv_x = static_cast<float>(x) / static_cast<float>(atlas_width);
+            const float uv_y = static_cast<float>(y) / static_cast<float>(atlas_height);
+            const float uv_w = static_cast<float>(w) / static_cast<float>(atlas_width);
+            const float uv_h = static_cast<float>(h) / static_cast<float>(atlas_height);
 
-        result.uvs.push(AABB(V2(uv_x, uv_y), V2(uv_w, uv_h)));
-
-        for (int row = 0; row < textures.data[i].height; ++row) {
-            memcpy(&atlas_pixels[atlas_row * atlas_width],
-                   &texture->pixels[row * texture->width],
-                   sizeof(RGBA32) * texture->width);
-            atlas_row += 1;
+            result.uvs.push(AABB(V2(uv_x, uv_y), V2(uv_w, uv_h)));
         }
+
+        atlas_row += 2 * margin + textures.data[i].height;
     }
 
-    result.texture = Texture::from_memory(atlas_width, atlas_height, atlas_pixels);
     result.gl_texture = GL_Texture::from_texture(result.texture);
 
     return result;
