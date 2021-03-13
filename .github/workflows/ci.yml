@@ -6,6 +6,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
+      - name: install 3rd party things
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev
       - name: build the game
         run: |
           ./build.sh
@@ -16,6 +20,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
+      - name: install 3rd party things
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev
       - name: build the game
         run: |
           ./build.sh
@@ -27,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: install dependencies
-        run: brew install pkg-config
+        run: brew install sdl2 pkg-config
       - name: build the game
         run: |
           ./build.sh
