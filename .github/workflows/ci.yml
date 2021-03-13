@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-linux-gcc:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: gcc
+          CXX: g++
+  build-linux-clang:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: clang
+          CXX: clang++
+  build-macos:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: brew install pkg-config
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: clang
+          CXX: clang++
+  build-freebsd:
+    runs-on: macos-latest
+    name: FreeBSD LLVM Clang build
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build on FreeBSD
+        id: build
+        uses: vmactions/freebsd-vm@v0.0.9
+        with:
+          usesh: true
+          prepare: pkg install -y sdl2 pkgconf gmake png
+          run: |
+            freebsd-version
+            ./build.sh
