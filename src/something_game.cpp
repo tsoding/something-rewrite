@@ -27,5 +27,9 @@ void Game::update(Seconds dt)
 
 void Game::render(Renderer *renderer) const
 {
+    renderer->fill_rect(
+        AABB(V2(-1.0f, -1.0f), V2(2.0f, 2.0f)),
+        RGBA(0.5f, 0.5f, 0.5f, 1.0f),
+        0);
     player.render(this, renderer);
 }
