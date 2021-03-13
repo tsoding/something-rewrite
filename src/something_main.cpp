@@ -1,6 +1,6 @@
 #include "./something_game.hpp"
 
-const int SCREEN_WIDTH = 800;
+const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_FPS = 60;
 
@@ -39,10 +39,10 @@ int main()
 
     SDL_Window * const window =
         SDL_CreateWindow(
-                "Something 2 -- Electric Boogaloo",
-                0, 0,
-                SCREEN_WIDTH, SCREEN_HEIGHT,
-                SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+            "Something 2 -- Electric Boogaloo",
+            0, 0,
+            SCREEN_WIDTH, SCREEN_HEIGHT,
+            SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
     if (window == NULL) {
         panic("SDL ERROR: ", SDL_GetError());
     }
@@ -107,6 +107,8 @@ int main()
                 static_cast<GLint>(floorf(w_height * 0.5f - a_height * 0.5f)),
                 static_cast<GLint>(a_width),
                 static_cast<GLint>(a_height));
+
+            glUniform2f(renderer->u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
         }
 
         glClearColor(BACKGROUND_COLOR.r,

@@ -193,8 +193,10 @@ void Renderer::init(const char *atlas_conf_path)
     }
 
     // Uniforms
-    GLint u_atlas = glGetUniformLocation(rect_program, "atlas");
+    u_atlas = glGetUniformLocation(rect_program, "atlas");
     glUniform1i(u_atlas, 0);
+
+    u_resolution = glGetUniformLocation(rect_program, "resolution");
 }
 
 void Renderer::present()

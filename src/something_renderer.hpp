@@ -14,6 +14,8 @@ struct Renderer {
     GLuint u_atlas;
     Atlas atlas;
 
+    GLuint u_resolution;
+
     // Buffers
     GLuint triangles_buffer_id;
     GLuint colors_buffer_id;
