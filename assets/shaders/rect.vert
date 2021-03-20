@@ -3,6 +3,8 @@
 precision mediump float;
 
 uniform vec2 resolution;
+uniform vec2 camera_position;
+uniform float camera_z;
 
 layout(location = 1) in vec2 vertex_position;
 layout(location = 2) in vec4 vertex_color;
@@ -12,6 +14,8 @@ out vec4 color;
 out vec2 uv;
 
 void main() {
+    
+
     float aspect = resolution.y / resolution.x;
     gl_Position = vec4(vertex_position * vec2(aspect, 1.0), 0.0, 1.0);
     color = vertex_color;

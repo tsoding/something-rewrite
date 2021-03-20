@@ -198,7 +198,9 @@ void Renderer::init(const char *atlas_conf_path)
     u_atlas = glGetUniformLocation(rect_program, "atlas");
     glUniform1i(u_atlas, 0);
 
-    u_resolution = glGetUniformLocation(rect_program, "resolution");
+    u_resolution      = glGetUniformLocation(rect_program, "resolution");
+    u_camera_position = glGetUniformLocation(rect_program, "camera_position");
+    u_camera_z        = glGetUniformLocation(rect_program, "camera_z");
 }
 
 void Renderer::present()
@@ -227,3 +229,4 @@ void Renderer::present()
 
     batch_buffer_size = 0;
 }
+
