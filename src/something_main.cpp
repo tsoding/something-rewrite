@@ -109,6 +109,7 @@ int main()
                 static_cast<GLint>(a_height));
 
             glUniform2f(renderer->u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
+            game->camera.resolution = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
         }
 
         glClearColor(BACKGROUND_COLOR.r,

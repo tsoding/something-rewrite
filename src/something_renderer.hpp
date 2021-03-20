@@ -3,6 +3,7 @@
 
 #include "./something_geo.hpp"
 #include "./something_rgba.hpp"
+#include "./something_camera.hpp"
 
 struct Renderer {
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
@@ -15,6 +16,8 @@ struct Renderer {
     Atlas atlas;
 
     GLuint u_resolution;
+    GLuint u_camera_position;
+    GLuint u_camera_z;
 
     // Buffers
     GLuint triangles_buffer_id;
