@@ -1,23 +1,15 @@
 #include "./something_player.hpp"
 
-const float PLAYER_SIZE = 100.0f;
-const RGBA PLAYER_COLOR = RGBA::from_abgr32(0xFF0000FF);
-const float PLAYER_SPEED = 800.0f;
+const float PLAYER_SIZE = 50.0f;
+const RGBA PLAYER_COLOR = RGBA::RED;
+const float PLAYER_SPEED = 500.0f;
 
 void Player::render(const Game *, Renderer *renderer) const
 {
     renderer->fill_rect(
-        AABB(pos, V2(PLAYER_SIZE)),
-        RGBA::RED, //PLAYER_COLOR,
-        0);
-    renderer->fill_rect(
-        AABB(pos + V2(PLAYER_SIZE, 0.0f), V2(PLAYER_SIZE)),
+        AABB(pos, V2(100.0f, 80.0f)),
         RGBA(),
-        3);
-    renderer->fill_rect(
-        AABB(pos + V2(0.0f, PLAYER_SIZE), V2(PLAYER_SIZE)),
-        RGBA(),
-        4);
+        6);
 }
 
 void Player::update(Game *, Seconds dt)
@@ -25,14 +17,20 @@ void Player::update(Game *, Seconds dt)
     pos += vel * dt;
 }
 
+void Player::jump()
+{
+    const float JUMP_VELOCITY = 500.0f;
+    vel.y = JUMP_VELOCITY;
+}
+
 void Player::move(Direction direction)
 {
     switch(direction) {
     case Direction::Left:
-        vel = V2(-1.0f, 0.0f) * PLAYER_SPEED;
+        vel.x = -PLAYER_SPEED;
         break;
     case Direction::Right:
-        vel = V2(1.0f, 0.0f) * PLAYER_SPEED;
+        vel.x = PLAYER_SPEED;
         break;
     default:
         unreachable("Player::move()");
@@ -41,5 +39,5 @@ void Player::move(Direction direction)
 
 void Player::stop()
 {
-    vel = V2<float>();
+    vel.x = 0.0f;
 }

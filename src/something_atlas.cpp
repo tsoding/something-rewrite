@@ -60,7 +60,7 @@ Atlas Atlas::from_config(const char *file_path, int margin)
             const float uv_w = static_cast<float>(w) / static_cast<float>(atlas_width);
             const float uv_h = static_cast<float>(h) / static_cast<float>(atlas_height);
 
-            result.uvs.push(AABB(V2(uv_x, uv_y), V2(uv_w, uv_h)));
+            result.uvs.push(AABB(V2(uv_x, uv_y + uv_h), V2(uv_w, -uv_h)));
         }
 
         atlas_row += 2 * margin + textures.data[i].height;

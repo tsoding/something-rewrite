@@ -18,6 +18,7 @@ struct Player {
     void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
+    void jump();
     void move(Direction direction);
     void stop();
 };

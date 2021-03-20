@@ -10,6 +10,15 @@ void Game::handle_event(const SDL_Event *event)
         quit = true;
     }
     break;
+
+    case SDL_KEYDOWN: {
+        switch (event->key.keysym.sym) {
+        case SDLK_SPACE: {
+            player.jump();
+        } break;
+        }
+    }
+    break;
     }
 }
 
@@ -24,6 +33,15 @@ void Game::update(Seconds dt)
     }
 
     player.update(this, dt);
+
+    const float GROUND = -200.0f;
+    const float GRAVITY = 2000.0f;
+    if (player.pos.y <= GROUND) {
+        player.pos.y = GROUND;
+        player.vel.y = 0.0f;
+    } else {
+        player.vel.y -= GRAVITY * dt;
+    }
 }
 
 void Game::render(Renderer *renderer) const
