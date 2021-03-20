@@ -70,7 +70,8 @@ void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index)
     } else {
         Triangle<GLfloat> lower_uv, upper_uv;
         assert((size_t) atlas_index < atlas.uvs.size);
-        atlas.uvs.data[atlas_index].split_into_triangles(&lower_uv, &upper_uv);
+        auto uv = atlas.uvs.data[atlas_index];
+        uv.split_into_triangles(&lower_uv, &upper_uv);
         fill_triangle(lower, shade, lower_uv);
         fill_triangle(upper, shade, upper_uv);
     }
