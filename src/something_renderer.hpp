@@ -17,6 +17,7 @@ struct Renderer {
     Atlas atlas;
 
     GLuint u_resolution;
+    GLuint u_time;
     GLuint u_camera_position;
     GLuint u_camera_z;
 

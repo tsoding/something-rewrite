@@ -3,6 +3,7 @@
 precision mediump float;
 
 uniform sampler2D atlas;
+uniform float time;
 
 in vec4 color;
 in vec2 uv;

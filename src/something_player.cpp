@@ -4,18 +4,18 @@ const float PLAYER_SIZE = 100.0f;
 const RGBA PLAYER_COLOR = RGBA::from_abgr32(0xFF0000FF);
 const float PLAYER_SPEED = 800.0f;
 
-void Player::render(const Game *game, Renderer *renderer) const
+void Player::render(const Game *, Renderer *renderer) const
 {
     renderer->fill_rect(
-        game->camera.to_screen(AABB(pos, V2(PLAYER_SIZE))),
+        AABB(pos, V2(PLAYER_SIZE)),
         RGBA::RED, //PLAYER_COLOR,
         0);
     renderer->fill_rect(
-        game->camera.to_screen(AABB(pos + V2(PLAYER_SIZE, 0.0f), V2(PLAYER_SIZE))),
+        AABB(pos + V2(PLAYER_SIZE, 0.0f), V2(PLAYER_SIZE)),
         RGBA(),
         3);
     renderer->fill_rect(
-        game->camera.to_screen(AABB(pos + V2(0.0f, PLAYER_SIZE), V2(PLAYER_SIZE))),
+        AABB(pos + V2(0.0f, PLAYER_SIZE), V2(PLAYER_SIZE)),
         RGBA(),
         4);
 }
