@@ -1,6 +1,7 @@
 #include "./something_game.hpp"
 
 const RGBA BACKGROUND_COLOR = RGBA::from_abgr32(0x181818FF);
+const RGBA FAILED_BACKGROUND_COLOR = RGBA::from_abgr32(0xAA1818FF);
 
 void Game::handle_event(const SDL_Event *event)
 {

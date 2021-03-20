@@ -1,9 +1,5 @@
 #include "./something_game.hpp"
 
-const int SCREEN_WIDTH  = 800;
-const int SCREEN_HEIGHT = 600;
-const int SCREEN_FPS = 60;
-
 const Seconds DELTA_TIME_SECS = 1.0f / static_cast<Seconds>(SCREEN_FPS);
 const Milliseconds DELTA_TIME_MS =
     static_cast<Milliseconds>(floorf(DELTA_TIME_SECS * 1000.0f));
@@ -76,7 +72,11 @@ int main()
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            game->handle_event(&event);
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
+                renderer->reload_shaders();
+            } else {
+                game->handle_event(&event);
+            }
         }
 
         game->update(DELTA_TIME_SECS);
@@ -108,14 +108,20 @@ int main()
                 static_cast<GLint>(a_width),
                 static_cast<GLint>(a_height));
 
-            glUniform2f(renderer->u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             game->camera.resolution = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
         }
 
-        glClearColor(BACKGROUND_COLOR.r,
-                     BACKGROUND_COLOR.g,
-                     BACKGROUND_COLOR.b,
-                     BACKGROUND_COLOR.a);
+        if (renderer->rect_program_failed) {
+            glClearColor(FAILED_BACKGROUND_COLOR.r,
+                         FAILED_BACKGROUND_COLOR.g,
+                         FAILED_BACKGROUND_COLOR.b,
+                         FAILED_BACKGROUND_COLOR.a);
+        } else {
+            glClearColor(BACKGROUND_COLOR.r,
+                         BACKGROUND_COLOR.g,
+                         BACKGROUND_COLOR.b,
+                         BACKGROUND_COLOR.a);
+        }
         glClear(GL_COLOR_BUFFER_BIT);
 
         game->render(renderer);

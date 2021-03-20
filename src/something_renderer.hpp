@@ -9,6 +9,7 @@ struct Renderer {
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
 
     // The GLSL program that can render a rectangle
+    bool rect_program_failed;
     GLuint rect_program;
 
     // Atlas
@@ -32,12 +33,13 @@ struct Renderer {
     Fixed_Region<1000 * 1000> shader_buffer;
 
     void init(const char *atlas_conf_path);
+    bool reload_shaders();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
     void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index);
     void present();
 
-    GLuint gl_compile_shader_file(const char *file_path, GLenum shader_type);
-    GLuint gl_link_program(GLuint *shader, size_t shader_size);
+    bool gl_compile_shader_file(const char *file_path, GLenum shader_type, GLuint *shader);
+    bool gl_link_program(GLuint *shader, size_t shader_size, GLuint *program);
 };
 
 #endif  // SOMETHING_RENDERER_HPP_
