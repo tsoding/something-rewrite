@@ -24,6 +24,15 @@ void Game::update(Seconds dt)
     }
 
     player.update(this, dt);
+
+    const float GROUND = -200.0f;
+    const float GRAVITY = 1000.0f;
+    if (player.pos.y <= GROUND) {
+        player.pos.y = GROUND;
+        player.vel.y = 0.0f;
+    } else {
+        player.vel.y -= GRAVITY * dt;
+    }
 }
 
 void Game::render(Renderer *renderer) const
