@@ -120,6 +120,7 @@ bool Renderer::reload_shaders()
     u_resolution      = glGetUniformLocation(rect_program, "resolution");
     u_camera_position = glGetUniformLocation(rect_program, "camera_position");
     u_camera_z        = glGetUniformLocation(rect_program, "camera_z");
+    u_time            = glGetUniformLocation(rect_program, "time");
 
     rect_program_failed = false;
 

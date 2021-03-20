@@ -128,6 +128,12 @@ int main()
 
         renderer->present();
 
+        if (!renderer->rect_program_failed) {
+            glUniform2f(renderer->u_camera_position, game->camera.position.x, game->camera.position.y);
+            glUniform1f(renderer->u_camera_z, game->camera.z);
+            glUniform1f(renderer->u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+        }
+
         SDL_GL_SwapWindow(window);
 
         SDL_Delay(DELTA_TIME_MS);
