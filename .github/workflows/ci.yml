@@ -1,0 +1,35 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-linux-gcc:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev libglew-dev
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: gcc
+          CXX: g++
+  build-linux-clang:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev libglew-dev
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: clang
+          CXX: clang++
+# TODO(#18): no CI on windows
+# TODO(#20): no CI on macos
+# TODO(#21): no CI on freebsd

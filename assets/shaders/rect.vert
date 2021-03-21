@@ -27,7 +27,7 @@ float lerp(float a, float b, float t)
 void main() {
     float aspect = resolution.x / resolution.y;
     vec2 pos = vertex_position - camera_position;
-    // TODO: camera_z is not used for anything
+    // TODO(#17): camera_z is not used for anything
     float x = lerp(-1.0, 1.0, inv_lerp(-resolution.x * 0.5, resolution.x * 0.5, pos.x)) * aspect;
     float y = lerp(-1.0, 1.0, inv_lerp(-resolution.y * 0.5, resolution.y * 0.5, pos.y)) * aspect;
 
