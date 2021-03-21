@@ -7,7 +7,6 @@ set /p PKGSCFLAGS=<temp.txt
 pkg-config --libs %PKGS% >temp.txt
 set /p PKGLIBS=<temp.txt
 del temp.txt
-rem more library added after inspired  https://stackoverflow.com/questions/51942342/glew-not-locating-opengl-functions-on-msys2
-%CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lglfw3 -lglew32 -lglu32 -lopengl32
+%CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lopengl32
 pause
 
