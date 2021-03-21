@@ -140,7 +140,7 @@ bool Renderer::reload_shaders()
 
 void Renderer::init(const char *atlas_conf_path)
 {
-    // TODO: it's impossible to build an atlas with 0 margin
+    // TODO(#19): it's impossible to build an atlas with 0 margin
     // It triggers some asserts.
     atlas = Atlas::from_config(atlas_conf_path, 10);
 
