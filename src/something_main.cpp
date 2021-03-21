@@ -69,6 +69,10 @@ int main()
 
     game->keyboard = SDL_GetKeyboardState(NULL);
 
+    for (int i = 0; i < 10; ++i) {
+        game->tile_grid.get_tile(V2(i)).wall = true;
+    }
+    
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {

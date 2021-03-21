@@ -46,5 +46,6 @@ void Game::update(Seconds dt)
 
 void Game::render(Renderer *renderer) const
 {
+    tile_grid.render(this, renderer);
     player.render(this, renderer);
 }
