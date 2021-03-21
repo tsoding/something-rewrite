@@ -6,6 +6,11 @@
 #include "./something_camera.hpp"
 
 struct Renderer {
+    using Flip = uint32_t;
+    const static Flip NONE = 0;
+    const static Flip HORIZONTALLY = 1;
+    const static Flip VERTICALLY = 2;
+
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
 
     // The GLSL program that can render a rectangle
@@ -36,7 +41,7 @@ struct Renderer {
     void init(const char *atlas_conf_path);
     bool reload_shaders();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
-    void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index);
+    void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip flip = NONE);
     void present();
 
     bool gl_compile_shader_file(const char *file_path, GLenum shader_type, GLuint *shader);

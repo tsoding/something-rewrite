@@ -6,10 +6,16 @@ const float PLAYER_SPEED = 500.0f;
 
 void Player::render(const Game *, Renderer *renderer) const
 {
+    Renderer::Flip flip = Renderer::VERTICALLY;
+    if (direction == Direction::Left) {
+        flip |= Renderer::HORIZONTALLY;
+    }
+
     renderer->fill_rect(
         AABB(pos, V2(100.0f, 80.0f)),
         RGBA(),
-        6);
+        6,
+        flip);
 }
 
 void Player::update(Game *, Seconds dt)
@@ -28,9 +34,11 @@ void Player::move(Direction direction)
     switch(direction) {
     case Direction::Left:
         vel.x = -PLAYER_SPEED;
+        this->direction = direction;
         break;
     case Direction::Right:
         vel.x = PLAYER_SPEED;
+        this->direction = direction;
         break;
     default:
         unreachable("Player::move()");
