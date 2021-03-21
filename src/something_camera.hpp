@@ -3,9 +3,11 @@
 
 struct Camera
 {
-    V2<float> resolution;
-    V2<float> position;
+    V2<float> pos;
+    V2<float> vel;
     float z;
+
+    void update(Seconds dt);
 };
 
 #endif // SOMETHING_CAMERA_HPP_
