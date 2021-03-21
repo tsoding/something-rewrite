@@ -24,5 +24,6 @@ const int SCREEN_FPS = 60;
 #include "./something_texture.cpp"
 #include "./something_game.cpp"
 #include "./something_player.cpp"
+#include "./something_camera.cpp"
 #include "./something_main.cpp"
 #include "./something_tile_grid.cpp"
