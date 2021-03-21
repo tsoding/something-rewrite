@@ -141,6 +141,20 @@ struct AABB {
             *upper = Triangle(pos + size * V2(0, 1).template cast_to<T>(), pos + size * V2(1, 0).template cast_to<T>(), pos + size);
         }
     }
+
+    AABB<T> flip_vertically() const
+    {
+        const auto new_pos = V2(pos.x, pos.y + size.y);
+        const auto new_size = V2(size.x, -size.y);
+        return AABB(new_pos, new_size);
+    }
+
+    AABB<T> flip_horizontally() const
+    {
+        const auto new_pos = V2(pos.x + size.x, pos.y);
+        const auto new_size = V2(-size.x, size.y);
+        return AABB(new_pos, new_size);
+    }
 };
 
 #endif  // SOMETHING_V2_HPP_

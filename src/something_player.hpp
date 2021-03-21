@@ -5,8 +5,8 @@
 #include "./something_renderer.hpp"
 
 enum class Direction {
+    Right = 0,
     Left,
-    Right,
 };
 
 struct Game;
@@ -14,6 +14,7 @@ struct Game;
 struct Player {
     V2<float> pos;
     V2<float> vel;
+    Direction direction;
 
     void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);

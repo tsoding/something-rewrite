@@ -58,7 +58,7 @@ bool Renderer::gl_link_program(GLuint *shader, size_t shader_size, GLuint *progr
     return program;
 }
 
-void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index)
+void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip flip)
 {
     Triangle<GLfloat> lower, upper;
     aabb.split_into_triangles(&lower, &upper);
@@ -71,7 +71,17 @@ void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index)
         Triangle<GLfloat> lower_uv, upper_uv;
         assert((size_t) atlas_index < atlas.uvs.size);
         auto uv = atlas.uvs.data[atlas_index];
+
+        if (flip & HORIZONTALLY) {
+            uv = uv.flip_horizontally();
+        }
+
+        if (flip & VERTICALLY) {
+            uv = uv.flip_vertically();
+        }
+
         uv.split_into_triangles(&lower_uv, &upper_uv);
+
         fill_triangle(lower, shade, lower_uv);
         fill_triangle(upper, shade, upper_uv);
     }
