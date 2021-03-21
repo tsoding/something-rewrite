@@ -31,5 +31,5 @@ jobs:
           CC: clang
           CXX: clang++
 # TODO(#18): no CI on windows
-# TODO: no CI on macos
+# TODO(#20): no CI on macos
 # TODO: no CI on freebsd
