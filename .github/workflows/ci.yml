@@ -9,7 +9,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq libsdl2-dev
+          sudo apt-get install -qq libsdl2-dev libglew-dev
       - name: build the game
         run: |
           ./build.sh
@@ -23,7 +23,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq libsdl2-dev
+          sudo apt-get install -qq libsdl2-dev libglew-dev
       - name: build the game
         run: |
           ./build.sh
@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: install dependencies
-        run: brew install sdl2 pkg-config
+        run: brew install sdl2 glew pkg-config
       - name: build the game
         run: |
           ./build.sh
@@ -52,7 +52,7 @@ jobs:
         uses: vmactions/freebsd-vm@v0.0.9
         with:
           usesh: true
-          prepare: pkg install -y sdl2 pkgconf gmake png
+          prepare: pkg install -y sdl2 glew pkgconf gmake png
           run: |
             freebsd-version
             ./build.sh
