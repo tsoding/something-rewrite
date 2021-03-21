@@ -49,8 +49,7 @@ int main(int argc, char *argv[])
     SDL_GL_CreateContext(window);
 
     if (GLEW_OK != glewInit()) {
-        fprintf(stderr, "Could not initialize GLEW!\n");
-        exit(1);
+        panic("Could not initialize GLEW!");
     }
 
     glEnable(GL_BLEND);
