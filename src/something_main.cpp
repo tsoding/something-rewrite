@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
 
     game->keyboard = SDL_GetKeyboardState(NULL);
 
+    for (int i = 0; i < 10; ++i) {
+        game->tile_grid.get_tile(V2(i)).wall = true;
+    }
+    
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -110,8 +114,6 @@ int main(int argc, char *argv[])
                 static_cast<GLint>(floorf(w_height * 0.5f - a_height * 0.5f)),
                 static_cast<GLint>(a_width),
                 static_cast<GLint>(a_height));
-
-            game->camera.resolution = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
         }
 
         if (renderer->rect_program_failed) {
@@ -132,7 +134,7 @@ int main(int argc, char *argv[])
         renderer->present();
 
         if (!renderer->rect_program_failed) {
-            glUniform2f(renderer->u_camera_position, game->camera.position.x, game->camera.position.y);
+            glUniform2f(renderer->u_camera_position, game->camera.pos.x, game->camera.pos.y);
             glUniform1f(renderer->u_camera_z, game->camera.z);
             glUniform1f(renderer->u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
         }

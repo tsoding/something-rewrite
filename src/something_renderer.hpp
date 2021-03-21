@@ -52,7 +52,7 @@ struct Renderer {
     void init(const char *atlas_conf_path);
     bool reload_shaders();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
-    void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip flip = Flip::NONE());
+    void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index = 0, Flip flip = Flip::NONE());
     void present();
 
     bool gl_compile_shader_file(const char *file_path, GLenum shader_type, GLuint *shader);
