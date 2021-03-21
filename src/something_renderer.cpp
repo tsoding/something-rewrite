@@ -72,11 +72,11 @@ void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip fli
         assert((size_t) atlas_index < atlas.uvs.size);
         auto uv = atlas.uvs.data[atlas_index];
 
-        if (flip & HORIZONTALLY) {
+        if (flip & Flip::HORIZONTALLY()) {
             uv = uv.flip_horizontally();
         }
 
-        if (flip & VERTICALLY) {
+        if (flip & Flip::VERTICALLY()) {
             uv = uv.flip_vertically();
         }
 

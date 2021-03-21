@@ -6,9 +6,9 @@ const float PLAYER_SPEED = 500.0f;
 
 void Player::render(const Game *, Renderer *renderer) const
 {
-    Renderer::Flip flip = Renderer::VERTICALLY;
+    Renderer::Flip flip = Renderer::Flip::VERTICALLY();
     if (direction == Direction::Left) {
-        flip |= Renderer::HORIZONTALLY;
+        flip |= Renderer::Flip::HORIZONTALLY();
     }
 
     renderer->fill_rect(
