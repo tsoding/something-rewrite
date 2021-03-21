@@ -30,6 +30,6 @@ jobs:
         env:
           CC: clang
           CXX: clang++
-# TODO: no CI on windows
+# TODO(#18): no CI on windows
 # TODO: no CI on macos
 # TODO: no CI on freebsd
