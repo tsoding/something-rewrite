@@ -58,33 +58,16 @@ bool Renderer::gl_link_program(GLuint *shader, size_t shader_size, GLuint *progr
     return program;
 }
 
-void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip flip)
+void Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 {
     Triangle<GLfloat> lower, upper;
     aabb.split_into_triangles(&lower, &upper);
 
-    if (atlas_index < 0) {
-        Triangle<GLfloat> no_uv;
-        fill_triangle(lower, shade, no_uv);
-        fill_triangle(upper, shade, no_uv);
-    } else {
-        Triangle<GLfloat> lower_uv, upper_uv;
-        assert((size_t) atlas_index < atlas.uvs.size);
-        auto uv = atlas.uvs.data[atlas_index];
+    Triangle<GLfloat> lower_uv, upper_uv;
+    uv_aabb.split_into_triangles(&lower_uv, &upper_uv);
 
-        if (flip & Flip::HORIZONTALLY()) {
-            uv = uv.flip_horizontally();
-        }
-
-        if (flip & Flip::VERTICALLY()) {
-            uv = uv.flip_vertically();
-        }
-
-        uv.split_into_triangles(&lower_uv, &upper_uv);
-
-        fill_triangle(lower, shade, lower_uv);
-        fill_triangle(upper, shade, upper_uv);
-    }
+    fill_triangle(lower, shade, lower_uv);
+    fill_triangle(upper, shade, upper_uv);
 }
 
 void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
@@ -138,12 +121,8 @@ bool Renderer::reload_shaders()
     return true;
 }
 
-void Renderer::init(const char *atlas_conf_path)
+void Renderer::init()
 {
-    // TODO(#19): it's impossible to build an atlas with 0 margin
-    // It triggers some asserts.
-    atlas = Atlas::from_config(atlas_conf_path, 10);
-
     // Compiling The Shader Program
     reload_shaders();
 

@@ -36,6 +36,8 @@ struct V2 {
     }
 };
 
+V2<float> rotate_v2(V2<float> v, float angle);
+
 template <typename T>
 V2<T> operator+(V2<T> a, V2<T> b)
 {
@@ -102,6 +104,24 @@ struct Triangle {
         vs {a, b, c}
     {}
 };
+
+Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivot);
+
+template <typename T>
+Triangle<T> operator+(Triangle<T> tri, V2<T> pos)
+{
+    return Triangle<T>(tri.vs[0] + pos,
+                       tri.vs[1] + pos,
+                       tri.vs[2] + pos);
+}
+
+template <typename T>
+Triangle<T> operator-(Triangle<T> tri, V2<T> pos)
+{
+    return Triangle<T>(tri.vs[0] - pos,
+                       tri.vs[1] - pos,
+                       tri.vs[2] - pos);
+}
 
 void split_triangle(const Triangle<float> &tri,
                     size_t side, float f,

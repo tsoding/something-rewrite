@@ -17,6 +17,10 @@ void Game::handle_event(const SDL_Event *event)
             player.jump();
         }
         break;
+
+        case SDLK_q: {
+            player.explode(poof, atlas);
+        } break;
         }
     }
     break;
@@ -52,10 +56,16 @@ void Game::update(Seconds dt)
         camera.update(dt);
         camera.vel = player.pos - camera.pos;
     }
+
+    // Poof
+    {
+        poof.update(dt);
+    }
 }
 
 void Game::render(Renderer *renderer) const
 {
     tile_grid.render(this, renderer);
     player.render(this, renderer);
+    poof.render(renderer);
 }

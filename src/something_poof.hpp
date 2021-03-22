@@ -9,7 +9,6 @@ struct Poof {
     Triangle<float>  triangles[CAPACITY];
     RGBA             shades[CAPACITY];
     Triangle<float>  uvs[CAPACITY];
-    int              textures[CAPACITY];
 
     V2<float>        positions[CAPACITY];
     V2<float>        velocities[CAPACITY];
@@ -22,8 +21,7 @@ struct Poof {
 
     void push(Triangle<float> triangle,
               RGBA shade,
-              Triangle<float> uv,
-              int atlas_index);
+              Triangle<float> uv);
     void clear();
     void update(Seconds dt);
     void render(Renderer *renderer) const;

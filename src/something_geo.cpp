@@ -1,5 +1,11 @@
 #include "./something_geo.hpp"
 
+V2<float> rotate_v2(V2<float> v, float angle)
+{
+    return V2(cos(angle) * v.x - sin(angle) * v.y,
+              sin(angle) * v.x + cos(angle) * v.y);
+}
+
 V2<float> lerp(V2<float> a, V2<float> b, float f)
 {
     return a + (b - a) * f;
@@ -26,4 +32,13 @@ void split_triangle(const Triangle<float> &tri,
     if (right) {
         *right = Triangle(c, q, b);
     }
+}
+
+Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivot)
+{
+    auto result = tri - pivot;
+    for (auto &v : result.vs) {
+        v = rotate_v2(v, angle);
+    }
+    return result + pivot;
 }

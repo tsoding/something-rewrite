@@ -20,10 +20,10 @@ const int SCREEN_HEIGHT = 600;
 const int SCREEN_FPS = 60;
 
 #include "./something_atlas.cpp"
-#include "./something_renderer.cpp"
 #include "./something_texture.cpp"
 #include "./something_game.cpp"
 #include "./something_player.cpp"
+#include "./something_renderer.cpp"
 #include "./something_camera.cpp"
 #include "./something_main.cpp"
 #include "./something_geo.cpp"

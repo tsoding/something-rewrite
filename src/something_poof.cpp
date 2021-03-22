@@ -17,15 +17,13 @@ V2<float> point_on_triangle(Triangle<float> triangle,
 
 void Poof::push(Triangle<float> triangle,
                 RGBA shade,
-                Triangle<float> uv,
-                int atlas_index)
+                Triangle<float> uv)
 {
     assert(poof_size < CAPACITY);
 
     triangles[poof_size] = triangle;
     shades[poof_size]    = shade;
     uvs[poof_size]       = uv;
-    textures[poof_size]  = atlas_index;
 
     positions[poof_size] = V2(0.0f);
     velocities[poof_size] = V2<float>::polar(random01() * 2.0f * M_PI, random01() * MAX_VELOCITY);
@@ -52,5 +50,13 @@ void Poof::update(Seconds dt)
 
 void Poof::render(Renderer *renderer) const
 {
-    assert(false && "Poof::render: not implemented");
+    for (size_t i = 0; i < poof_size; ++i) {
+        renderer->fill_triangle(
+            rotate_triangle(
+                triangles[i] + positions[i],
+                angles[i],
+                pivots[i] + positions[i]),
+            shades[i],
+            uvs[i]);
+    }
 }
