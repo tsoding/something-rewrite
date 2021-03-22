@@ -1,6 +1,12 @@
 #ifndef SOMETHING_V2_HPP_
 #define SOMETHING_V2_HPP_
 
+float random01()
+{
+    static_assert(RAND_MAX != 0);
+    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+}
+
 // 2D Vector //////////////////////////////
 
 template <typename T>
@@ -17,6 +23,11 @@ struct V2 {
         x(x), y(y)
     {}
 
+    static V2<T> polar(float angle, float mag)
+    {
+        return V2<T>(cos(angle), sin(angle)) * mag;
+    }
+
     template <typename U>
     V2<U> cast_to()
     {
@@ -30,6 +41,9 @@ struct V2 {
         return V2<U>(f(x), f(y));
     }
 };
+
+V2<float> rotate_v2(V2<float> v, float angle);
+float length(V2<float> v);
 
 template <typename T>
 V2<T> operator+(V2<T> a, V2<T> b)
@@ -85,18 +99,44 @@ void print1(FILE *stream, V2<T> v2)
 
 // Triangle //////////////////////////////
 
+static constexpr size_t TRIANGLE_VERT_COUNT = 3;
+
 template <typename T>
 struct Triangle {
-    V2<T> a;
-    V2<T> b;
-    V2<T> c;
+    V2<T> vs[TRIANGLE_VERT_COUNT];
 
     Triangle() = default;
 
     Triangle(V2<T> a, V2<T> b, V2<T> c):
-        a(a), b(b), c(c)
+        vs {a, b, c}
     {}
 };
+
+Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivot);
+
+template <typename T>
+Triangle<T> operator+(Triangle<T> tri, V2<T> pos)
+{
+    return Triangle<T>(tri.vs[0] + pos,
+                       tri.vs[1] + pos,
+                       tri.vs[2] + pos);
+}
+
+template <typename T>
+Triangle<T> operator-(Triangle<T> tri, V2<T> pos)
+{
+    return Triangle<T>(tri.vs[0] - pos,
+                       tri.vs[1] - pos,
+                       tri.vs[2] - pos);
+}
+
+void split_triangle(const Triangle<float> &tri,
+                    size_t side, float f,
+                    Triangle<float> output[2]);
+
+void split_triangle(const Triangle<float> &tri,
+                    const float fs[TRIANGLE_VERT_COUNT],
+                    Triangle<float> output[TRIANGLE_VERT_COUNT + 1]);
 
 template <typename T>
 void print1(FILE *stream, Triangle<T> tri)

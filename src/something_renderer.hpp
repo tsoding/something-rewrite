@@ -4,34 +4,19 @@
 #include "./something_geo.hpp"
 #include "./something_rgba.hpp"
 #include "./something_camera.hpp"
-#include "./something_bitmask.hpp"
 
 struct Renderer {
-    struct Flip: public Bitmask<Flip> {
-        static constexpr Flip NONE()
-        {
-            return {0};
-        }
-        static constexpr Flip HORIZONTALLY()
-        {
-            return {1};
-        }
-        static constexpr Flip VERTICALLY()
-        {
-            return {2};
-        }
-    };
-
+    // TODO: BATCH_BUFFER_CAPACITY should be chosen based on the capabilities of the GPU
+    // Maybe we can extract that information using OpenGL API
+    // http://docs.gl/gl3/glGet
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
 
     // The GLSL program that can render a rectangle
     bool rect_program_failed;
     GLuint rect_program;
 
-    // Atlas
+    // Uniforms
     GLuint u_atlas;
-    Atlas atlas;
-
     GLuint u_resolution;
     GLuint u_time;
     GLuint u_camera_position;
@@ -49,10 +34,10 @@ struct Renderer {
 
     Fixed_Region<1000 * 1000> shader_buffer;
 
-    void init(const char *atlas_conf_path);
+    void init();
     bool reload_shaders();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
-    void fill_rect(AABB<float> aabb, RGBA shade, int atlas_index = 0, Flip flip = Flip::NONE());
+    void fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
     void present();
 
     bool gl_compile_shader_file(const char *file_path, GLenum shader_type, GLuint *shader);

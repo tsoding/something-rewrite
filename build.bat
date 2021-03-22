@@ -1,6 +1,6 @@
 SET CXX=g++
 SET PKGS=sdl2 glew
-SET CXXFLAGS=-Wall -Wextra -std=c++17 -pedantic -fno-exceptions
+SET CXXFLAGS=-Wall -Wextra -std=c++17 -pedantic -fno-exceptions -D_GNU_SOURCE
 rem inspired  https://stackoverflow.com/questions/2323292/assign-output-of-a-program-to-a-variable-using-a-ms-batch-file
 pkg-config --cflags %PKGS% >temp.txt
 set /p PKGSCFLAGS=<temp.txt

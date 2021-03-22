@@ -1,6 +1,6 @@
 #include "./something_tile_grid.hpp"
 
-void Tile_Grid::render(const Game *, Renderer *renderer) const
+void Tile_Grid::render(const Game *game, Renderer *renderer) const
 {
     for (size_t row = 0; row < ROWS; ++row) {
         for (size_t col = 0; col < COLS; ++col) {
@@ -9,7 +9,7 @@ void Tile_Grid::render(const Game *, Renderer *renderer) const
                 const AABB<float> tile_aabb =
                     AABB(tile_pos,
                          V2(Tile::SIZE));
-                renderer->fill_rect(tile_aabb, RGBA::RED);
+                renderer->fill_rect(tile_aabb, RGBA::RED, game->atlas.uvs.data[0]);
             }
         }
     }
