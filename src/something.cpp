@@ -26,4 +26,6 @@ const int SCREEN_FPS = 60;
 #include "./something_player.cpp"
 #include "./something_camera.cpp"
 #include "./something_main.cpp"
+#include "./something_geo.cpp"
+#include "./something_poof.cpp"
 #include "./something_tile_grid.cpp"

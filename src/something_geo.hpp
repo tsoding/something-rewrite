@@ -17,6 +17,11 @@ struct V2 {
         x(x), y(y)
     {}
 
+    static V2<T> polar(float angle, float mag)
+    {
+        return V2<T>(cos(angle), sin(angle)) * mag;
+    }
+
     template <typename U>
     V2<U> cast_to()
     {
@@ -85,18 +90,23 @@ void print1(FILE *stream, V2<T> v2)
 
 // Triangle //////////////////////////////
 
+static constexpr size_t TRIANGLE_VERT_COUNT = 3;
+
 template <typename T>
 struct Triangle {
-    V2<T> a;
-    V2<T> b;
-    V2<T> c;
+    V2<T> vs[TRIANGLE_VERT_COUNT];
 
     Triangle() = default;
 
     Triangle(V2<T> a, V2<T> b, V2<T> c):
-        a(a), b(b), c(c)
+        vs {a, b, c}
     {}
 };
+
+void split_triangle(const Triangle<float> &tri,
+                    size_t side, float f,
+                    Triangle<float> *a,
+                    Triangle<float> *b);
 
 template <typename T>
 void print1(FILE *stream, Triangle<T> tri)
