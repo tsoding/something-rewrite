@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#define GLEW_STATIC
+#include <GL/glew.h>
 #define GL_GLEXT_PROTOTYPES
 #include <SDL2/SDL_opengl.h>
 

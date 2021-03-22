@@ -20,10 +20,10 @@ Atlas Atlas::from_config(const char *file_path, int margin)
         String_View file_path_sv = line.chop_by_delim('#').trim();
 
         if (file_path_sv.count > 0) {
-            const char *file_path = file_path_sv.as_cstr();
-            assert(file_path != nullptr);
-            println(stdout, "INFO: loading ", file_path, " ...");
-            textures.push(Texture::from_file(file_path));
+            const char *texture_file_path = file_path_sv.as_cstr();
+            assert(texture_file_path != nullptr);
+            println(stdout, "INFO: loading ", texture_file_path, " ...");
+            textures.push(Texture::from_file(texture_file_path));
         }
     }
 
@@ -34,7 +34,7 @@ Atlas Atlas::from_config(const char *file_path, int margin)
         atlas_height += textures.data[i].height;
     }
     atlas_width += 2 * margin;
-    atlas_height += 2 * margin * textures.size;
+    atlas_height += 2 * margin * static_cast<int>(textures.size);
 
     result.texture = Texture::from_solid_color(
                          atlas_width,

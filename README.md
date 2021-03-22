@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/tsoding/something-rewrite/workflows/CI/badge.svg)](https://github.com/tsoding/something-rewrite/actions)
+
 # Rewrite of Something from scratch
 
 ## Objectives of the Rewrite
@@ -20,7 +22,15 @@ The `Game` object becames the central communication hub between different parts 
 
 ## Quick Start
 
+`*NIX`:
 ```console
 $ ./build.sh
 $ ./something.debug
+```
+
+`Windows (Visual Studio)`:
+```
+> setup_dependencies
+> build_msvc
+> something.debug
 ```
