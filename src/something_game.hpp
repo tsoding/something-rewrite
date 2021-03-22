@@ -5,6 +5,7 @@
 #include "./something_renderer.hpp"
 #include "./something_camera.hpp"
 #include "./something_tile_grid.hpp"
+#include "./something_poof.hpp"
 
 struct Game
 {
@@ -12,9 +13,11 @@ struct Game
 
     const Uint8 *keyboard;
 
+    Atlas atlas;
     Player player;
     Camera camera;
     Tile_Grid tile_grid;
+    Poof poof;
 
     void handle_event(const SDL_Event *event);
     void update(Seconds dt);
