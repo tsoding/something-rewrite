@@ -23,10 +23,6 @@ struct V2 {
         x(x), y(y)
     {}
 
-    static V2<T> polar(float angle, float mag)
-    {
-        return V2<T>(cos(angle), sin(angle)) * mag;
-    }
 
     template <typename U>
     V2<U> cast_to()
@@ -42,6 +38,7 @@ struct V2 {
     }
 };
 
+V2<float> polar_v2(float angle, float mag);
 V2<float> rotate_v2(V2<float> v, float angle);
 float length(V2<float> v);
 

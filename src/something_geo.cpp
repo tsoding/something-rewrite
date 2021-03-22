@@ -11,6 +11,11 @@ float length(V2<float> v)
     return sqrtf(v.x * v.x + v.y * v.y);
 }
 
+V2<float> polar_v2(float angle, float mag)
+{
+    return V2<float>(cosf(angle), sinf(angle)) * mag;
+}
+
 V2<float> lerp(V2<float> a, V2<float> b, float f)
 {
     return a + (b - a) * f;

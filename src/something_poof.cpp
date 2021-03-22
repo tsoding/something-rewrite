@@ -20,7 +20,7 @@ void Poof::push(Triangle<float> triangle,
     uvs[poof_size]       = uv;
 
     positions[poof_size] = V2(0.0f);
-    velocities[poof_size] = V2<float>::polar(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
+    velocities[poof_size] = polar_v2(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
 
     angles[poof_size] = 0.0f;
     angle_velocities[poof_size] = random01() * MAX_ANGLE_VELOCITY;
