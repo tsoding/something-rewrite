@@ -1,1 +1,6 @@
 something.debug
+dependencies
+*.exe
+*.obj
+*.pdb
+*.ilk

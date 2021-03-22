@@ -64,7 +64,7 @@ void Renderer::fill_rect(AABB<float> aabb, RGBA shade, int atlas_index, Flip fli
     aabb.split_into_triangles(&lower, &upper);
 
     if (atlas_index < 0) {
-        Triangle<GLfloat> no_uv;
+        Triangle<GLfloat> no_uv = {};
         fill_triangle(lower, shade, no_uv);
         fill_triangle(upper, shade, no_uv);
     } else {

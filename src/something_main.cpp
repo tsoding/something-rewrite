@@ -22,8 +22,10 @@ void MessageCallback(GLenum source,
 }
 
 // TODO(#4): hot-reloadable configuration
-int main()
+int main(int argc, char *argv[])
 {
+    (void) argc;
+    (void) argv;
     // NOTE: The game object could be too big to put on the stack.
     // So we are allocating it on the heap.
     Game *game = new Game{};
@@ -45,6 +47,10 @@ int main()
     defer(SDL_DestroyWindow(window));
 
     SDL_GL_CreateContext(window);
+
+    if (GLEW_OK != glewInit()) {
+        panic("Could not initialize GLEW!");
+    }
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
