@@ -47,7 +47,10 @@ int main(int argc, char *argv[])
     defer(SDL_DestroyWindow(window));
 
     SDL_GL_CreateContext(window);
-    glewInit(); // insired https://stackoverflow.com/questions/12329082/glcreateshader-is-crashing
+
+    if (GLEW_OK != glewInit()) { // https://stackoverflow.com/questions/12329082/glcreateshader-is-crashing
+        panic("Could not initialize GLEW!");
+    }
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

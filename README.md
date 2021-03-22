@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/tsoding/something-rewrite/workflows/CI/badge.svg)](https://github.com/tsoding/something-rewrite/actions)
+
 # Rewrite of Something from scratch
 
 ## Objectives of the Rewrite
@@ -18,16 +20,24 @@ The only limitation is spliting the access into two distinct phases:
 
 The `Game` object becames the central communication hub between different parts of the system, similarly to a database in [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) applications.
 
-## Quick Start in Linux OS
+## Quick Start
 
+`*NIX`:
 ```console
 $ ./build.sh
 $ ./something.debug
 ```
 
-## Quick Start in Windows OS
+`Windows (Visual Studio)`:
+```
+> setup_dependencies
+> build_msvc
+> something.debug
+```
 
-```console
+`Windows (MSYS2)`:
+
+```regular windows console (cmd)
 > build.bat
 > something.debug.exe
 ```
