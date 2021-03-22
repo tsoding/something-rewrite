@@ -2,13 +2,13 @@
 
 V2<float> rotate_v2(V2<float> v, float angle)
 {
-    return V2(cos(angle) * v.x - sin(angle) * v.y,
-              sin(angle) * v.x + cos(angle) * v.y);
+    return V2(cosf(angle) * v.x - sinf(angle) * v.y,
+              sinf(angle) * v.x + cosf(angle) * v.y);
 }
 
 float length(V2<float> v)
 {
-    return sqrt(v.x * v.x + v.y * v.y);
+    return sqrtf(v.x * v.x + v.y * v.y);
 }
 
 V2<float> lerp(V2<float> a, V2<float> b, float f)
@@ -20,7 +20,7 @@ void split_triangle(const Triangle<float> &tri,
                     const float fs[TRIANGLE_VERT_COUNT],
                     Triangle<float> output[TRIANGLE_VERT_COUNT + 1])
 {
-    V2<float> ps[TRIANGLE_VERT_COUNT] = {0};
+    V2<float> ps[TRIANGLE_VERT_COUNT] = {};
     for (size_t i = 0; i < TRIANGLE_VERT_COUNT; ++i) {
         ps[i] = lerp(tri.vs[i], tri.vs[(i + 1) % TRIANGLE_VERT_COUNT], fs[i]);
     }

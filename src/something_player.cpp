@@ -41,7 +41,7 @@ void explode_triangle(Poof &poof, Triangle<float> vert, Triangle<float> uv,
 
     switch (n) {
     case 2: {
-        int side = longest_side(vert);
+        size_t side = longest_side(vert);
         const float margin = 0.4f;
         float f = aids::clamp(random01(), margin, 1.0f - margin);
 

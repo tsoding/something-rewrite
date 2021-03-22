@@ -4,7 +4,7 @@
 struct Poof {
     static constexpr size_t CAPACITY = 1024;
     static constexpr float MAX_VELOCITY = 200.0f;
-    static constexpr float MAX_ANGLE_VELOCITY = M_PI;
+    static constexpr float MAX_ANGLE_VELOCITY = static_cast<float>(M_PI);
 
     Triangle<float>  triangles[CAPACITY];
     RGBA             shades[CAPACITY];
