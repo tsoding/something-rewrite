@@ -35,24 +35,40 @@ size_t longest_side(Triangle<float> tri)
 void explode_triangle(Poof &poof, Triangle<float> vert, Triangle<float> uv,
                       int level)
 {
-    Triangle<GLfloat> a0, a1;
-    Triangle<GLfloat> uv0, uv1;
+    Triangle<GLfloat> child_vert[4];
+    Triangle<GLfloat> child_uv[4];
+    size_t n = (rand() % 2 + 1) * 2;
 
-    {
+    switch (n) {
+    case 2: {
         int side = longest_side(vert);
         const float margin = 0.4f;
         float f = aids::clamp(random01(), margin, 1.0f - margin);
 
-        split_triangle(vert, side, f, &a0, &a1);
-        split_triangle(uv, side, f, &uv0, &uv1);
+        split_triangle(vert, side, f, child_vert);
+        split_triangle(uv, side, f, child_uv);
+    }
+    break;
+    case 4: {
+        const float fs[TRIANGLE_VERT_COUNT] = {0.5f, 0.5f, 0.5f};
+
+        split_triangle(vert, fs, child_vert);
+        split_triangle(uv, fs, child_uv);
+    }
+    break;
+    default: {
+        unreachable("explode_triangle()");
+    }
     }
 
     if (level <= 0) {
-        poof.push(a0, RGBA(), uv0);
-        poof.push(a1, RGBA(), uv1);
+        for (size_t i = 0; i < n; ++i) {
+            poof.push(child_vert[i], RGBA(), child_uv[i]);
+        }
     } else {
-        explode_triangle(poof, a0, uv0, level - 1);
-        explode_triangle(poof, a1, uv1, level - 1);
+        for (size_t i = 0; i < n; ++i) {
+            explode_triangle(poof, child_vert[i], child_uv[i], level - 1);
+        }
     }
 }
 
@@ -76,7 +92,7 @@ void Player::explode(Poof &poof, const Atlas &atlas)
     }
 
     {
-        int level = 3;
+        int level = 2;
         explode_triangle(poof, lower, lower_uv, level);
         explode_triangle(poof, upper, upper_uv, level);
     }

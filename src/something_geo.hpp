@@ -132,8 +132,11 @@ Triangle<T> operator-(Triangle<T> tri, V2<T> pos)
 
 void split_triangle(const Triangle<float> &tri,
                     size_t side, float f,
-                    Triangle<float> *a,
-                    Triangle<float> *b);
+                    Triangle<float> output[2]);
+
+void split_triangle(const Triangle<float> &tri,
+                    const float fs[TRIANGLE_VERT_COUNT],
+                    Triangle<float> output[TRIANGLE_VERT_COUNT + 1]);
 
 template <typename T>
 void print1(FILE *stream, Triangle<T> tri)
