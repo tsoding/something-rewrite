@@ -2,7 +2,7 @@
 #define SOMETHING_POOF_HPP_
 
 struct Poof {
-    static constexpr size_t CAPACITY = 69;
+    static constexpr size_t CAPACITY = 1024;
     static constexpr float MAX_VELOCITY = 200.0f;
     static constexpr float MAX_ANGLE_VELOCITY = M_PI;
 

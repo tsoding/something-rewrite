@@ -6,6 +6,11 @@ V2<float> rotate_v2(V2<float> v, float angle)
               sin(angle) * v.x + cos(angle) * v.y);
 }
 
+float length(V2<float> v)
+{
+    return sqrt(v.x * v.x + v.y * v.y);
+}
+
 V2<float> lerp(V2<float> a, V2<float> b, float f)
 {
     return a + (b - a) * f;

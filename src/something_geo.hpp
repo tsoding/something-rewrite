@@ -1,6 +1,12 @@
 #ifndef SOMETHING_V2_HPP_
 #define SOMETHING_V2_HPP_
 
+float random01()
+{
+    static_assert(RAND_MAX != 0);
+    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+}
+
 // 2D Vector //////////////////////////////
 
 template <typename T>
@@ -37,6 +43,7 @@ struct V2 {
 };
 
 V2<float> rotate_v2(V2<float> v, float angle);
+float length(V2<float> v);
 
 template <typename T>
 V2<T> operator+(V2<T> a, V2<T> b)

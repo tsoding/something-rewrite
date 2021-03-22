@@ -1,11 +1,5 @@
 #include "./something_poof.hpp"
 
-float random01()
-{
-    static_assert(RAND_MAX != 0);
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-}
-
 V2<float> point_on_triangle(Triangle<float> triangle,
                             float f0, float f1)
 {

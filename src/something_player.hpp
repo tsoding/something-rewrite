@@ -14,7 +14,8 @@ struct Game;
 
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
-    static constexpr size_t ATLAS_INDEX = 3;
+    // static constexpr size_t ATLAS_INDEX = 3;
+    static constexpr size_t ATLAS_INDEX = 7;
 
     V2<float> pos;
     V2<float> vel;

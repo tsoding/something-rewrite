@@ -6,6 +6,9 @@
 #include "./something_camera.hpp"
 
 struct Renderer {
+    // TODO: BATCH_BUFFER_CAPACITY should be chosen based on the capabilities of the GPU
+    // Maybe we can extract that information using OpenGL API
+    // http://docs.gl/gl3/glGet
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
 
     // The GLSL program that can render a rectangle
