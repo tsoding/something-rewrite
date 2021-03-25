@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MSYS
+          msystem: MINGW64
           install: mingw-w64-${{ matrix.arch }}-SDL2 mingw-w64-${{ matrix.arch }}-glew mingw-w64-${{ matrix.arch }}-pkg-config
           update: true
       - name: Update
@@ -27,12 +27,14 @@ jobs:
       - name: Build
         run: |
           cd temp
-          SET          
-          build_msys2.bat          
+          dir D:\a\_temp\msys\msys64\usr\bin
+          dir D:\a\_temp\msys\msys64\mingw64\bin
+          dir D:\a\_temp\msys
+          build_msys2.bat
         shell: cmd
         env:
           CC: gcc
           CXX: g++
-          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\mingw64\bin;D:\a\_temp\msys
+          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\mingw64\bin;D:\a\_temp\msys
 # TODO(#20): no CI on macos
 # TODO(#21): no CI on freebsd
