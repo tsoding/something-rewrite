@@ -26,6 +26,7 @@ jobs:
           msys2 -c 'pacman --noconfirm -Suu'
       - name: Build
         run: |
+          cd temp
           dir
           build_msys2.bat          
         shell: cmd
