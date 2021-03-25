@@ -16,6 +16,11 @@ jobs:
       - name: build the game
         shell: cmd
         run: |
+          pkg-config --list-all
+          echo "::add-path::C:\\msys64\\usr\\bin"
+          echo "::add-path::C:\\msys64\\mingw64\\bin"
+          echo "::set-env name=PKG_CONFIG_PATH::/mingw64/lib/pkgconfig"
+          pkg-config --list-all
           ./build_msys2.bat
         env:
           CC: gcc
