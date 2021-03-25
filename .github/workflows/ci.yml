@@ -5,23 +5,25 @@ jobs:
   build-windows-msys2-mingw64:
     runs-on: windows-latest
     steps:
+      - if: runner.os == 'Windows'
+        run: |
+          echo "::add-path::C:\\msys64\\usr\\bin"
+          echo "::add-path::C:\\msys64\\mingw64\\bin"
+          echo "::set-env name=PKG_CONFIG_PATH::/mingw64/lib/pkgconfig"
       - uses: actions/checkout@v1
       - uses: msys2/setup-msys2@v2
       - name: install dependencies
         shell: msys2 {0}
         run: |
-          pacman --noconfirm -S mingw64/mingw-w64-x86_64-SDL2
-          pacman --noconfirm -S mingw64/mingw-w64-x86_64-glew
-          pacman --noconfirm -S mingw64/mingw-w64-x86_64-pkg-config
-      - name: build the game
+          pacman --noconfirm -Suuy mingw-w64-x86_64-SDL2 mingw-w64-x86_64-glew mingw-w64-x86_64-pkg-config
+      - name: check packages
         shell: cmd
         run: |
           pkg-config --list-all
-          echo "::add-path::C:\\msys64\\usr\\bin"
-          echo "::add-path::C:\\msys64\\mingw64\\bin"
-          echo "::set-env name=PKG_CONFIG_PATH::/mingw64/lib/pkgconfig"
-          pkg-config --list-all
-          ./build_msys2.bat
+      - name: build the game
+        shell: cmd
+        run: |
+          build_msys2.bat
         env:
           CC: gcc
           CXX: g++

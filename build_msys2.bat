@@ -8,5 +8,5 @@ pkg-config --libs %PKGS% >temp.txt
 set /p PKGLIBS=<temp.txt
 del temp.txt
 %CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lopengl32
-pause
+dir *.exe
 
