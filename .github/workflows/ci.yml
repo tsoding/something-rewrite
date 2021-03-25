@@ -50,8 +50,8 @@ jobs:
       fail-fast: false
       matrix:
         include: [
-          { msystem: MINGW64, msystem_lower: mingw64, arch: x86_64 },
-          { msystem: MINGW32, msystem_lower: mingw32, arch: i686   }
+          { msystem: MINGW64, msystem_lower: mingw64, arch: x86_64 }
+#          { msystem: MINGW32, msystem_lower: mingw32, arch: i686   }
         ]          
     steps:
       - uses: actions/checkout@v2
