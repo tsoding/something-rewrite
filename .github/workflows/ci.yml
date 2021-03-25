@@ -69,7 +69,6 @@ jobs:
           msys2 -c 'pacman --noconfirm -Suu'
       - name: Build
         run: |
-          cd temp
           build_msys2.bat
         shell: cmd
         env:
