@@ -52,8 +52,8 @@ jobs:
       - name: install dependencies
         shell: msys2 {0}
         run: |
-          pacman -S mingw-w64-x86_64-SDL2
-          pacman -S mingw-w64-x86_64-glew
+          pacman --noconfirm -S mingw-w64-x86_64-SDL2
+          pacman --noconfirm -S mingw-w64-x86_64-glew
       - name: build the game
         shell: cmd
         run: |
