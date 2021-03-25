@@ -33,5 +33,6 @@ jobs:
         env:
           CC: gcc
           CXX: g++
+          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\mingw64\bin;D:\a\_temp\msys
 # TODO(#20): no CI on macos
 # TODO(#21): no CI on freebsd
