@@ -27,7 +27,7 @@ jobs:
       - name: Build
         run: |
           cd temp
-          dir
+          SET          
           build_msys2.bat          
         shell: cmd
         env:
