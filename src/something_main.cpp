@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     SDL_GL_CreateContext(window);
 
-    if (GLEW_OK != glewInit()) { // https://stackoverflow.com/questions/12329082/glcreateshader-is-crashing
+    if (GLEW_OK != glewInit()) {
         panic("Could not initialize GLEW!");
     }
 
