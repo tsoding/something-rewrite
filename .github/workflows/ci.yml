@@ -2,48 +2,6 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build-linux-gcc:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - name: install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -qq libsdl2-dev libglew-dev
-      - name: build the game
-        run: |
-          ./build.sh
-        env:
-          CC: gcc
-          CXX: g++
-  build-linux-clang:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - name: install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -qq libsdl2-dev libglew-dev
-      - name: build the game
-        run: |
-          ./build.sh
-        env:
-          CC: clang
-          CXX: clang++
-  build-windows-msvc:
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v1
-        # this runs vcvarsall for us, so we get the MSVC toolchain in PATH.
-      - uses: seanmiddleditch/gha-setup-vsdevenv@master
-      - name: install dependencies
-        run: |
-          ./setup_dependencies.bat
-      - name: build the game
-        shell: cmd
-        # this replaces default PowerShell, which can't fail the build
-        run: |
-          ./build_msvc.bat
   build-windows-msys2-mingw64:
     runs-on: windows-latest
     steps:
@@ -54,6 +12,7 @@ jobs:
         run: |
           pacman --noconfirm -S mingw64/mingw-w64-x86_64-SDL2
           pacman --noconfirm -S mingw64/mingw-w64-x86_64-glew
+          pacman --noconfirm -S mingw64/mingw-w64-x86_64-pkg-config
       - name: build the game
         shell: cmd
         run: |
