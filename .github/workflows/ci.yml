@@ -44,14 +44,15 @@ jobs:
         # this replaces default PowerShell, which can't fail the build
         run: |
           ./build_msvc.bat
-  build-windows-msys2-mingw64:
+  build-windows-msys2-mingw:
     runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
         include: [
-          { msystem: MINGW64, arch: x86_64 }
-        ]
+          { msystem: MINGW64, msystem_lower: mingw64, arch: x86_64 },
+          { msystem: MINGW32, msystem_lower: mingw32, arch: i686   }
+        ]          
     steps:
       - uses: actions/checkout@v2
         with:
@@ -59,7 +60,7 @@ jobs:
           fetch-depth: 0
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: ${{ matrix.msystem }}
           install: mingw-w64-${{ matrix.arch }}-toolchain mingw-w64-${{ matrix.arch }}-SDL2 mingw-w64-${{ matrix.arch }}-glew mingw-w64-${{ matrix.arch }}-pkg-config
           update: true
       - name: Update
@@ -74,6 +75,6 @@ jobs:
         env:
           CC: gcc
           CXX: g++
-          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\mingw64\bin;D:\a\_temp\msys
+          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\${{ matrix.msystem_lower }}\bin;D:\a\_temp\msys
 # TODO(#20): no CI on macos
 # TODO(#21): no CI on freebsd
