@@ -2,6 +2,63 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  build-linux-gcc:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev libglew-dev
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: gcc
+          CXX: g++
+  build-linux-clang:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq libsdl2-dev libglew-dev
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: clang
+          CXX: clang++
+  build-windows-msvc:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v1
+        # this runs vcvarsall for us, so we get the MSVC toolchain in PATH.
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+      - name: install dependencies
+        run: |
+          ./setup_dependencies.bat
+      - name: build the game
+        shell: cmd
+        # this replaces default PowerShell, which can't fail the build
+        run: |
+          ./build_msvc.bat
+  build-windows-msys2-mingw64:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: msys2/setup-msys2@v2
+      - name: install dependencies
+        run: |
+          pacman -S mingw-w64-x86_64-SDL2
+          pacman -S mingw-w64-x86_64-glew
+      - name: build the game
+        run: |
+          ./build_msys2.bat
+        env:
+          CC: gcc
+          CXX: g++
   build-windows-msys2-mingw64:
     runs-on: windows-latest
     strategy:
@@ -27,9 +84,6 @@ jobs:
       - name: Build
         run: |
           cd temp
-          dir D:\a\_temp\msys\msys64\usr\bin
-          dir D:\a\_temp\msys\msys64\mingw64\bin
-          dir D:\a\_temp\msys
           build_msys2.bat
         shell: cmd
         env:
