@@ -38,7 +38,7 @@ $ ./something.debug
 `Windows (MSYS2)`:
 
 ```regular windows console (cmd)
-> build.bat
+> build_msys2.bat
 > something.debug.exe
 ```
 
