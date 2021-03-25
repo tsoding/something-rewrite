@@ -54,7 +54,7 @@ jobs:
 #          { msystem: MINGW32, msystem_lower: mingw32, arch: i686   }
         ]          
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
         with:
           path: temp
           fetch-depth: 0
