@@ -24,15 +24,10 @@ jobs:
         run: |
           msys2 -c 'pacman --noconfirm -Suuy'
           msys2 -c 'pacman --noconfirm -Suu'
-      - name: Move Checkout
+      - name: Build
         run: |
-          Copy-Item -Path ".\temp" -Destination "C:\_" -Recurse
-      - name: CI-Build
-        run: |
-          cd "C:\_"
-          build_msys2.bat
-          SET MINGW_INSTALLS=${{ matrix.msystem }}
-          build_msys2.bat
+          dir
+          build_msys2.bat          
         shell: cmd
         env:
           CC: gcc
