@@ -46,21 +46,6 @@ jobs:
           ./build_msvc.bat
   build-windows-msys2-mingw64:
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: msys2/setup-msys2@v2
-      - name: install dependencies
-        run: |
-          pacman -S mingw-w64-x86_64-SDL2
-          pacman -S mingw-w64-x86_64-glew
-      - name: build the game
-        run: |
-          ./build_msys2.bat
-        env:
-          CC: gcc
-          CXX: g++
-  build-windows-msys2-mingw64:
-    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
