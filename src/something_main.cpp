@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
     Game *game = new Game{};
     defer(delete game);
 
+    game->camera.z = Camera::DISTANCE;
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         panic("SDL ERROR: ", SDL_GetError());
     }
@@ -142,7 +144,7 @@ int main(int argc, char *argv[])
 
         if (!renderer->rect_program_failed) {
             glUniform2f(renderer->u_camera_position, game->camera.pos.x, game->camera.pos.y);
-            glUniform1f(renderer->u_camera_z, game->camera.z);
+            glUniform1f(renderer->u_camera_scale, game->camera.z / Camera::DISTANCE);
             glUniform1f(renderer->u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
         }
 
