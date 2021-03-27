@@ -40,6 +40,7 @@ void Game::update(Seconds dt)
         }
 
         player.update(this, dt);
+        player.resolve_collisions(tile_grid);
 
         const float GROUND = -200.0f;
         const float GRAVITY = 2000.0f;

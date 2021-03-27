@@ -1,6 +1,7 @@
 #include "./something_player.hpp"
 
-const float PLAYER_SIZE = 50.0f;
+const float PLAYER_WIDTH = 100.0f;
+const float PLAYER_HEIGHT = 80.0f;
 const RGBA PLAYER_COLOR = RGBA::RED;
 const float PLAYER_SPEED = 500.0f;
 
@@ -13,9 +14,17 @@ void Player::render(const Game *game, Renderer *renderer) const
         }
 
         renderer->fill_rect(
-            AABB(pos, V2(100.0f, 80.0f)),
+            AABB(pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT)),
             RGBA(1.0f),
             uv);
+
+        {
+            constexpr float COLLIDER_SIZE = 10.0f;
+            renderer->fill_rect(
+                AABB((pos + V2(PLAYER_WIDTH, 0.0f) * 0.5f) - V2(COLLIDER_SIZE * 0.5f), V2(COLLIDER_SIZE)),
+                RGBA::RED,
+                AABB<float>());
+        }
     }
 }
 
@@ -130,4 +139,19 @@ void Player::move(Direction direction)
 void Player::stop()
 {
     vel.x = 0.0f;
+}
+
+void Player::resolve_collisions(const Tile_Grid &grid)
+{
+    const auto COLLIDER_OFFSET = V2(PLAYER_WIDTH, 0.0f) * 0.5f;
+    auto collider = pos + COLLIDER_OFFSET;
+    const auto tile_coord = World_Coord(collider).to_tile();
+    auto tile = grid.get_tile(tile_coord);
+    if (tile && tile->wall) {
+        const auto tile_hitbox = grid.get_tile_hitbox(tile_coord);
+        collider.y = tile_hitbox.pos.y + tile_hitbox.size.y;
+
+        pos = collider - COLLIDER_OFFSET;
+        vel.y = 0.0f;
+    }
 }

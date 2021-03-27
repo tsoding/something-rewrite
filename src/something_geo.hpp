@@ -89,6 +89,18 @@ V2<T> operator*(T s, V2<T> a)
 }
 
 template <typename T>
+V2<T> operator/(V2<T> a, T s)
+{
+    return V2<T>(a.x / s, a.y / s);
+}
+
+template <typename T>
+V2<T> operator/(T s, V2<T> a)
+{
+    return V2<T>(a.x / s, a.y / s);
+}
+
+template <typename T>
 void print1(FILE *stream, V2<T> v2)
 {
     print(stream, "V2(", v2.x, ", ", v2.y, ")");
