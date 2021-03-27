@@ -34,3 +34,11 @@ $ ./something.debug
 > build_msvc
 > something.debug
 ```
+
+`Windows (MSYS2)`:
+
+```regular windows console (cmd)
+> build_msys2.bat
+> something.debug.exe
+```
+
