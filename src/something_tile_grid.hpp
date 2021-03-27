@@ -35,6 +35,8 @@ struct World_Coord {
     Tile_Coord to_tile() const;
 };
 
+struct Game;
+
 struct Tile_Grid {
     static constexpr size_t QUAD_ROWS = 10;
     static constexpr size_t QUAD_COLS = 10;
@@ -44,9 +46,15 @@ struct Tile_Grid {
     Tile tiles[ROWS][COLS];
 
     void render(const Game *game, Renderer *renderer) const;
-    Tile &get_tile(Mem_Coord coord);
-    Tile &get_tile(Tile_Coord coord);
-    Tile &get_tile(World_Coord coord);
+    Tile *get_tile(Mem_Coord coord);
+    Tile *get_tile(Tile_Coord coord);
+    Tile *get_tile(World_Coord coord);
+    const Tile *get_tile(Mem_Coord coord) const;
+    const Tile *get_tile(Tile_Coord coord) const;
+    const Tile *get_tile(World_Coord coord) const;
+
+    AABB<float> get_tile_hitbox(Tile_Coord coord) const;
+    AABB<float> get_tile_hitbox(World_Coord coord) const;
 };
 
 #endif // SOMETHING_TILE_GRID_HPP_

@@ -4,6 +4,7 @@
 #include "./something_geo.hpp"
 #include "./something_renderer.hpp"
 #include "./something_poof.hpp"
+#include "./something_tile_grid.hpp"
 
 enum class Direction {
     Right = 0,
@@ -29,6 +30,7 @@ struct Player {
     void move(Direction direction);
     void stop();
     void explode(Poof &poof, const Atlas &atlas);
+    void resolve_collisions(const Tile_Grid &grid);
 };
 
 #endif // SOMETHING_PLAYER_HPP_

@@ -80,7 +80,10 @@ int main(int argc, char *argv[])
     game->keyboard = SDL_GetKeyboardState(NULL);
 
     for (int i = 0; i < 10; ++i) {
-        game->tile_grid.get_tile(Tile_Coord(V2(i))).wall = true;
+        auto tile = game->tile_grid.get_tile(Tile_Coord(V2(i)));
+        if (tile) {
+            tile->wall = true;
+        }
     }
     
     while (!game->quit) {
