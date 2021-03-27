@@ -14,7 +14,7 @@ void Player::render(const Game *game, Renderer *renderer) const
 
         renderer->fill_rect(
             AABB(pos, V2(100.0f, 80.0f)),
-            RGBA(),
+            RGBA(1.0f),
             uv);
     }
 }
@@ -63,7 +63,7 @@ void explode_triangle(Poof &poof, Triangle<float> vert, Triangle<float> uv,
 
     if (level <= 0) {
         for (size_t i = 0; i < n; ++i) {
-            poof.push(child_vert[i], RGBA(), child_uv[i]);
+            poof.push(child_vert[i], RGBA(1.0f), child_uv[i]);
         }
     } else {
         for (size_t i = 0; i < n; ++i) {

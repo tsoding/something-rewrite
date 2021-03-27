@@ -13,44 +13,47 @@ void Poof::push(Triangle<float> triangle,
                 RGBA shade,
                 Triangle<float> uv)
 {
-    assert(poof_size < CAPACITY);
+    for (size_t i = 0; i < CAPACITY; ++i) {
+        if (lifetimes[i] <= 0.0f) {
+            triangles[i] = triangle;
+            shades[i]    = shade;
+            uvs[i]       = uv;
 
-    triangles[poof_size] = triangle;
-    shades[poof_size]    = shade;
-    uvs[poof_size]       = uv;
+            positions[i] = V2(0.0f);
+            velocities[i] = polar_v2(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
 
-    positions[poof_size] = V2(0.0f);
-    velocities[poof_size] = polar_v2(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
+            angles[i] = 0.0f;
+            angle_velocities[i] = random01() * MAX_ANGLE_VELOCITY;
+            pivots[i] = point_on_triangle(triangle, random01(), random01());
 
-    angles[poof_size] = 0.0f;
-    angle_velocities[poof_size] = random01() * MAX_ANGLE_VELOCITY;
-    pivots[poof_size] = point_on_triangle(triangle, random01(), random01());
-
-    poof_size += 1;
-}
-
-void Poof::clear()
-{
-    poof_size = 0;
+            lifetimes[i] = LIFETIME;
+            return;
+        }
+    }
 }
 
 void Poof::update(Seconds dt)
 {
-    for (size_t i = 0; i < poof_size; ++i) {
-        positions[i] += velocities[i] * dt;
-        angles[i] += angle_velocities[i] * dt;
+    for (size_t i = 0; i < CAPACITY; ++i) {
+        if (lifetimes[i] > 0.0f) {
+            positions[i] += velocities[i] * dt;
+            angles[i] += angle_velocities[i] * dt;
+            lifetimes[i] -= dt;
+        }
     }
 }
 
 void Poof::render(Renderer *renderer) const
 {
-    for (size_t i = 0; i < poof_size; ++i) {
-        renderer->fill_triangle(
-            rotate_triangle(
-                triangles[i] + positions[i],
-                angles[i],
-                pivots[i] + positions[i]),
-            shades[i],
-            uvs[i]);
+    for (size_t i = 0; i < CAPACITY; ++i) {
+        if (lifetimes[i] > 0.0f) {
+            renderer->fill_triangle(
+                rotate_triangle(
+                    triangles[i] + positions[i],
+                    angles[i],
+                    pivots[i] + positions[i]),
+                shades[i].with_alpha(lifetimes[i] / LIFETIME),
+                uvs[i]);
+        }
     }
 }
