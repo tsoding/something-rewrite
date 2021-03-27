@@ -21,6 +21,8 @@ struct Tile_Coord {
     Tile_Coord(V2<int> v2):
         unwrap(v2)
     {}
+
+    Mem_Coord to_mem() const;
 };
 
 struct World_Coord {
@@ -29,6 +31,8 @@ struct World_Coord {
     World_Coord(V2<float> v2):
         unwrap(v2)
     {}
+
+    Tile_Coord to_tile() const;
 };
 
 struct Tile_Grid {

@@ -15,6 +15,16 @@ void Tile_Grid::render(const Game *game, Renderer *renderer) const
     }
 }
 
+Mem_Coord Tile_Coord::to_mem() const
+{
+    return Mem_Coord(unwrap + V2(Tile_Grid::QUAD_ROWS, Tile_Grid::QUAD_COLS).cast_to<int>());
+}
+
+Tile_Coord World_Coord::to_tile() const
+{
+    return Tile_Coord((unwrap / Tile::SIZE).cast_to<int>());
+}
+
 Tile &Tile_Grid::get_tile(Mem_Coord coord)
 {
     assert(0 <= coord.unwrap.x && coord.unwrap.x < static_cast<int>(COLS));
@@ -24,10 +34,10 @@ Tile &Tile_Grid::get_tile(Mem_Coord coord)
 
 Tile &Tile_Grid::get_tile(Tile_Coord coord)
 {
-    return get_tile(Mem_Coord(coord.unwrap + V2(QUAD_ROWS, QUAD_COLS).cast_to<int>()));
+    return get_tile(coord.to_mem());
 }
 
 Tile &Tile_Grid::get_tile(World_Coord coord)
 {
-    return get_tile(Tile_Coord((coord.unwrap / Tile::SIZE).cast_to<int>()));
+    return get_tile(coord.to_tile());
 }
