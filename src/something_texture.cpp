@@ -47,57 +47,63 @@ RGBA32 Texture::get(int x, int y)
 
 void Texture::fill_cols(Texture src, int x0, AABB<int> aabb)
 {
-    const int x1 = aabb.pos.x;
-    const int y1 = aabb.pos.y;
-    const int x2 = aabb.pos.x + aabb.size.x - 1;
-    const int y2 = aabb.pos.y + aabb.size.y - 1;
+    if (aabb.size.x > 0 && aabb.size.y > 0) {
+        const int x1 = aabb.pos.x;
+        const int y1 = aabb.pos.y;
+        const int x2 = aabb.pos.x + aabb.size.x - 1;
+        const int y2 = aabb.pos.y + aabb.size.y - 1;
 
-    assert(0 <= x1 && x1 < width);
-    assert(0 <= y1 && y1 < height);
-    assert(0 <= x2 && x2 < width);
-    assert(0 <= y2 && y2 < height);
+        assert(0 <= x1 && x1 < width);
+        assert(0 <= y1 && y1 < height);
+        assert(0 <= x2 && x2 < width);
+        assert(0 <= y2 && y2 < height);
 
-    for (int x = x1; x <= x2; ++x) {
-        for (int y = y1; y <= y2; ++y) {
-            pixels[y * width + x] = src.get(x0, y - aabb.pos.y);
+        for (int x = x1; x <= x2; ++x) {
+            for (int y = y1; y <= y2; ++y) {
+                pixels[y * width + x] = src.get(x0, y - aabb.pos.y);
+            }
         }
     }
 }
 
 void Texture::fill_rows(Texture src, int y0, AABB<int> aabb)
 {
-    const int x1 = aabb.pos.x;
-    const int y1 = aabb.pos.y;
-    const int x2 = aabb.pos.x + aabb.size.x - 1;
-    const int y2 = aabb.pos.y + aabb.size.y - 1;
+    if (aabb.size.x > 0 && aabb.size.y > 0) {
+        const int x1 = aabb.pos.x;
+        const int y1 = aabb.pos.y;
+        const int x2 = aabb.pos.x + aabb.size.x - 1;
+        const int y2 = aabb.pos.y + aabb.size.y - 1;
 
-    assert(0 <= x1 && x1 < width);
-    assert(0 <= y1 && y1 < height);
-    assert(0 <= x2 && x2 < width);
-    assert(0 <= y2 && y2 < height);
+        assert(0 <= x1 && x1 < width);
+        assert(0 <= y1 && y1 < height);
+        assert(0 <= x2 && x2 < width);
+        assert(0 <= y2 && y2 < height);
 
-    for (int x = x1; x <= x2; ++x) {
-        for (int y = y1; y <= y2; ++y) {
-            pixels[y * width + x] = src.get(x - aabb.pos.x, y0);
+        for (int x = x1; x <= x2; ++x) {
+            for (int y = y1; y <= y2; ++y) {
+                pixels[y * width + x] = src.get(x - aabb.pos.x, y0);
+            }
         }
     }
 }
 
 void Texture::fill_aabb(AABB<int> aabb, RGBA32 color)
 {
-    const int x1 = aabb.pos.x;
-    const int y1 = aabb.pos.y;
-    const int x2 = aabb.pos.x + aabb.size.x - 1;
-    const int y2 = aabb.pos.y + aabb.size.y - 1;
+    if (aabb.size.x > 0 && aabb.size.y > 0) {
+        const int x1 = aabb.pos.x;
+        const int y1 = aabb.pos.y;
+        const int x2 = aabb.pos.x + aabb.size.x - 1;
+        const int y2 = aabb.pos.y + aabb.size.y - 1;
 
-    assert(0 <= x1 && x1 < width);
-    assert(0 <= y1 && y1 < height);
-    assert(0 <= x2 && x2 < width);
-    assert(0 <= y2 && y2 < height);
+        assert(0 <= x1 && x1 < width);
+        assert(0 <= y1 && y1 < height);
+        assert(0 <= x2 && x2 < width);
+        assert(0 <= y2 && y2 < height);
 
-    for (int x = x1; x <= x2; ++x) {
-        for (int y = y1; y <= y2; ++y) {
-            pixels[y * width + x] = color;
+        for (int x = x1; x <= x2; ++x) {
+            for (int y = y1; y <= y2; ++y) {
+                pixels[y * width + x] = color;
+            }
         }
     }
 }

@@ -194,4 +194,10 @@ struct AABB {
     }
 };
 
+template <typename T>
+void print1(FILE *stream, AABB<T> aabb)
+{
+    print(stream, "AABB(", aabb.pos, ",", aabb.size, ")");
+}
+
 #endif  // SOMETHING_V2_HPP_
