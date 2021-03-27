@@ -229,19 +229,19 @@ void Renderer::present()
         glBindBuffer(GL_ARRAY_BUFFER, colors_buffer_id);
         glBufferSubData(GL_ARRAY_BUFFER,
                         0,
-                        sizeof(colors_buffer[0]) * 3 * batch_buffer_size,
+                        sizeof(colors_buffer[0]) * batch_buffer_size,
                         colors_buffer);
 
         glBindBuffer(GL_ARRAY_BUFFER, uv_buffer_id);
         glBufferSubData(GL_ARRAY_BUFFER,
                         0,
-                        sizeof(uv_buffer[0]) * 3 * batch_buffer_size,
+                        sizeof(uv_buffer[0]) * batch_buffer_size,
                         uv_buffer);
 
         glUniform2f(u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
         glDrawArrays(GL_TRIANGLES,
                      0,
-                     static_cast<GLsizei>(batch_buffer_size) * 3 * 2);
+                     static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
     }
 
     batch_buffer_size = 0;
