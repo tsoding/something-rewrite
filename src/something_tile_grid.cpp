@@ -15,10 +15,19 @@ void Tile_Grid::render(const Game *game, Renderer *renderer) const
     }
 }
 
-Tile &Tile_Grid::get_tile(V2<int> world_coord)
+Tile &Tile_Grid::get_tile(Mem_Coord coord)
 {
-    const auto mem_coord = world_coord + V2(QUAD_ROWS, QUAD_COLS).cast_to<int>();
-    assert(0 <= mem_coord.x && mem_coord.x < static_cast<int>(COLS));
-    assert(0 <= mem_coord.y && mem_coord.y < static_cast<int>(ROWS));
-    return tiles[mem_coord.y][mem_coord.x];
+    assert(0 <= coord.unwrap.x && coord.unwrap.x < static_cast<int>(COLS));
+    assert(0 <= coord.unwrap.y && coord.unwrap.y < static_cast<int>(ROWS));
+    return tiles[coord.unwrap.y][coord.unwrap.x];
+}
+
+Tile &Tile_Grid::get_tile(Tile_Coord coord)
+{
+    return get_tile(Mem_Coord(coord.unwrap + V2(QUAD_ROWS, QUAD_COLS).cast_to<int>()));
+}
+
+Tile &Tile_Grid::get_tile(World_Coord coord)
+{
+    return get_tile(Tile_Coord((coord.unwrap / Tile::SIZE).cast_to<int>()));
 }
