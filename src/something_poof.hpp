@@ -2,6 +2,7 @@
 #define SOMETHING_POOF_HPP_
 
 struct Poof {
+    static constexpr Seconds LIFETIME = 5.0f;
     static constexpr size_t CAPACITY = 1024;
     static constexpr float MAX_VELOCITY = 200.0f;
     static constexpr float MAX_ANGLE_VELOCITY = static_cast<float>(M_PI);
@@ -17,12 +18,11 @@ struct Poof {
     float            angle_velocities[CAPACITY];
     V2<float>        pivots[CAPACITY];
 
-    size_t poof_size;
+    Seconds          lifetimes[CAPACITY];
 
     void push(Triangle<float> triangle,
               RGBA shade,
               Triangle<float> uv);
-    void clear();
     void update(Seconds dt);
     void render(Renderer *renderer) const;
 };

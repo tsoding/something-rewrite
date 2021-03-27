@@ -6,6 +6,10 @@ struct RGBA {
 
     RGBA() = default;
 
+    RGBA(float x):
+        RGBA(x, x, x, x)
+    {}
+
     RGBA(float r, float g, float b, float a):
         r(r), g(g), b(b), a(a)
     {}
@@ -20,6 +24,11 @@ struct RGBA {
                     static_cast<float>((hex >> (2 * 8)) & 0xFF) / 255.0f,
                     static_cast<float>((hex >> (1 * 8)) & 0xFF) / 255.0f,
                     static_cast<float>((hex >> (0 * 8)) & 0xFF) / 255.0f);
+    }
+
+    RGBA with_alpha(float alpha) const
+    {
+        return RGBA(r, g, b, alpha);
     }
 };
 
