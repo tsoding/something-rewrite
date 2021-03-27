@@ -71,8 +71,6 @@ int main(int argc, char *argv[])
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
 
-    // TODO(#19): it's impossible to build an atlas with 0 margin
-    // It triggers some asserts.
     game->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
 
     Renderer *renderer = new Renderer{};
