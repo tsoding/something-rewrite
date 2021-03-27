@@ -5,7 +5,7 @@ precision mediump float;
 uniform vec2 resolution;
 uniform float time;
 uniform vec2 camera_position;
-uniform float camera_z;
+uniform float camera_scale;
 
 layout(location = 1) in vec2 vertex_position;
 layout(location = 2) in vec4 vertex_color;
@@ -24,14 +24,28 @@ float lerp(float a, float b, float t)
     return a + (b - a) * t;
 }
 
-void main() {
+vec2 camera_projection(vec2 pos)
+{
     float aspect = resolution.x / resolution.y;
-    vec2 pos = vertex_position - camera_position;
-    // TODO(#17): camera_z is not used for anything
-    float x = lerp(-1.0, 1.0, inv_lerp(-resolution.x * 0.5, resolution.x * 0.5, pos.x)) * aspect;
-    float y = lerp(-1.0, 1.0, inv_lerp(-resolution.y * 0.5, resolution.y * 0.5, pos.y)) * aspect;
+    float x = aspect * lerp(
+        -1.0, 1.0,
+        inv_lerp(
+            -(resolution.x * camera_scale) * 0.5,
+            (resolution.x * camera_scale) * 0.5, 
+            pos.x));
+    float y = aspect * lerp(
+        -1.0, 1.0, 
+        inv_lerp(
+            -(resolution.y * camera_scale) * 0.5,
+            (resolution.y * camera_scale) * 0.5,
+            pos.y));
+    return vec2(x, y);
+}
 
-    gl_Position = vec4(x, y, 0.0, 1.0);
+void main() {
+    gl_Position = vec4(
+        camera_projection(vertex_position - camera_position), 
+        0.0, 1.0);
     color = vertex_color;
     uv = vertex_uv;
 }

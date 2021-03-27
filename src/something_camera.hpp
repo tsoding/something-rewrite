@@ -3,6 +3,8 @@
 
 struct Camera
 {
+    constexpr static float DISTANCE = 100.0f;
+
     V2<float> pos;
     V2<float> vel;
     float z;
