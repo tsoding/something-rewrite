@@ -76,3 +76,25 @@ AABB<float> Tile_Grid::get_tile_hitbox(World_Coord coord) const
 {
     return get_tile_hitbox(coord.to_tile());
 }
+
+bool Tile_Grid::is_there_any_walls_in_region(Tile_Region region) const
+{
+    const auto a1 = region.unwrap.pos;
+    const auto a2 = a1 + region.unwrap.size;
+
+    for (int y = a1.y; y < a2.y; ++y) {
+        for (int x = a1.x; x < a2.x; ++x) {
+            const auto tile = get_tile(Tile_Coord(V2(x, y)));
+            if (tile && tile->wall) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Tile_Grid::is_there_any_walls_in_region(World_Region region) const
+{
+    return is_there_any_walls_in_region(region.to_tile());
+}
