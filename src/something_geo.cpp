@@ -69,7 +69,7 @@ Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivo
 Triangle<float> equilateral_triangle(V2<float> center, float radius, float angle)
 {
     Triangle<float> result = {};
-    const float sector_angle = 2 * M_PI / static_cast<float>(TRIANGLE_VERT_COUNT);
+    const float sector_angle = 2.0f * static_cast<float>(M_PI) / static_cast<float>(TRIANGLE_VERT_COUNT);
 
     for (size_t i = 0; i < TRIANGLE_VERT_COUNT; ++i) {
         result.vs[i] = center + polar_v2(static_cast<float>(i) * sector_angle + angle, radius);
