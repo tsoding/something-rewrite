@@ -107,9 +107,24 @@ void Player::explode(Poof &poof, const Atlas &atlas)
     }
 }
 
-void Player::update(Game *, Seconds dt)
+void Player::update(Game *game, Seconds dt)
 {
-    pos += vel * dt;
+    const V2<float> ps[] = {
+        V2(1.0f, 1.0f),
+        V2(0.0f, 1.0f),
+        V2(1.0f, 0.0f),
+        V2(0.0f, 0.0f)
+    };
+
+    for (auto p : ps) {
+        const auto new_vel = vel * p;
+        const auto new_pos = pos + new_vel * dt;
+        if (!game->tile_grid.is_there_any_walls_in_region(World_Region(AABB(new_pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT))))) {
+            pos = new_pos;
+            vel = new_vel;
+            return;
+        }
+    }
 }
 
 void Player::jump()
@@ -139,19 +154,4 @@ void Player::move(Direction direction)
 void Player::stop()
 {
     vel.x = 0.0f;
-}
-
-void Player::resolve_collisions(const Tile_Grid &grid)
-{
-    const auto COLLIDER_OFFSET = V2(PLAYER_WIDTH, 0.0f) * 0.5f;
-    auto collider = pos + COLLIDER_OFFSET;
-    const auto tile_coord = World_Coord(collider).to_tile();
-    auto tile = grid.get_tile(tile_coord);
-    if (tile && tile->wall) {
-        const auto tile_hitbox = grid.get_tile_hitbox(tile_coord);
-        collider.y = tile_hitbox.pos.y + tile_hitbox.size.y;
-
-        pos = collider - COLLIDER_OFFSET;
-        vel.y = 0.0f;
-    }
 }
