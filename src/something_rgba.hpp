@@ -6,20 +6,35 @@ struct RGBA {
 
     RGBA() = default;
 
-    RGBA(float x):
+    constexpr RGBA(float x):
         RGBA(x, x, x, x)
     {}
 
-    RGBA(float r, float g, float b, float a):
+    constexpr RGBA(float r, float g, float b, float a):
         r(r), g(g), b(b), a(a)
     {}
 
-    static const RGBA RED;
-    static const RGBA GREEN;
-    static const RGBA BLUE;
-    static const RGBA WHITE;
+    static constexpr RGBA RED()
+    {
+        return RGBA(1.0f, 0.0f, 0.0f, 1.0f);
+    }
 
-    static RGBA from_abgr32(uint32_t hex)
+    static constexpr RGBA GREEN()
+    {
+        return RGBA(0.0f, 1.0f, 0.0f, 1.0f);
+    }
+
+    static constexpr RGBA BLUE()
+    {
+        return RGBA(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+
+    static constexpr RGBA WHITE()
+    {
+        return RGBA(1.0f, 1.0f, 1.0f, 1.0f);
+    }
+
+    static constexpr RGBA from_abgr32(uint32_t hex)
     {
         return RGBA(static_cast<float>((hex >> (3 * 8)) & 0xFF) / 255.0f,
                     static_cast<float>((hex >> (2 * 8)) & 0xFF) / 255.0f,
@@ -32,10 +47,5 @@ struct RGBA {
         return RGBA(r, g, b, alpha);
     }
 };
-
-const RGBA RGBA::RED   = RGBA(1.0f, 0.0f, 0.0f, 1.0f);
-const RGBA RGBA::GREEN = RGBA(0.0f, 1.0f, 0.0f, 1.0f);
-const RGBA RGBA::BLUE  = RGBA(0.0f, 0.0f, 1.0f, 1.0f);
-const RGBA RGBA::WHITE = RGBA(1.0f);
 
 #endif  // SOMETHING_RGBA_HPP_

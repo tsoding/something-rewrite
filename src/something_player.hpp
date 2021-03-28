@@ -11,17 +11,30 @@ enum class Direction {
     Left,
 };
 
+constexpr V2<float> direction_to_v2(Direction direction)
+{
+    switch (direction) {
+    case Direction::Right:
+        return V2(1.0f, 0.0f);
+    case Direction::Left:
+        return V2(-1.0f, 0.0f);
+    default:
+        return V2(0.0f);
+    }
+}
+
 struct Game;
 
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
-    // static constexpr size_t ATLAS_INDEX = 3;
-    static constexpr size_t ATLAS_INDEX = 7;
+    static constexpr size_t ATLAS_INDEX = 3;
+    // static constexpr size_t ATLAS_INDEX = 7;
+    static constexpr float PROJECTILE_VELOCITY = 1000.0f;
+    static constexpr float TELEPORTATION_DISTANCE = 300.0f;
 
     V2<float> pos;
     V2<float> vel;
     Direction direction;
-    bool hidden;
 
     void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
@@ -29,6 +42,7 @@ struct Player {
     void jump();
     void move(Direction direction);
     void stop();
+    void shoot(Game *game);
     void explode(Poof &poof, const Atlas &atlas);
 };
 

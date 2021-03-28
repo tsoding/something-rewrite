@@ -19,6 +19,20 @@ void Game::init()
             tile->wall = true;
         }
     }
+
+    for (int i = 10; i < 20; ++i) {
+        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i, 10)));
+        if (tile) {
+            tile->wall = true;
+        }
+    }
+
+    for (int i = 10; i < 20; ++i) {
+        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(20, i)));
+        if (tile) {
+            tile->wall = true;
+        }
+    }
 }
 
 void Game::handle_event(const SDL_Event *event)
@@ -38,6 +52,10 @@ void Game::handle_event(const SDL_Event *event)
 
         case SDLK_q: {
             player.explode(poof, atlas);
+        } break;
+
+        case SDLK_e: {
+            player.shoot(this);
         } break;
         }
     }
@@ -72,12 +90,17 @@ void Game::update(Seconds dt)
     // Camera
     {
         camera.update(dt);
-        camera.vel = player.pos - camera.pos;
+        camera.vel = (player.pos - camera.pos) * 4.0f;
     }
 
     // Poof
     {
         poof.update(dt);
+    }
+
+    // Projectiles
+    {
+        projectiles.update(this, dt);
     }
 }
 
@@ -86,4 +109,5 @@ void Game::render(Renderer *renderer) const
     tile_grid.render(this, renderer);
     player.render(this, renderer);
     poof.render(renderer);
+    projectiles.render(renderer);
 }

@@ -40,6 +40,7 @@ struct V2 {
 
 V2<float> polar_v2(float angle, float mag);
 V2<float> rotate_v2(V2<float> v, float angle);
+float angle_v2(V2<float> v);
 float length(V2<float> v);
 
 template <typename T>
@@ -120,6 +121,8 @@ struct Triangle {
         vs {a, b, c}
     {}
 };
+
+Triangle<float> equilateral_triangle(V2<float> center, float radius, float angle);
 
 Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivot);
 
