@@ -107,9 +107,10 @@ void Player::update(Game *game, Seconds dt)
         V2(1.0f, 0.0f),
         V2(0.0f, 0.0f)
     };
+    constexpr size_t ps_count = sizeof(ps) / sizeof(ps[0]);
 
-    for (auto p : ps) {
-        const auto new_vel = vel * p;
+    for (size_t i = 0; i < ps_count; ++i) {
+        const auto new_vel = vel * ps[i];
         const auto new_pos = pos + new_vel * dt;
         if (!game->tile_grid.is_there_any_walls_in_region(World_Region(AABB(new_pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT))))) {
             pos = new_pos;

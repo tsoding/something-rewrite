@@ -3,6 +3,24 @@
 const RGBA BACKGROUND_COLOR = RGBA::from_abgr32(0x181818FF);
 const RGBA FAILED_BACKGROUND_COLOR = RGBA::from_abgr32(0xAA1818FF);
 
+void Game::init()
+{
+    this->camera.z = Camera::DISTANCE;
+
+    this->player.pos = V2(-100.0f, 0.0f);
+
+    this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
+
+    this->keyboard = SDL_GetKeyboardState(NULL);
+
+    for (int i = 0; i < 10; ++i) {
+        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i)));
+        if (tile) {
+            tile->wall = true;
+        }
+    }
+}
+
 void Game::handle_event(const SDL_Event *event)
 {
     switch (event->type) {
