@@ -17,14 +17,6 @@ void Player::render(const Game *game, Renderer *renderer) const
             AABB(pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT)),
             RGBA(1.0f),
             uv);
-
-        {
-            constexpr float COLLIDER_SIZE = 10.0f;
-            renderer->fill_rect(
-                AABB((pos + V2(PLAYER_WIDTH, 0.0f) * 0.5f) - V2(COLLIDER_SIZE * 0.5f), V2(COLLIDER_SIZE)),
-                RGBA::RED,
-                AABB<float>());
-        }
     }
 }
 
