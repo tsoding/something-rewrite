@@ -204,6 +204,20 @@ struct AABB {
         const auto new_size = V2(-size.x, size.y);
         return AABB(new_pos, new_size);
     }
+
+    bool overlaps_with(const AABB<T> &that) const
+    {
+        const auto a1 = this->pos;
+        const auto a2 = this->pos + this->size;
+
+        const auto b1 = that.pos;
+        const auto b2 = that.pos + that.size;
+
+        return a2.x >= b1.x &&
+               b2.x >= a1.x &&
+               a2.y >= b1.y &&
+               b2.y >= a1.y;
+    }
 };
 
 template <typename T>
