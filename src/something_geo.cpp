@@ -16,6 +16,11 @@ V2<float> polar_v2(float angle, float mag)
     return V2<float>(cosf(angle), sinf(angle)) * mag;
 }
 
+float angle_v2(V2<float> v)
+{
+    return atan2f(v.y, v.x);
+}
+
 V2<float> lerp(V2<float> a, V2<float> b, float f)
 {
     return a + (b - a) * f;
@@ -59,4 +64,16 @@ Triangle<float> rotate_triangle(Triangle<float> tri, float angle, V2<float> pivo
         v = rotate_v2(v, angle);
     }
     return result + pivot;
+}
+
+Triangle<float> equilateral_triangle(V2<float> center, float radius, float angle)
+{
+    Triangle<float> result = {};
+    const float sector_angle = 2 * M_PI / static_cast<float>(TRIANGLE_VERT_COUNT);
+
+    for (size_t i = 0; i < TRIANGLE_VERT_COUNT; ++i) {
+        result.vs[i] = center + polar_v2(static_cast<float>(i) * sector_angle + angle, radius);
+    }
+
+    return result;
 }

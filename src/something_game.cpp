@@ -39,6 +39,10 @@ void Game::handle_event(const SDL_Event *event)
         case SDLK_q: {
             player.explode(poof, atlas);
         } break;
+
+        case SDLK_e: {
+            player.shoot(this);
+        } break;
         }
     }
     break;
@@ -79,6 +83,11 @@ void Game::update(Seconds dt)
     {
         poof.update(dt);
     }
+
+    // Projectiles
+    {
+        projectiles.update(this, dt);
+    }
 }
 
 void Game::render(Renderer *renderer) const
@@ -86,4 +95,5 @@ void Game::render(Renderer *renderer) const
     tile_grid.render(this, renderer);
     player.render(this, renderer);
     poof.render(renderer);
+    projectiles.render(renderer);
 }

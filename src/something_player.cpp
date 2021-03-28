@@ -2,22 +2,20 @@
 
 const float PLAYER_WIDTH = 100.0f;
 const float PLAYER_HEIGHT = 80.0f;
-const RGBA PLAYER_COLOR = RGBA::RED;
+const RGBA PLAYER_COLOR = RGBA::RED();
 const float PLAYER_SPEED = 500.0f;
 
 void Player::render(const Game *game, Renderer *renderer) const
 {
-    if (!hidden) {
-        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-        if (direction == Direction::Left) {
-            uv = uv.flip_horizontally();
-        }
-
-        renderer->fill_rect(
-            AABB(pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT)),
-            RGBA(1.0f),
-            uv);
+    auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+    if (direction == Direction::Left) {
+        uv = uv.flip_horizontally();
     }
+
+    renderer->fill_rect(
+        AABB(pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT)),
+        RGBA(1.0f),
+        uv);
 }
 
 size_t longest_side(Triangle<float> tri)
@@ -75,7 +73,6 @@ void explode_triangle(Poof &poof, Triangle<float> vert, Triangle<float> uv,
 
 void Player::explode(Poof &poof, const Atlas &atlas)
 {
-    hidden = true;
     Triangle<GLfloat> lower, upper;
     {
         auto aabb = AABB(pos, V2(100.0f, 80.0f));
@@ -97,6 +94,8 @@ void Player::explode(Poof &poof, const Atlas &atlas)
         explode_triangle(poof, lower, lower_uv, level);
         explode_triangle(poof, upper, upper_uv, level);
     }
+
+    pos += direction_to_v2(direction) * TELEPORTATION_DISTANCE;
 }
 
 void Player::update(Game *game, Seconds dt)
@@ -132,12 +131,10 @@ void Player::move(Direction direction)
     case Direction::Left:
         vel.x = -PLAYER_SPEED;
         this->direction = direction;
-        hidden = false;
         break;
     case Direction::Right:
         vel.x = PLAYER_SPEED;
         this->direction = direction;
-        hidden = false;
         break;
     default:
         unreachable("Player::move()");
@@ -147,4 +144,11 @@ void Player::move(Direction direction)
 void Player::stop()
 {
     vel.x = 0.0f;
+}
+
+void Player::shoot(Game *game)
+{
+    game->projectiles.push(
+        pos + V2(PLAYER_WIDTH, PLAYER_HEIGHT) * 0.5f,
+        direction_to_v2(direction) * PROJECTILE_VELOCITY);
 }
