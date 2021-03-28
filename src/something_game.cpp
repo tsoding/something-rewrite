@@ -76,7 +76,7 @@ void Game::update(Seconds dt)
     // Camera
     {
         camera.update(dt);
-        camera.vel = player.pos - camera.pos;
+        camera.vel = (player.pos - camera.pos) * 4.0f;
     }
 
     // Poof
