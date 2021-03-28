@@ -1,7 +1,7 @@
 #include "./something_player.hpp"
 
 const float PLAYER_WIDTH = 100.0f;
-const float PLAYER_HEIGHT = 80.0f;
+const float PLAYER_HEIGHT = 100.0f;
 const RGBA PLAYER_COLOR = RGBA::RED();
 const float PLAYER_SPEED = 500.0f;
 
