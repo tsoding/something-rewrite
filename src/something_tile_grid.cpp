@@ -2,10 +2,10 @@
 
 void Tile_Grid::render(const Game *game, Renderer *renderer) const
 {
-    for (size_t row = 0; row < ROWS; ++row) {
-        for (size_t col = 0; col < COLS; ++col) {
-            if (tiles[row][col].wall) {
-                const auto tile_pos = (V2(row, col) - V2(QUAD_ROWS, QUAD_COLS)).cast_to<float>() * Tile::SIZE;
+    for (size_t y = 0; y < ROWS; ++y) {
+        for (size_t x = 0; x < COLS; ++x) {
+            if (tiles[y][x].wall) {
+                const auto tile_pos = (V2(x, y) - V2(QUAD_COLS, QUAD_ROWS)).cast_to<float>() * Tile::SIZE;
                 const AABB<float> tile_aabb =
                     AABB(tile_pos,
                          V2(Tile::SIZE));
