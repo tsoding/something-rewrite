@@ -35,6 +35,29 @@ struct World_Coord {
     Tile_Coord to_tile() const;
 };
 
+struct Tile_Region {
+    AABB<int> unwrap;
+
+    Tile_Region(AABB<int> region):
+        unwrap(region)
+    {}
+};
+
+struct World_Region {
+    AABB<float> unwrap;
+
+    World_Region(AABB<float> region):
+        unwrap(region)
+    {}
+
+    Tile_Region to_tile() const
+    {
+        const auto a1 = World_Coord(unwrap.pos).to_tile();
+        const auto a2 = World_Coord(unwrap.pos + unwrap.size).to_tile();
+        return Tile_Region(AABB(a1.unwrap, a2.unwrap - a1.unwrap + V2(1)));
+    }
+};
+
 struct Game;
 
 struct Tile_Grid {
@@ -55,6 +78,9 @@ struct Tile_Grid {
 
     AABB<float> get_tile_hitbox(Tile_Coord coord) const;
     AABB<float> get_tile_hitbox(World_Coord coord) const;
+
+    bool is_there_any_walls_in_region(Tile_Region region) const;
+    bool is_there_any_walls_in_region(World_Region region) const;
 };
 
 #endif // SOMETHING_TILE_GRID_HPP_

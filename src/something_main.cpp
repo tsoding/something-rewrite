@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     defer(delete game);
 
     game->camera.z = Camera::DISTANCE;
+    game->player.pos = V2(-100.0f, 0.0f);
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         panic("SDL ERROR: ", SDL_GetError());

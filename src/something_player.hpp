@@ -30,7 +30,6 @@ struct Player {
     void move(Direction direction);
     void stop();
     void explode(Poof &poof, const Atlas &atlas);
-    void resolve_collisions(const Tile_Grid &grid);
 };
 
 #endif // SOMETHING_PLAYER_HPP_
