@@ -26,17 +26,10 @@ int main(int argc, char *argv[])
 {
     (void) argc;
     (void) argv;
-    // NOTE: The game object could be too big to put on the stack.
-    // So we are allocating it on the heap.
-    Game *game = new Game{};
-    defer(delete game);
-
-    game->camera.z = Camera::DISTANCE;
-    game->player.pos = V2(-100.0f, 0.0f);
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         panic("SDL ERROR: ", SDL_GetError());
     }
+    defer(SDL_Quit());
 
     SDL_Window * const window =
         SDL_CreateWindow(
@@ -72,20 +65,15 @@ int main(int argc, char *argv[])
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(MessageCallback, 0);
 
-    game->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
+    // NOTE: The game object could be too big to put on the stack.
+    // So we are allocating it on the heap.
+    Game *game = new Game{};
+    defer(delete game);
+    game->init();
 
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
     renderer->init();
-
-    game->keyboard = SDL_GetKeyboardState(NULL);
-
-    for (int i = 0; i < 10; ++i) {
-        auto tile = game->tile_grid.get_tile(Tile_Coord(V2(i)));
-        if (tile) {
-            tile->wall = true;
-        }
-    }
     
     while (!game->quit) {
         SDL_Event event;

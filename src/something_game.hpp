@@ -19,6 +19,7 @@ struct Game
     Tile_Grid tile_grid;
     Poof poof;
 
+    void init();
     void handle_event(const SDL_Event *event);
     void update(Seconds dt);
     void render(Renderer *renderer) const;
