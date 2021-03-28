@@ -9,7 +9,7 @@ void Tile_Grid::render(const Game *game, Renderer *renderer) const
                 const AABB<float> tile_aabb =
                     AABB(tile_pos,
                          V2(Tile::SIZE));
-                renderer->fill_rect(tile_aabb, RGBA::RED(), game->atlas.uvs.data[0]);
+                renderer->fill_rect(tile_aabb, RGBA::BLUE(), game->atlas.uvs.data[0]);
             }
         }
     }
