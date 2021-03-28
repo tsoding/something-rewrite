@@ -19,7 +19,7 @@ constexpr V2<float> direction_to_v2(Direction direction)
     case Direction::Left:
         return V2(-1.0f, 0.0f);
     default:
-        assert(false && "Thank you Straustrup");
+        return V2(0.0f);
     }
 }
 
