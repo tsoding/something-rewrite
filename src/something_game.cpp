@@ -19,6 +19,20 @@ void Game::init()
             tile->wall = true;
         }
     }
+
+    for (int i = 10; i < 20; ++i) {
+        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i, 10)));
+        if (tile) {
+            tile->wall = true;
+        }
+    }
+
+    for (int i = 10; i < 20; ++i) {
+        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(20, i)));
+        if (tile) {
+            tile->wall = true;
+        }
+    }
 }
 
 void Game::handle_event(const SDL_Event *event)

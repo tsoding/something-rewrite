@@ -61,8 +61,8 @@ struct World_Region {
 struct Game;
 
 struct Tile_Grid {
-    static constexpr size_t QUAD_ROWS = 10;
-    static constexpr size_t QUAD_COLS = 10;
+    static constexpr size_t QUAD_ROWS = 100;
+    static constexpr size_t QUAD_COLS = 100;
     static constexpr size_t ROWS = QUAD_ROWS * 2;
     static constexpr size_t COLS = QUAD_COLS * 2;
 
