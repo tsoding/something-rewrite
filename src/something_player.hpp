@@ -35,6 +35,7 @@ struct Player {
     V2<float> pos;
     V2<float> vel;
     Direction direction;
+    float gun_angle;
 
     void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
@@ -44,6 +45,7 @@ struct Player {
     void stop();
     void shoot(Game *game);
     void explode(Poof &poof, const Atlas &atlas);
+    void point_gun_at(V2<float> target);
 };
 
 #endif // SOMETHING_PLAYER_HPP_

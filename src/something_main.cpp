@@ -21,6 +21,27 @@ void MessageCallback(GLenum source,
             type, severity, message);
 }
 
+AABB<float> compute_gl_viewport(int w, int h)
+{
+    const float w_width = static_cast<float>(w);
+    const float w_height = static_cast<float>(h);
+    const float s_width = static_cast<float>(SCREEN_WIDTH);
+    const float s_height = static_cast<float>(SCREEN_HEIGHT);
+
+    float n_width = w_width;
+    float n_height = w_width * (s_height / s_width);
+
+    if (n_height > w_height) {
+        n_height = w_height;
+        n_width = w_height * (s_width / s_height);
+    }
+
+    return AABB(
+               V2(w_width * 0.5f - n_width * 0.5f,
+                  w_height * 0.5f - n_height * 0.5f),
+               V2(n_width, n_height));
+}
+
 // TODO(#4): hot-reloadable configuration
 int main(int argc, char *argv[])
 {
@@ -69,12 +90,12 @@ int main(int argc, char *argv[])
     // So we are allocating it on the heap.
     Game *game = new Game{};
     defer(delete game);
-    game->init();
+    game->init(window);
 
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
     renderer->init();
-    
+
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -91,28 +112,8 @@ int main(int argc, char *argv[])
             // TODO(#6): don't recompute the GL viewport on every frame
             int w, h;
             SDL_GetWindowSize(window, &w, &h);
-
-            const float w_width = static_cast<float>(w);
-            const float w_height = static_cast<float>(h);
-            const float s_width = static_cast<float>(SCREEN_WIDTH);
-            const float s_height = static_cast<float>(SCREEN_HEIGHT);
-
-            float a_height = 0.0f;
-            float a_width = 0.0f;
-
-            if (w_width > w_height) {
-                a_width = s_width * (w_height / s_height);
-                a_height = w_height;
-            } else {
-                a_width = w_width;
-                a_height = s_height * (w_width / s_width);
-            }
-
-            glViewport(
-                static_cast<GLint>(floorf(w_width * 0.5f - a_width * 0.5f)),
-                static_cast<GLint>(floorf(w_height * 0.5f - a_height * 0.5f)),
-                static_cast<GLint>(a_width),
-                static_cast<GLint>(a_height));
+            const auto viewport = compute_gl_viewport(w, h).map(floorf).cast_to<GLint>();
+            glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
 
         if (renderer->rect_program_failed) {

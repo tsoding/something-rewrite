@@ -21,11 +21,6 @@ float angle_v2(V2<float> v)
     return atan2f(v.y, v.x);
 }
 
-V2<float> lerp(V2<float> a, V2<float> b, float f)
-{
-    return a + (b - a) * f;
-}
-
 void split_triangle(const Triangle<float> &tri,
                     const float fs[TRIANGLE_VERT_COUNT],
                     Triangle<float> output[TRIANGLE_VERT_COUNT + 1])

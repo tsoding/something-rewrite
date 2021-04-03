@@ -26,14 +26,13 @@ float lerp(float a, float b, float t)
 
 vec2 camera_projection(vec2 pos)
 {
-    float aspect = resolution.x / resolution.y;
-    float x = aspect * lerp(
+    float x = lerp(
         -1.0, 1.0,
         inv_lerp(
             -(resolution.x * camera_scale) * 0.5,
             (resolution.x * camera_scale) * 0.5, 
             pos.x));
-    float y = aspect * lerp(
+    float y = lerp(
         -1.0, 1.0, 
         inv_lerp(
             -(resolution.y * camera_scale) * 0.5,

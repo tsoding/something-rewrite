@@ -4,25 +4,40 @@ const float PLAYER_WIDTH = 100.0f;
 const float PLAYER_HEIGHT = 100.0f;
 const RGBA PLAYER_COLOR = RGBA::RED();
 const float PLAYER_SPEED = 500.0f;
+const float PLAYER_GUN_SIZE = 20.0f;
+
+static AABB<float> player_hitbox(V2<float> pos)
+{
+    const auto size = V2(PLAYER_WIDTH, PLAYER_HEIGHT);
+    return AABB(pos - size * 0.5f, size);
+}
 
 void Player::render(const Game *game, Renderer *renderer) const
 {
-    auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-    if (direction == Direction::Left) {
-        uv = uv.flip_horizontally();
+    // Player body
+    {
+        // TODO: player position is not at the center of its body
+        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+        if (direction == Direction::Left) {
+            uv = uv.flip_horizontally();
+        }
+
+        renderer->fill_rect(player_hitbox(pos), RGBA(1.0f), uv);
     }
 
-    renderer->fill_rect(
-        AABB(pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT)),
-        RGBA(1.0f),
-        uv);
+    // Payer gun
+    {
+        const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
+        const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
+        renderer->fill_triangle(gun, RGBA::RED(), {});
+    }
 }
 
 void Player::explode(Poof &poof, const Atlas &atlas)
 {
     Triangle<GLfloat> lower, upper;
     {
-        auto aabb = AABB(pos, V2(100.0f, 80.0f));
+        auto aabb = player_hitbox(pos);
         aabb.split_into_triangles(&lower, &upper);
     }
 
@@ -58,7 +73,7 @@ void Player::update(Game *game, Seconds dt)
     for (size_t i = 0; i < ps_count; ++i) {
         const auto new_vel = vel * ps[i];
         const auto new_pos = pos + new_vel * dt;
-        if (!game->tile_grid.is_there_any_walls_in_region(World_Region(AABB(new_pos, V2(PLAYER_WIDTH, PLAYER_HEIGHT))))) {
+        if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
             pos = new_pos;
             vel = new_vel;
             return;
@@ -68,7 +83,7 @@ void Player::update(Game *game, Seconds dt)
 
 void Player::jump()
 {
-    const float JUMP_VELOCITY = 500.0f;
+    const float JUMP_VELOCITY = 1000.0f;
     vel.y = JUMP_VELOCITY;
 }
 
@@ -95,7 +110,13 @@ void Player::stop()
 
 void Player::shoot(Game *game)
 {
+    const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
     game->projectiles.push(
-        pos + V2(PLAYER_WIDTH, PLAYER_HEIGHT) * 0.5f,
-        direction_to_v2(direction) * PROJECTILE_VELOCITY);
+        gun_pos,
+        polar_v2(gun_angle, PROJECTILE_VELOCITY));
+}
+
+void Player::point_gun_at(V2<float> target)
+{
+    gun_angle = angle_v2(target - pos);
 }
