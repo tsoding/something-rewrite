@@ -6,6 +6,9 @@
 #include "./something_camera.hpp"
 
 struct Renderer {
+    const char *vert_shader_path;
+    const char *frag_shader_path;
+
     // TODO(#29): BATCH_BUFFER_CAPACITY should be chosen based on the capabilities of the GPU
     // Maybe we can extract that information using OpenGL API
     // http://docs.gl/gl3/glGet
@@ -34,7 +37,7 @@ struct Renderer {
 
     Fixed_Region<1000 * 1000> shader_buffer;
 
-    void init();
+    void init(const char *vert_shader_path, const char *frag_shader_path);
     bool reload_shaders();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
     void fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);

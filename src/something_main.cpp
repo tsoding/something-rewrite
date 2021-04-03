@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
-    renderer->init();
+    renderer->init("./assets/shaders/rect.vert", "./assets/shaders/rect.frag");
 
     while (!game->quit) {
         SDL_Event event;

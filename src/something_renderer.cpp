@@ -93,13 +93,11 @@ bool Renderer::reload_shaders()
     {
         GLuint shaders[2] = {0};
 
-        if (!gl_compile_shader_file("./assets/shaders/rect.vert", GL_VERTEX_SHADER,
-                                    shaders)) {
+        if (!gl_compile_shader_file(vert_shader_path, GL_VERTEX_SHADER, shaders)) {
             return false;
         }
 
-        if (!gl_compile_shader_file("./assets/shaders/rect.frag", GL_FRAGMENT_SHADER,
-                                    shaders + 1)) {
+        if (!gl_compile_shader_file(frag_shader_path, GL_FRAGMENT_SHADER, shaders + 1)) {
             return false;
         }
 
@@ -121,8 +119,11 @@ bool Renderer::reload_shaders()
     return true;
 }
 
-void Renderer::init()
+void Renderer::init(const char *vert_shader_path, const char *frag_shader_path)
 {
+    this->vert_shader_path = vert_shader_path;
+    this->frag_shader_path = frag_shader_path;
+
     // Compiling The Shader Program
     reload_shaders();
 
