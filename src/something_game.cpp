@@ -66,7 +66,7 @@ V2<float> window_to_viewport(SDL_Window *window, V2<Sint32> p)
 
 V2<float> viewport_to_world(const Camera &camera, V2<float> p)
 {
-    // TODO: viewport_to_world() does not apply camera scaling
+    // TODO(#38): viewport_to_world() does not apply camera scaling
     return p - V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * 0.5f + camera.pos;
 }
 
