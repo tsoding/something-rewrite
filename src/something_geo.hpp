@@ -1,6 +1,18 @@
 #ifndef SOMETHING_V2_HPP_
 #define SOMETHING_V2_HPP_
 
+template <typename T, typename U>
+T lerp(T a, T b, U f)
+{
+    return a + (b - a) * f;
+}
+
+template <typename T>
+T inv_lerp(T a, T b, T c)
+{
+    return (c - a) / (b - a);
+}
+
 float random01()
 {
     static_assert(RAND_MAX != 0);

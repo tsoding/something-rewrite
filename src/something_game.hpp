@@ -13,6 +13,7 @@ struct Game
     bool quit;
 
     const Uint8 *keyboard;
+    SDL_Window *window;
 
     Atlas atlas;
     Player player;
@@ -21,7 +22,9 @@ struct Game
     Poof poof;
     Projectiles projectiles;
 
-    void init();
+    V2<float> mouse;
+
+    void init(SDL_Window *window);
     void handle_event(const SDL_Event *event);
     void update(Seconds dt);
     void render(Renderer *renderer) const;
