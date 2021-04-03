@@ -86,7 +86,7 @@ void Game::handle_event(const SDL_Event *event)
         break;
 
         case SDLK_q: {
-            player.explode(poof, atlas);
+            player.teleport(this);
         }
         break;
         }

@@ -44,7 +44,7 @@ struct Player {
     void move(Direction direction);
     void stop();
     void shoot(Game *game);
-    void explode(Poof &poof, const Atlas &atlas);
+    void teleport(Game *game);
     void point_gun_at(V2<float> target);
 };
 

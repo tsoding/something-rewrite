@@ -33,7 +33,7 @@ void Player::render(const Game *game, Renderer *renderer) const
     }
 }
 
-void Player::explode(Poof &poof, const Atlas &atlas)
+void Player::teleport(Game *game)
 {
     Triangle<GLfloat> lower, upper;
     {
@@ -43,7 +43,7 @@ void Player::explode(Poof &poof, const Atlas &atlas)
 
     Triangle<GLfloat> lower_uv, upper_uv;
     {
-        auto uv = atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
         if (direction == Direction::Left) {
             uv = uv.flip_horizontally();
         }
@@ -53,11 +53,11 @@ void Player::explode(Poof &poof, const Atlas &atlas)
 
     {
         int level = 2;
-        explode_triangle(poof, lower, RGBA::WHITE(), lower_uv, level);
-        explode_triangle(poof, upper, RGBA::WHITE(), upper_uv, level);
+        explode_triangle(game->poof, lower, RGBA::WHITE(), lower_uv, level);
+        explode_triangle(game->poof, upper, RGBA::WHITE(), upper_uv, level);
     }
 
-    pos += direction_to_v2(direction) * TELEPORTATION_DISTANCE;
+    pos += polar_v2(gun_angle, TELEPORTATION_DISTANCE);
 }
 
 void Player::update(Game *game, Seconds dt)
