@@ -48,14 +48,14 @@ V2<float> window_to_viewport(SDL_Window *window, V2<Sint32> p)
     p.y = h - p.y;
 
     const float mouse_x =
-        lerp(0, SCREEN_WIDTH,
+        lerp(0.0f, static_cast<float>(SCREEN_WIDTH),
              inv_lerp(
                  viewport.pos.x,
                  viewport.pos.x + viewport.size.x,
                  static_cast<float>(p.x)));
 
     const float mouse_y =
-        lerp(0, SCREEN_HEIGHT,
+        lerp(0.0f, static_cast<float>(SCREEN_HEIGHT),
              inv_lerp(
                  viewport.pos.y,
                  viewport.pos.y + viewport.size.y,
