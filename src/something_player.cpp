@@ -16,7 +16,6 @@ void Player::render(const Game *game, Renderer *renderer) const
 {
     // Player body
     {
-        // TODO: player position is not at the center of its body
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
         if (direction == Direction::Left) {
             uv = uv.flip_horizontally();
