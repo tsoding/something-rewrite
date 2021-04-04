@@ -23,7 +23,8 @@ struct Renderer {
     void init();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
     void fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
-    void present();
+    void draw();
+    void clear();
 };
 
 #endif  // SOMETHING_RENDERER_HPP_

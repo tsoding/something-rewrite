@@ -107,7 +107,7 @@ bool Program::reload()
     return true;
 }
 
-void Program::use()
+void Program::use() const
 {
     glUseProgram(program);
 }

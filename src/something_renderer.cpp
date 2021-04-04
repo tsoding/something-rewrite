@@ -118,7 +118,7 @@ void Renderer::init()
     }
 }
 
-void Renderer::present()
+void Renderer::draw()
 {
     glBindBuffer(GL_ARRAY_BUFFER, triangles_buffer_id);
     glBufferSubData(GL_ARRAY_BUFFER,
@@ -141,7 +141,9 @@ void Renderer::present()
     glDrawArrays(GL_TRIANGLES,
                  0,
                  static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
-
-    batch_buffer_size = 0;
 }
 
+void Renderer::clear()
+{
+    batch_buffer_size = 0;
+}

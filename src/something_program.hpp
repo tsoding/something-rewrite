@@ -18,7 +18,7 @@ struct Program {
     static Program load_from_shader_files(const char *vert_shader_path,
                                           const char *frag_shader_path);
     bool reload();
-    void use();
+    void use() const;
 };
 
 #endif // SOMETHING_PROGRAM_HPP_
