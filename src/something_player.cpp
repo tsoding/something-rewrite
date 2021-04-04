@@ -65,18 +65,22 @@ void Player::update(Game *game, Seconds dt)
         V2(1.0f, 1.0f),
         V2(0.0f, 1.0f),
         V2(1.0f, 0.0f),
-        V2(0.0f, 0.0f)
     };
     constexpr size_t ps_count = sizeof(ps) / sizeof(ps[0]);
 
-    for (size_t i = 0; i < ps_count; ++i) {
-        const auto new_vel = vel * ps[i];
-        const auto new_pos = pos + new_vel * dt;
-        if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
-            pos = new_pos;
-            vel = new_vel;
-            return;
+    const size_t MAX_ATTEMPTS = 8;
+
+    for (size_t attempt = 0; attempt < MAX_ATTEMPTS; ++attempt) {
+        for (size_t i = 0; i < ps_count; ++i) {
+            const auto new_vel = vel * ps[i];
+            const auto new_pos = pos + new_vel * dt;
+            if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
+                pos = new_pos;
+                vel = new_vel;
+                return;
+            }
         }
+        vel *= 0.5f;
     }
 }
 

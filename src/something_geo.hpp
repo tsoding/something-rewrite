@@ -70,6 +70,14 @@ V2<T> &operator+=(V2<T> &a, V2<T> b)
 }
 
 template <typename T>
+V2<T> &operator*=(V2<T> &a, T s)
+{
+    a.x *= s;
+    a.y *= s;
+    return a;
+}
+
+template <typename T>
 V2<T> &operator-=(V2<T> &a, V2<T> b)
 {
     a.x -= b.x;
