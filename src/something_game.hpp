@@ -30,7 +30,8 @@ struct Game
     Projectiles projectiles;
     Particles particles;
 
-    V2<float> mouse;
+    V2<Sint32> mouse_window;
+    V2<float> mouse_world;
 
     void init(SDL_Window *window);
     void handle_event(const SDL_Event *event);

@@ -118,12 +118,7 @@ void Game::handle_event(const SDL_Event *event)
     break;
 
     case SDL_MOUSEMOTION: {
-        mouse = viewport_to_world(
-                    camera,
-                    window_to_viewport(
-                        window,
-                        V2(event->motion.x, event->motion.y)));
-        player.point_gun_at(mouse);
+        mouse_window = V2(event->motion.x, event->motion.y);
     }
     break;
 
@@ -136,6 +131,16 @@ void Game::handle_event(const SDL_Event *event)
 
 void Game::update(Seconds dt)
 {
+    // Mouse
+    {
+        mouse_world =
+            viewport_to_world(
+                camera,
+                window_to_viewport(
+                    window,
+                    mouse_window));
+    }
+
     // Player
     {
         if (keyboard[SDL_SCANCODE_D]) {
@@ -156,6 +161,8 @@ void Game::update(Seconds dt)
         } else {
             player.vel.y -= GRAVITY * dt;
         }
+
+        player.point_gun_at(mouse_world);
     }
 
     // Camera
@@ -189,6 +196,13 @@ void Game::render(Renderer *renderer) const
             player.render(this, renderer);
             poof.render(renderer);
             projectiles.render(renderer);
+
+            const float MOUSE_PROBE_SIZE = 50.0f;
+            renderer->fill_rect(AABB(mouse_world - V2(MOUSE_PROBE_SIZE * 0.5f),
+                                     V2(MOUSE_PROBE_SIZE)),
+                                RGBA::RED(),
+                                atlas.uvs.data[0]);
+
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
