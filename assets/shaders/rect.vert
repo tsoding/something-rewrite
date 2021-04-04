@@ -5,7 +5,7 @@ precision mediump float;
 uniform vec2 resolution;
 uniform float time;
 uniform vec2 camera_position;
-uniform float camera_scale;
+uniform float camera_zoom;
 
 layout(location = 1) in vec2 vertex_position;
 layout(location = 2) in vec4 vertex_color;
@@ -29,14 +29,14 @@ vec2 camera_projection(vec2 pos)
     float x = lerp(
         -1.0, 1.0,
         inv_lerp(
-            -(resolution.x * camera_scale) * 0.5,
-            (resolution.x * camera_scale) * 0.5, 
+            -(resolution.x * camera_zoom) * 0.5,
+            (resolution.x * camera_zoom) * 0.5, 
             pos.x));
     float y = lerp(
         -1.0, 1.0, 
         inv_lerp(
-            -(resolution.y * camera_scale) * 0.5,
-            (resolution.y * camera_scale) * 0.5,
+            -(resolution.y * camera_zoom) * 0.5,
+            (resolution.y * camera_zoom) * 0.5,
             pos.y));
     return vec2(x, y);
 }

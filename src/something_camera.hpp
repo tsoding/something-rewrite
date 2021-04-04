@@ -7,7 +7,7 @@ struct Camera
 
     V2<float> pos;
     V2<float> vel;
-    float z;
+    float zoom;
 
     void update(Seconds dt);
 };

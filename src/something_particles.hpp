@@ -3,7 +3,7 @@
 
 struct Particles
 {
-    static constexpr size_t CAPACITY = 100;
+    static constexpr size_t CAPACITY = 10;
     static constexpr float MIN_MAG = 1.0f;
     static constexpr float MAX_MAG = 10.0f;
     static constexpr float SIZE = 100.0f;

@@ -13,7 +13,7 @@ struct Program {
     GLuint u_resolution;
     GLuint u_time;
     GLuint u_camera_position;
-    GLuint u_camera_scale;
+    GLuint u_camera_zoom;
 
     static Program load_from_shader_files(const char *vert_shader_path,
                                           const char *frag_shader_path);

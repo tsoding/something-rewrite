@@ -99,7 +99,7 @@ bool Program::reload()
     u_atlas           = glGetUniformLocation(program, "atlas");
     u_resolution      = glGetUniformLocation(program, "resolution");
     u_camera_position = glGetUniformLocation(program, "camera_position");
-    u_camera_scale    = glGetUniformLocation(program, "camera_scale");
+    u_camera_zoom     = glGetUniformLocation(program, "camera_zoom");
     u_time            = glGetUniformLocation(program, "time");
 
     failed = false;
