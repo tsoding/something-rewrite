@@ -1,63 +1,5 @@
 #include "./something_renderer.hpp"
 
-bool Renderer::gl_compile_shader_file(const char *file_path, GLenum shader_type, GLuint *shader)
-{
-    const auto source = unwrap_or_panic(
-                            read_file_as_string_view(file_path, &shader_buffer),
-                            "Could not read file `", file_path, "`: ",
-                            strerror(errno));
-    const GLint source_size = static_cast<GLint>(source.count);
-
-    *shader = glCreateShader(shader_type);
-    glShaderSource(*shader, 1, &source.data, &source_size);
-    glCompileShader(*shader);
-
-    GLint compiled;
-    glGetShaderiv(*shader, GL_COMPILE_STATUS, &compiled);
-    if (compiled != GL_TRUE) {
-        GLchar log[1024];
-        GLsizei log_size = 0;
-        glGetShaderInfoLog(*shader, sizeof(log), &log_size, log);
-
-        const String_View log_sv = {
-            (size_t) log_size,
-            log
-        };
-
-        println(stderr, "Failed to compile ", file_path, ":", log_sv);
-        return false;
-    }
-
-    return true;
-}
-
-bool Renderer::gl_link_program(GLuint *shader, size_t shader_size, GLuint *program)
-{
-    *program = glCreateProgram();
-
-    for (size_t i = 0; i < shader_size; ++i) {
-        glAttachShader(*program, shader[i]);
-    }
-    glLinkProgram(*program);
-
-    GLint linked = 0;
-    glGetProgramiv(*program, GL_LINK_STATUS, &linked);
-    if (linked != GL_TRUE) {
-        GLsizei log_size = 0;
-        GLchar log[1024];
-        glGetProgramInfoLog(*program, sizeof(log), &log_size, log);
-
-        const String_View log_sv = {
-            (size_t) log_size,
-            log
-        };
-
-        panic("Failed to link the shader program: ", log_sv);
-    }
-
-    return program;
-}
-
 void Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 {
     Triangle<GLfloat> lower, upper;
@@ -83,50 +25,8 @@ void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLf
     batch_buffer_size += 1;
 }
 
-bool Renderer::reload_shaders()
+void Renderer::init()
 {
-    rect_program_failed = true;
-
-    println(stderr, "LOG: compiling the shader program");
-    glDeleteProgram(rect_program);
-    // Compiling The Shader Program
-    {
-        GLuint shaders[2] = {0};
-
-        if (!gl_compile_shader_file(vert_shader_path, GL_VERTEX_SHADER, shaders)) {
-            return false;
-        }
-
-        if (!gl_compile_shader_file(frag_shader_path, GL_FRAGMENT_SHADER, shaders + 1)) {
-            return false;
-        }
-
-        if (!gl_link_program(shaders, sizeof(shaders) / sizeof(shaders[0]), &rect_program)) {
-            return false;
-        }
-    }
-    glUseProgram(rect_program);
-
-    // Uniforms
-    u_atlas           = glGetUniformLocation(rect_program, "atlas");
-    u_resolution      = glGetUniformLocation(rect_program, "resolution");
-    u_camera_position = glGetUniformLocation(rect_program, "camera_position");
-    u_camera_scale    = glGetUniformLocation(rect_program, "camera_scale");
-    u_time            = glGetUniformLocation(rect_program, "time");
-
-    rect_program_failed = false;
-
-    return true;
-}
-
-void Renderer::init(const char *vert_shader_path, const char *frag_shader_path)
-{
-    this->vert_shader_path = vert_shader_path;
-    this->frag_shader_path = frag_shader_path;
-
-    // Compiling The Shader Program
-    reload_shaders();
-
     println(stderr, "LOG: initializing vertex position attribute");
     // Initializing Vertex Position Attribute
     {
@@ -220,30 +120,27 @@ void Renderer::init(const char *vert_shader_path, const char *frag_shader_path)
 
 void Renderer::present()
 {
-    if (!rect_program_failed) {
-        glBindBuffer(GL_ARRAY_BUFFER, triangles_buffer_id);
-        glBufferSubData(GL_ARRAY_BUFFER,
-                        0,
-                        sizeof(triangles_buffer[0]) * batch_buffer_size,
-                        triangles_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, triangles_buffer_id);
+    glBufferSubData(GL_ARRAY_BUFFER,
+                    0,
+                    sizeof(triangles_buffer[0]) * batch_buffer_size,
+                    triangles_buffer);
 
-        glBindBuffer(GL_ARRAY_BUFFER, colors_buffer_id);
-        glBufferSubData(GL_ARRAY_BUFFER,
-                        0,
-                        sizeof(colors_buffer[0]) * batch_buffer_size,
-                        colors_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, colors_buffer_id);
+    glBufferSubData(GL_ARRAY_BUFFER,
+                    0,
+                    sizeof(colors_buffer[0]) * batch_buffer_size,
+                    colors_buffer);
 
-        glBindBuffer(GL_ARRAY_BUFFER, uv_buffer_id);
-        glBufferSubData(GL_ARRAY_BUFFER,
-                        0,
-                        sizeof(uv_buffer[0]) * batch_buffer_size,
-                        uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer_id);
+    glBufferSubData(GL_ARRAY_BUFFER,
+                    0,
+                    sizeof(uv_buffer[0]) * batch_buffer_size,
+                    uv_buffer);
 
-        glUniform2f(u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
-        glDrawArrays(GL_TRIANGLES,
-                     0,
-                     static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
-    }
+    glDrawArrays(GL_TRIANGLES,
+                 0,
+                 static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
 
     batch_buffer_size = 0;
 }

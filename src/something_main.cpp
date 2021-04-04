@@ -1,3 +1,4 @@
+#include "./something_program.hpp"
 #include "./something_game.hpp"
 
 const Seconds DELTA_TIME_SECS = 1.0f / static_cast<Seconds>(SCREEN_FPS);
@@ -92,15 +93,19 @@ int main(int argc, char *argv[])
     defer(delete game);
     game->init(window);
 
+    Program program = Program::load_from_shader_files(
+                          "./assets/shaders/rect.vert",
+                          "./assets/shaders/rect.frag");
+
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
-    renderer->init("./assets/shaders/rect.vert", "./assets/shaders/rect.frag");
+    renderer->init();
 
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
-                renderer->reload_shaders();
+                program.reload();
             } else {
                 game->handle_event(&event);
             }
@@ -116,7 +121,7 @@ int main(int argc, char *argv[])
             glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
 
-        if (renderer->rect_program_failed) {
+        if (program.failed) {
             glClearColor(FAILED_BACKGROUND_COLOR.r,
                          FAILED_BACKGROUND_COLOR.g,
                          FAILED_BACKGROUND_COLOR.b,
@@ -131,12 +136,12 @@ int main(int argc, char *argv[])
 
         game->render(renderer);
 
-        renderer->present();
-
-        if (!renderer->rect_program_failed) {
-            glUniform2f(renderer->u_camera_position, game->camera.pos.x, game->camera.pos.y);
-            glUniform1f(renderer->u_camera_scale, game->camera.z / Camera::DISTANCE);
-            glUniform1f(renderer->u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+        if (!program.failed) {
+            glUniform2f(program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glUniform2f(program.u_camera_position, game->camera.pos.x, game->camera.pos.y);
+            glUniform1f(program.u_camera_scale, game->camera.z / Camera::DISTANCE);
+            glUniform1f(program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            renderer->present();
         }
 
         SDL_GL_SwapWindow(window);
