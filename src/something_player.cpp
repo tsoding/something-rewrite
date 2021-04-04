@@ -17,8 +17,13 @@ void Player::render(const Game *game, Renderer *renderer) const
     // Player body
     {
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-        if (direction == Direction::Left) {
-            uv = uv.flip_horizontally();
+
+        {
+            const float pi = static_cast<float>(M_PI);
+            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
+            if (0.5f <= a && a <= 1.5f) {
+                uv = uv.flip_horizontally();
+            }
         }
 
         renderer->fill_rect(player_hitbox(pos), RGBA(1.0f), uv);
@@ -43,8 +48,12 @@ void Player::teleport(Game *game)
     Triangle<GLfloat> lower_uv, upper_uv;
     {
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-        if (direction == Direction::Left) {
-            uv = uv.flip_horizontally();
+        {
+            const float pi = static_cast<float>(M_PI);
+            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
+            if (0.5f <= a && a <= 1.5f) {
+                uv = uv.flip_horizontally();
+            }
         }
 
         uv.split_into_triangles(&lower_uv, &upper_uv);
@@ -65,18 +74,22 @@ void Player::update(Game *game, Seconds dt)
         V2(1.0f, 1.0f),
         V2(0.0f, 1.0f),
         V2(1.0f, 0.0f),
-        V2(0.0f, 0.0f)
     };
     constexpr size_t ps_count = sizeof(ps) / sizeof(ps[0]);
 
-    for (size_t i = 0; i < ps_count; ++i) {
-        const auto new_vel = vel * ps[i];
-        const auto new_pos = pos + new_vel * dt;
-        if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
-            pos = new_pos;
-            vel = new_vel;
-            return;
+    const size_t MAX_ATTEMPTS = 8;
+
+    for (size_t attempt = 0; attempt < MAX_ATTEMPTS; ++attempt) {
+        for (size_t i = 0; i < ps_count; ++i) {
+            const auto new_vel = vel * ps[i];
+            const auto new_pos = pos + new_vel * dt;
+            if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
+                pos = new_pos;
+                vel = new_vel;
+                return;
+            }
         }
+        vel *= 0.5f;
     }
 }
 
@@ -91,11 +104,9 @@ void Player::move(Direction direction)
     switch(direction) {
     case Direction::Left:
         vel.x = -PLAYER_SPEED;
-        this->direction = direction;
         break;
     case Direction::Right:
         vel.x = PLAYER_SPEED;
-        this->direction = direction;
         break;
     default:
         unreachable("Player::move()");

@@ -208,12 +208,6 @@ void Game::render(Renderer *renderer) const
             poof.render(renderer);
             projectiles.render(renderer);
 
-            const float MOUSE_PROBE_SIZE = 50.0f;
-            renderer->fill_rect(AABB(mouse_world - V2(MOUSE_PROBE_SIZE * 0.5f),
-                                     V2(MOUSE_PROBE_SIZE)),
-                                RGBA::RED(),
-                                atlas.uvs.data[0]);
-
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);

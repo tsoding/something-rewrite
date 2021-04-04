@@ -34,7 +34,6 @@ struct Player {
 
     V2<float> pos;
     V2<float> vel;
-    Direction direction;
     float gun_angle;
 
     void render(const Game *game, Renderer *renderer) const;

@@ -70,6 +70,14 @@ V2<T> &operator+=(V2<T> &a, V2<T> b)
 }
 
 template <typename T>
+V2<T> &operator*=(V2<T> &a, T s)
+{
+    a.x *= s;
+    a.y *= s;
+    return a;
+}
+
+template <typename T>
 V2<T> &operator-=(V2<T> &a, V2<T> b)
 {
     a.x -= b.x;
@@ -239,6 +247,11 @@ template <typename T>
 void print1(FILE *stream, AABB<T> aabb)
 {
     print(stream, "AABB(", aabb.pos, ",", aabb.size, ")");
+}
+
+float fmodulof(float a, float b)
+{
+    return fmodf(fmodf(a, b) + b, b);
 }
 
 #endif  // SOMETHING_V2_HPP_
