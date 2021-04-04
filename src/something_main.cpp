@@ -1,3 +1,4 @@
+#include "./something_program.hpp"
 #include "./something_game.hpp"
 
 const Seconds DELTA_TIME_SECS = 1.0f / static_cast<Seconds>(SCREEN_FPS);
@@ -100,7 +101,8 @@ int main(int argc, char *argv[])
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
-                renderer->reload_shaders();
+                game->regular_program.reload();
+                game->particle_program.reload();
             } else {
                 game->handle_event(&event);
             }
@@ -116,7 +118,7 @@ int main(int argc, char *argv[])
             glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
 
-        if (renderer->rect_program_failed) {
+        if (game->regular_program.failed || game->particle_program.failed) {
             glClearColor(FAILED_BACKGROUND_COLOR.r,
                          FAILED_BACKGROUND_COLOR.g,
                          FAILED_BACKGROUND_COLOR.b,
@@ -130,14 +132,6 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
         game->render(renderer);
-
-        renderer->present();
-
-        if (!renderer->rect_program_failed) {
-            glUniform2f(renderer->u_camera_position, game->camera.pos.x, game->camera.pos.y);
-            glUniform1f(renderer->u_camera_scale, game->camera.z / Camera::DISTANCE);
-            glUniform1f(renderer->u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-        }
 
         SDL_GL_SwapWindow(window);
 

@@ -7,6 +7,8 @@
 #include "./something_tile_grid.hpp"
 #include "./something_poof.hpp"
 #include "./something_projectiles.hpp"
+#include "./something_program.hpp"
+#include "./something_particles.hpp"
 
 struct Game
 {
@@ -15,12 +17,18 @@ struct Game
     const Uint8 *keyboard;
     SDL_Window *window;
 
+    // Programs
+    Program regular_program;
+    Program particle_program;
+
+    // Game Entities
     Atlas atlas;
     Player player;
     Camera camera;
     Tile_Grid tile_grid;
     Poof poof;
     Projectiles projectiles;
+    Particles particles;
 
     V2<float> mouse;
 

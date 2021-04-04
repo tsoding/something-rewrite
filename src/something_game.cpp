@@ -15,24 +15,48 @@ void Game::init(SDL_Window *window)
 
     this->window = window;
 
-    for (int i = 0; i < 10; ++i) {
-        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i)));
-        if (tile) {
-            tile->wall = true;
+    // Shader Programs
+    {
+        regular_program = Program::load_from_shader_files(
+                              "./assets/shaders/rect.vert",
+                              "./assets/shaders/rect.frag");
+
+        particle_program = Program::load_from_shader_files(
+                               "./assets/shaders/rect.vert",
+                               "./assets/shaders/particle.frag");
+
+    }
+
+    // Testing tiles
+    {
+        for (int i = 0; i < 10; ++i) {
+            auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i)));
+            if (tile) {
+                tile->wall = true;
+            }
+        }
+
+        for (int i = 10; i < 20; ++i) {
+            auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i, 10)));
+            if (tile) {
+                tile->wall = true;
+            }
+        }
+
+        for (int i = 10; i < 20; ++i) {
+            auto tile = this->tile_grid.get_tile(Tile_Coord(V2(20, i)));
+            if (tile) {
+                tile->wall = true;
+            }
         }
     }
 
-    for (int i = 10; i < 20; ++i) {
-        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(i, 10)));
-        if (tile) {
-            tile->wall = true;
-        }
-    }
-
-    for (int i = 10; i < 20; ++i) {
-        auto tile = this->tile_grid.get_tile(Tile_Coord(V2(20, i)));
-        if (tile) {
-            tile->wall = true;
+    // Particles
+    {
+        const float MAX_PARTICLE_REGION = 500.0f;
+        for (size_t i = 0; i < Particles::CAPACITY; ++i) {
+            particles.push(V2(lerp(0.0f, MAX_PARTICLE_REGION, random01()),
+                              lerp(0.0f, MAX_PARTICLE_REGION, random01())));
         }
     }
 }
@@ -105,7 +129,8 @@ void Game::handle_event(const SDL_Event *event)
 
     case SDL_MOUSEBUTTONDOWN: {
         player.shoot(this);
-    } break;
+    }
+    break;
     }
 }
 
@@ -148,29 +173,41 @@ void Game::update(Seconds dt)
     {
         projectiles.update(this, dt);
     }
+
+    // Particles
+    {
+        particles.update(dt);
+    }
 }
 
 void Game::render(Renderer *renderer) const
 {
-    tile_grid.render(this, renderer);
-    player.render(this, renderer);
-    poof.render(renderer);
-    projectiles.render(renderer);
+    if (!regular_program.failed && !particle_program.failed) {
+        // Regular things
+        {
+            tile_grid.render(this, renderer);
+            player.render(this, renderer);
+            poof.render(renderer);
+            projectiles.render(renderer);
+            regular_program.use();
+            glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
+            glUniform1f(regular_program.u_camera_scale, camera.z / Camera::DISTANCE);
+            glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            renderer->draw();
+            renderer->clear();
+        }
 
-#if 0
-    const float MOUSE_PROBE_SIZE = 10.0f;
-
-    renderer->fill_rect(
-        AABB(mouse, V2(MOUSE_PROBE_SIZE)),
-        RGBA::RED(),
-        atlas.uvs.data[0]);
-#endif
-
-#if 0
-    renderer->fill_rect(
-        AABB(V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * -0.5f,
-             V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>()),
-        RGBA::RED(),
-        atlas.uvs.data[0]);
-#endif
+        // Particle things
+        {
+            particles.render(renderer);
+            particle_program.use();
+            glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
+            glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
+            glUniform1f(particle_program.u_camera_scale, camera.z / Camera::DISTANCE);
+            glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            renderer->draw();
+            renderer->clear();
+        }
+    }
 }
