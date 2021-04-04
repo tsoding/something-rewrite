@@ -5,7 +5,7 @@ const RGBA FAILED_BACKGROUND_COLOR = RGBA::from_abgr32(0xAA1818FF);
 
 void Game::init(SDL_Window *window)
 {
-    this->camera.z = Camera::DISTANCE;
+    this->camera.zoom = 1.0f;
 
     this->player.pos = V2(-100.0f, 0.0f);
 
@@ -91,7 +91,7 @@ V2<float> window_to_viewport(SDL_Window *window, V2<Sint32> p)
 V2<float> viewport_to_world(const Camera &camera, V2<float> p)
 {
     // TODO(#38): viewport_to_world() does not apply camera scaling
-    return p - V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * 0.5f + camera.pos;
+    return (p - V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * 0.5f) * camera.zoom + camera.pos;
 }
 
 void Game::handle_event(const SDL_Event *event)
@@ -126,6 +126,17 @@ void Game::handle_event(const SDL_Event *event)
         player.shoot(this);
     }
     break;
+
+    case SDL_MOUSEWHEEL: {
+        const float MIN_ZOOM = 1e-3f;
+        if (event->wheel.y > 0) {
+            camera.zoom *= 0.75f;
+        } else if (event->wheel.y < 0) {
+            camera.zoom *= 1.75f;
+        }
+
+        camera.zoom = max(camera.zoom, MIN_ZOOM);
+    } break;
     }
 }
 
@@ -206,7 +217,7 @@ void Game::render(Renderer *renderer) const
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
-            glUniform1f(regular_program.u_camera_scale, camera.z / Camera::DISTANCE);
+            glUniform1f(regular_program.u_camera_zoom, camera.zoom);
             glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
             renderer->draw();
             renderer->clear();
@@ -218,7 +229,7 @@ void Game::render(Renderer *renderer) const
             particle_program.use();
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
-            glUniform1f(particle_program.u_camera_scale, camera.z / Camera::DISTANCE);
+            glUniform1f(particle_program.u_camera_zoom, camera.zoom);
             glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
             renderer->draw();
             renderer->clear();
