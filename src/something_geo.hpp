@@ -249,4 +249,9 @@ void print1(FILE *stream, AABB<T> aabb)
     print(stream, "AABB(", aabb.pos, ",", aabb.size, ")");
 }
 
+float fmodulof(float a, float b)
+{
+    return fmodf(fmodf(a, b) + b, b);
+}
+
 #endif  // SOMETHING_V2_HPP_

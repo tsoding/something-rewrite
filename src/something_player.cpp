@@ -17,8 +17,13 @@ void Player::render(const Game *game, Renderer *renderer) const
     // Player body
     {
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-        if (direction == Direction::Left) {
-            uv = uv.flip_horizontally();
+
+        {
+            const float pi = static_cast<float>(M_PI);
+            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
+            if (0.5f <= a && a <= 1.5f) {
+                uv = uv.flip_horizontally();
+            }
         }
 
         renderer->fill_rect(player_hitbox(pos), RGBA(1.0f), uv);
@@ -43,8 +48,12 @@ void Player::teleport(Game *game)
     Triangle<GLfloat> lower_uv, upper_uv;
     {
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-        if (direction == Direction::Left) {
-            uv = uv.flip_horizontally();
+        {
+            const float pi = static_cast<float>(M_PI);
+            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
+            if (0.5f <= a && a <= 1.5f) {
+                uv = uv.flip_horizontally();
+            }
         }
 
         uv.split_into_triangles(&lower_uv, &upper_uv);
@@ -95,11 +104,9 @@ void Player::move(Direction direction)
     switch(direction) {
     case Direction::Left:
         vel.x = -PLAYER_SPEED;
-        this->direction = direction;
         break;
     case Direction::Right:
         vel.x = PLAYER_SPEED;
-        this->direction = direction;
         break;
     default:
         unreachable("Player::move()");
