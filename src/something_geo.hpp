@@ -37,14 +37,14 @@ struct V2 {
 
 
     template <typename U>
-    V2<U> cast_to()
+    V2<U> cast_to() const
     {
         return V2<U>(static_cast<U>(x),
                      static_cast<U>(y));
     }
 
     template <typename U>
-    V2<U> map(U (*f)(T))
+    V2<U> map(U (*f)(T)) const
     {
         return V2<U>(f(x), f(y));
     }
