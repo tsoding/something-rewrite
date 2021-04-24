@@ -2,10 +2,14 @@
 #define SOMETHING_TILE_GRID_HPP_
 
 struct Tile {
-    static constexpr float SIZE = 64.0f;
+    static constexpr float SIZE = 128.0f;
 
     bool wall;
 };
+
+struct Mem_Coord;
+struct Tile_Coord;
+struct World_Coord;
 
 struct Mem_Coord {
     V2<int> unwrap;
@@ -13,6 +17,8 @@ struct Mem_Coord {
     Mem_Coord(V2<int> v2):
         unwrap(v2)
     {}
+
+    Tile_Coord to_tile() const;
 };
 
 struct Tile_Coord {
@@ -23,6 +29,7 @@ struct Tile_Coord {
     {}
 
     Mem_Coord to_mem() const;
+    World_Coord to_world() const;
 };
 
 struct World_Coord {

@@ -1,0 +1,23 @@
+- https://opengameart.org/content/fantasy-tiles
+- https://opengameart.org/content/walking-animation
+- https://opengameart.org/content/assorted-fireballs-and-effects
+- https://design.ubuntu.com/font/
+- https://opengameart.org/content/cute-cartoon-jump-sound-effect
+- https://opengameart.org/content/flatshot-complete-sfx-pack
+  - enemy_shot.wav
+- https://opengameart.org/content/jump-and-run-and-stand
+  - jump.wav
+- https://opengameart.org/content/jumping-man-sounds
+- https://opengameart.org/content/ascii-bitmap-font-oldschool
+  - charmap-oldschool.bmp
+- https://gamepedia.cursecdn.com/minecraft_gamepedia/e/e8/Fallbig1.ogg
+- https://gamepedia.cursecdn.com/minecraft_gamepedia/c/cf/Hurt_Old.ogg
+- https://opengameart.org/content/forest-background
+- https://opengameart.org/content/walking-ice-golem
+- https://opengameart.org/content/fireball-projectile
+- https://opengameart.org/content/rock-projectile-0
+- https://opengameart.org/content/water-splash-yo-frankie
+- https://opengameart.org/content/fireball-1
+- https://opengameart.org/content/mech-stomp-step-sound
+- https://opengameart.org/content/crystals-0
+- https://opengameart.org/content/futuristic-gun

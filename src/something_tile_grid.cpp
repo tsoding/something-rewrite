@@ -2,22 +2,46 @@
 
 void Tile_Grid::render(const Game *game, Renderer *renderer) const
 {
+    const size_t GRASS_INDEX = 8;
+    const size_t DIRT_INDEX = 9;
+
     for (size_t y = 0; y < ROWS; ++y) {
         for (size_t x = 0; x < COLS; ++x) {
             if (tiles[y][x].wall) {
-                const auto tile_pos = (V2(x, y) - V2(QUAD_COLS, QUAD_ROWS)).cast_to<float>() * Tile::SIZE;
+                const auto tile_coord = Mem_Coord(V2(x, y).cast_to<int>()).to_tile();
                 const AABB<float> tile_aabb =
-                    AABB(tile_pos,
+                    AABB(tile_coord.to_world().unwrap,
                          V2(Tile::SIZE));
-                renderer->fill_rect(tile_aabb, RGBA::BLUE(), game->atlas.uvs.data[0]);
+                const auto tile = get_tile(Tile_Coord(tile_coord.unwrap + V2(0, 1)));
+                if (tile && tile->wall) {
+                    renderer->fill_rect(
+                        tile_aabb,
+                        RGBA::WHITE(),
+                        game->atlas.uvs.data[DIRT_INDEX].flip_vertically());
+                } else {
+                    renderer->fill_rect(
+                        tile_aabb,
+                        RGBA::WHITE(),
+                        game->atlas.uvs.data[GRASS_INDEX].flip_vertically());
+                }
             }
         }
     }
 }
 
+Tile_Coord Mem_Coord::to_tile() const
+{
+    return Tile_Coord(unwrap.cast_to<int>() - V2(Tile_Grid::QUAD_COLS, Tile_Grid::QUAD_ROWS).cast_to<int>());
+}
+
 Mem_Coord Tile_Coord::to_mem() const
 {
     return Mem_Coord(unwrap + V2(Tile_Grid::QUAD_ROWS, Tile_Grid::QUAD_COLS).cast_to<int>());
+}
+
+World_Coord Tile_Coord::to_world() const
+{
+    return unwrap.cast_to<float>() * Tile::SIZE;
 }
 
 Tile_Coord World_Coord::to_tile() const
