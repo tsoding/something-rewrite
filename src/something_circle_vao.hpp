@@ -1,9 +1,9 @@
-#ifndef SOMETHING_CIRCLE_RENDERER
-#define SOMETHING_CIRCLE_RENDERER
+#ifndef SOMETHING_CIRCLE_VAO_HPP_
+#define SOMETHING_CIRCLE_VAO_HPP_
 
 #include "./something_rgba.hpp"
 
-struct Circle_Renderer {
+struct Circle_VAO {
     static const size_t CAPACITY = 1024;
 
     enum Attrib: int {
@@ -31,4 +31,4 @@ struct Circle_Renderer {
     void clear();
 };
 
-#endif // SOMETHING_CIRCLE_RENDERER
+#endif // SOMETHING_CIRCLE_VAO_HPP_

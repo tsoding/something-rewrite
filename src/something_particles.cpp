@@ -18,9 +18,9 @@ void Particles::update(Seconds delta_time)
     }
 }
 
-void Particles::render(Circle_Renderer *circle_renderer) const
+void Particles::render(Circle_VAO *circle_vao) const
 {
     for (size_t i = 0; i < count; ++i) {
-        circle_renderer->fill_circle(positions[i], SIZE, COLOR);
+        circle_vao->fill_circle(positions[i], SIZE, COLOR);
     }
 }

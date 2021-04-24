@@ -200,7 +200,7 @@ void Game::update(Seconds dt)
 }
 
 void Game::render(Triangle_VAO *triangle_vao,
-                  Circle_Renderer *circle_renderer) const
+                  Circle_VAO *circle_vao) const
 {
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things
@@ -221,14 +221,14 @@ void Game::render(Triangle_VAO *triangle_vao,
 
         // Particle things
         {
-            particles.render(circle_renderer);
+            particles.render(circle_vao);
             particle_program.use();
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
             glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            circle_renderer->draw();
-            circle_renderer->clear();
+            circle_vao->draw();
+            circle_vao->clear();
         }
     }
 }

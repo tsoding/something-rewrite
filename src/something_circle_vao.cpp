@@ -1,6 +1,6 @@
-#include "./something_circle_renderer.hpp"
+#include "./something_circle_vao.hpp"
 
-void Circle_Renderer::init()
+void Circle_VAO::init()
 {
     vbo_element_size[ATTRIB_CENTER] = sizeof(centers[0]);
     vbo_element_size[ATTRIB_RADIUS] = sizeof(radii[0]);
@@ -42,7 +42,7 @@ void Circle_Renderer::init()
     }
 }
 
-void Circle_Renderer::sync_buffers()
+void Circle_VAO::sync_buffers()
 {
     for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
@@ -53,7 +53,7 @@ void Circle_Renderer::sync_buffers()
     }
 }
 
-void Circle_Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
+void Circle_VAO::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
 {
     // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
     // Crash can help to troubleshoot disappearing triangles problem in the future.
@@ -64,7 +64,7 @@ void Circle_Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color
     count += 1;
 }
 
-void Circle_Renderer::draw()
+void Circle_VAO::draw()
 {
     glBindVertexArray(vao_id);
 
@@ -76,7 +76,7 @@ void Circle_Renderer::draw()
                              static_cast<GLsizei>(count));
 }
 
-void Circle_Renderer::clear()
+void Circle_VAO::clear()
 {
     count = 0;
 }

@@ -1,7 +1,7 @@
 #ifndef SOMETHING_PARTICLES_HPP_
 #define SOMETHING_PARTICLES_HPP_
 
-#include "./something_circle_renderer.hpp"
+#include "./something_circle_vao.hpp"
 
 struct Particles
 {
@@ -18,7 +18,7 @@ struct Particles
 
     void push(V2<float> position);
     void update(Seconds delta_time);
-    void render(Circle_Renderer *renderer) const;
+    void render(Circle_VAO *renderer) const;
 };
 
 #endif // SOMETHING_PARTICLES_HPP_
