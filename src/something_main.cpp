@@ -103,6 +103,10 @@ int main(int argc, char *argv[])
     defer(delete game);
     game->init(window);
 
+    Circle_Renderer *circle_renderer = new Circle_Renderer{};
+    defer(delete circle_renderer);
+    circle_renderer->init();
+
     Triangle_Renderer *renderer = new Triangle_Renderer{};
     defer(delete renderer);
     renderer->init();

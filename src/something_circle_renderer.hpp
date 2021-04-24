@@ -26,6 +26,7 @@ struct Circle_Renderer {
 
     void init();
     void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color);
+    void sync_buffers();
     void draw();
     void clear();
 };
