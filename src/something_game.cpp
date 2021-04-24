@@ -226,14 +226,18 @@ void Game::render(Triangle_VAO *triangle_vao,
 
         // Particle things
         {
+            circle_vao->use();
+            circle_vao->clear();
             particles.render(circle_vao);
+            circle_vao->sync_buffers();
+
             particle_program.use();
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
             glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+
             circle_vao->draw();
-            circle_vao->clear();
         }
     }
 }

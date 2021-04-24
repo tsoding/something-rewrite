@@ -63,11 +63,13 @@ void Circle_VAO::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
     }
 }
 
-void Circle_VAO::draw()
+void Circle_VAO::use()
 {
     glBindVertexArray(vao_id);
+}
 
-    sync_buffers();
+void Circle_VAO::draw()
+{
     const size_t QUAD_COMPONENTS = 4;
     glDrawArraysInstancedARB(GL_TRIANGLE_STRIP,
                              0,

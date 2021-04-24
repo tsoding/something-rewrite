@@ -25,6 +25,7 @@ struct Circle_VAO {
     size_t count;
 
     void init();
+    void use();
     void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color);
     void sync_buffers();
     void draw();
