@@ -21,7 +21,7 @@ struct Projectiles
     Seconds lifetimes[CAPACITY];
 
     void update(Game *game, Seconds dt);
-    void render(Triangle_VAO *renderer) const;
+    void render(Triangle_VAO *triangle_vao) const;
 
     void push(V2<float> pos, V2<float> vel);
 };

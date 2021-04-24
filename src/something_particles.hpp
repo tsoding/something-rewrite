@@ -18,7 +18,7 @@ struct Particles
 
     void push(V2<float> position);
     void update(Seconds delta_time);
-    void render(Circle_VAO *renderer) const;
+    void render(Circle_VAO *circle_vao) const;
 };
 
 #endif // SOMETHING_PARTICLES_HPP_

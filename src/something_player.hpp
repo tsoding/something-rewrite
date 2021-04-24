@@ -37,7 +37,7 @@ struct Player {
     V2<float> vel;
     float gun_angle;
 
-    void render(const Game *game, Triangle_VAO *renderer) const;
+    void render(const Game *game, Triangle_VAO *triangle_vao) const;
     void update(Game *game, Seconds dt);
 
     void jump();

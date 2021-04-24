@@ -107,9 +107,9 @@ int main(int argc, char *argv[])
     defer(delete circle_vao);
     circle_vao->init();
 
-    Triangle_VAO *triangle_renderer = new Triangle_VAO{};
-    defer(delete triangle_renderer);
-    triangle_renderer->init();
+    Triangle_VAO *triangle_vao = new Triangle_VAO{};
+    defer(delete triangle_vao);
+    triangle_vao->init();
 
     while (!game->quit) {
         SDL_Event event;
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
         }
         glClear(GL_COLOR_BUFFER_BIT);
 
-        game->render(triangle_renderer, circle_vao);
+        game->render(triangle_vao, circle_vao);
 
         SDL_GL_SwapWindow(window);
 

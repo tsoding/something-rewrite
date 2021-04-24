@@ -24,7 +24,7 @@ struct Poof {
               RGBA shade,
               Triangle<float> uv);
     void update(Seconds dt);
-    void render(Triangle_VAO *renderer) const;
+    void render(Triangle_VAO *triangle_vao) const;
 };
 
 size_t longest_side(Triangle<float> tri)
