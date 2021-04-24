@@ -21,6 +21,8 @@ float random01()
 
 // 2D Vector //////////////////////////////
 
+const size_t V2_COMPONENTS = 2;
+
 template <typename T>
 struct V2 {
     T x, y;
@@ -129,7 +131,7 @@ void print1(FILE *stream, V2<T> v2)
 
 // Triangle //////////////////////////////
 
-static constexpr size_t TRIANGLE_VERT_COUNT = 3;
+const size_t TRIANGLE_VERT_COUNT = 3;
 
 template <typename T>
 struct Triangle {
@@ -141,6 +143,10 @@ struct Triangle {
         vs {a, b, c}
     {}
 };
+
+static_assert(
+    sizeof(Triangle<GLfloat>) == sizeof(GLfloat) * V2_COMPONENTS * TRIANGLE_VERT_COUNT,
+    "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the Triangle structure");
 
 Triangle<float> equilateral_triangle(V2<float> center, float radius, float angle);
 

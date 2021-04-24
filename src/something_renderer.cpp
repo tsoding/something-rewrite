@@ -27,89 +27,35 @@ void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLf
 
 void Renderer::init()
 {
-    println(stderr, "LOG: initializing vertex position attribute");
-    // Initializing Vertex Position Attribute
-    {
-        const size_t V2_COMPONENTS = 2;
-        glGenBuffers(1, &triangles_buffer_id);
-        glBindBuffer(GL_ARRAY_BUFFER, triangles_buffer_id);
-        {
-            const size_t TRIANGLE_VERTICES = 3;
-            static_assert(
-                sizeof(triangles_buffer) == sizeof(GLfloat) * V2_COMPONENTS * TRIANGLE_VERTICES * BATCH_BUFFER_CAPACITY,
-                "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the Triangle or V2 structures");
-        }
+    vbo_element_size[TRIANGLE_ATTRIB] = sizeof(triangles_buffer[0]);
+    vbo_element_size[COLORS_ATTRIB] = sizeof(colors_buffer[0]);
+    vbo_element_size[UV_ATTRIB] = sizeof(uv_buffer[0]);
+    static_assert(COUNT_ATTRIBS == 3);
+
+    vbo_datas[TRIANGLE_ATTRIB] = triangles_buffer;
+    vbo_datas[COLORS_ATTRIB] = colors_buffer;
+    vbo_datas[UV_ATTRIB] = uv_buffer;
+    static_assert(COUNT_ATTRIBS == 3);
+
+    attrib_size[TRIANGLE_ATTRIB] = V2_COMPONENTS;
+    attrib_size[COLORS_ATTRIB] = RGBA_COMPONENTS;
+    attrib_size[UV_ATTRIB] = V2_COMPONENTS;
+    static_assert(COUNT_ATTRIBS == 3);
+
+    glGenVertexArrays(1, &vao_id);
+    glGenBuffers(COUNT_ATTRIBS, vbo_ids);
+
+    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(triangles_buffer),
-                     triangles_buffer,
+                     vbo_element_size[attrib] * BATCH_BUFFER_CAPACITY,
+                     vbo_datas[attrib],
                      GL_DYNAMIC_DRAW);
-        const GLint vertex_position = 1;
-        println(stderr, "vertex_position: ", vertex_position);
-        glEnableVertexAttribArray(vertex_position);
+        glEnableVertexAttribArray(attrib);
 
         glVertexAttribPointer(
-            vertex_position,    // index
-            V2_COMPONENTS,      // numComponents
-            GL_FLOAT,           // type
-            0,                  // normalized
-            0,                  // stride
-            0                   // offset
-        );
-    }
-
-    println(stderr, "LOG: initializing vertex color attribute");
-    // Initializing Vertex Color Attribute
-    {
-        const size_t RGBA_COMPONENTS = 4;
-        glGenBuffers(1, &colors_buffer_id);
-        glBindBuffer(GL_ARRAY_BUFFER, colors_buffer_id);
-        {
-            const size_t TRIANGLE_VERTICES = 3;
-            static_assert(
-                sizeof(colors_buffer) == sizeof(GLfloat) * RGBA_COMPONENTS * TRIANGLE_VERTICES * BATCH_BUFFER_CAPACITY,
-                "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the RGBA structure");
-        }
-        glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(colors_buffer),
-                     colors_buffer,
-                     GL_DYNAMIC_DRAW);
-        const GLint vertex_color = 2;
-        println(stderr, "vertex_color: ", vertex_color);
-
-        glEnableVertexAttribArray(vertex_color);
-        glVertexAttribPointer(
-            vertex_color,       // index
-            RGBA_COMPONENTS,    // numComponents
-            GL_FLOAT,           // type
-            0,                  // normalized
-            0,                  // stride
-            0                   // offset
-        );
-    }
-
-    println(stderr, "LOG: initializing UV position attribute");
-    // Initializing Vertex UV Attribute
-    {
-        const size_t V2_COMPONENTS = 2;
-        glGenBuffers(1, &uv_buffer_id);
-        glBindBuffer(GL_ARRAY_BUFFER, uv_buffer_id);
-        {
-            const size_t TRIANGLE_VERTICES = 3;
-            static_assert(
-                sizeof(uv_buffer) == sizeof(GLfloat) * V2_COMPONENTS * TRIANGLE_VERTICES * BATCH_BUFFER_CAPACITY,
-                "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the Triangle or V2 structures");
-        }
-        glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(uv_buffer),
-                     uv_buffer,
-                     GL_DYNAMIC_DRAW);
-        const GLint vertex_uv = 3;
-        println(stderr, "vertex_uv: ", vertex_uv);
-        glEnableVertexAttribArray(vertex_uv);
-
-        glVertexAttribPointer(
-            vertex_uv,    // index
-            V2_COMPONENTS,      // numComponents
+            attrib,    // index
+            attrib_size[attrib],      // numComponents
             GL_FLOAT,           // type
             0,                  // normalized
             0,                  // stride
@@ -120,23 +66,13 @@ void Renderer::init()
 
 void Renderer::draw()
 {
-    glBindBuffer(GL_ARRAY_BUFFER, triangles_buffer_id);
-    glBufferSubData(GL_ARRAY_BUFFER,
-                    0,
-                    sizeof(triangles_buffer[0]) * batch_buffer_size,
-                    triangles_buffer);
-
-    glBindBuffer(GL_ARRAY_BUFFER, colors_buffer_id);
-    glBufferSubData(GL_ARRAY_BUFFER,
-                    0,
-                    sizeof(colors_buffer[0]) * batch_buffer_size,
-                    colors_buffer);
-
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer_id);
-    glBufferSubData(GL_ARRAY_BUFFER,
-                    0,
-                    sizeof(uv_buffer[0]) * batch_buffer_size,
-                    uv_buffer);
+    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
+        glBufferSubData(GL_ARRAY_BUFFER,
+                        0,
+                        vbo_element_size[attrib] * batch_buffer_size,
+                        vbo_datas[attrib]);
+    }
 
     glDrawArrays(GL_TRIANGLES,
                  0,
