@@ -1,6 +1,6 @@
 #include "./something_tile_grid.hpp"
 
-void Tile_Grid::render(const Game *game, Triangle_Renderer *renderer) const
+void Tile_Grid::render(const Game *game, Triangle_VAO *triangle_vao) const
 {
     const size_t GRASS_INDEX = 8;
     const size_t DIRT_INDEX = 9;
@@ -14,12 +14,12 @@ void Tile_Grid::render(const Game *game, Triangle_Renderer *renderer) const
                          V2(Tile::SIZE));
                 const auto tile = get_tile(Tile_Coord(tile_coord.unwrap + V2(0, 1)));
                 if (tile && tile->wall) {
-                    renderer->fill_rect(
+                    triangle_vao->fill_aabb(
                         tile_aabb,
                         RGBA::WHITE(),
                         game->atlas.uvs.data[DIRT_INDEX].flip_vertically());
                 } else {
-                    renderer->fill_rect(
+                    triangle_vao->fill_aabb(
                         tile_aabb,
                         RGBA::WHITE(),
                         game->atlas.uvs.data[GRASS_INDEX].flip_vertically());

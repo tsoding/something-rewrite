@@ -12,7 +12,7 @@ static AABB<float> player_hitbox(V2<float> pos)
     return AABB(pos - size * 0.5f, size);
 }
 
-void Player::render(const Game *game, Triangle_Renderer *renderer) const
+void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
 {
     // Player body
     {
@@ -26,14 +26,14 @@ void Player::render(const Game *game, Triangle_Renderer *renderer) const
             }
         }
 
-        renderer->fill_rect(player_hitbox(pos), RGBA(1.0f), uv);
+        triangle_vao->fill_aabb(player_hitbox(pos), RGBA(1.0f), uv);
     }
 
     // Payer gun
     {
         const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
         const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
-        renderer->fill_triangle(gun, RGBA::RED(), {});
+        triangle_vao->fill_triangle(gun, RGBA::RED(), {});
     }
 }
 

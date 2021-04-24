@@ -199,36 +199,45 @@ void Game::update(Seconds dt)
     }
 }
 
-void Game::render(Triangle_Renderer *triangle_renderer,
-                  Circle_Renderer *circle_renderer) const
+void Game::render(Triangle_VAO *triangle_vao,
+                  Circle_VAO *circle_vao) const
 {
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things
         {
-            tile_grid.render(this, triangle_renderer);
-            player.render(this, triangle_renderer);
-            poof.render(triangle_renderer);
-            projectiles.render(triangle_renderer);
+            triangle_vao->use();
+            triangle_vao->clear();
+
+            tile_grid.render(this, triangle_vao);
+            player.render(this, triangle_vao);
+            poof.render(triangle_vao);
+            projectiles.render(triangle_vao);
+
+            triangle_vao->sync_buffers();
 
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
             glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            triangle_renderer->draw();
-            triangle_renderer->clear();
+
+            triangle_vao->draw();
         }
 
         // Particle things
         {
-            particles.render(circle_renderer);
+            circle_vao->use();
+            circle_vao->clear();
+            particles.render(circle_vao);
+            circle_vao->sync_buffers();
+
             particle_program.use();
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
             glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            circle_renderer->draw();
-            circle_renderer->clear();
+
+            circle_vao->draw();
         }
     }
 }

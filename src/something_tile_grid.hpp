@@ -75,7 +75,7 @@ struct Tile_Grid {
 
     Tile tiles[ROWS][COLS];
 
-    void render(const Game *game, Triangle_Renderer *renderer) const;
+    void render(const Game *game, Triangle_VAO *triangle_vao) const;
     Tile *get_tile(Mem_Coord coord);
     Tile *get_tile(Tile_Coord coord);
     Tile *get_tile(World_Coord coord);

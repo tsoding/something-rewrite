@@ -29,11 +29,11 @@ void Projectiles::update(Game *game, Seconds dt)
     }
 }
 
-void Projectiles::render(Triangle_Renderer *renderer) const
+void Projectiles::render(Triangle_VAO *triangle_vao) const
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (states[i] == State::Aliv) {
-            renderer->fill_triangle(
+            triangle_vao->fill_triangle(
                 equilateral_triangle(
                     positions[i],
                     RADIUS,

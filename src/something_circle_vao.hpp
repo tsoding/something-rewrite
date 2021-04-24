@@ -1,12 +1,12 @@
-#ifndef SOMETHING_CIRCLE_RENDERER
-#define SOMETHING_CIRCLE_RENDERER
+#ifndef SOMETHING_CIRCLE_VAO_HPP_
+#define SOMETHING_CIRCLE_VAO_HPP_
 
 #include "./something_rgba.hpp"
 
-struct Circle_Renderer {
+struct Circle_VAO {
     static const size_t CAPACITY = 1024;
 
-    enum Attrib: int {
+    enum Attrib: GLuint {
         ATTRIB_CENTER = 0,
         ATTRIB_RADIUS,
         ATTRIB_COLOR,
@@ -25,10 +25,11 @@ struct Circle_Renderer {
     size_t count;
 
     void init();
+    void use();
     void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color);
     void sync_buffers();
     void draw();
     void clear();
 };
 
-#endif // SOMETHING_CIRCLE_RENDERER
+#endif // SOMETHING_CIRCLE_VAO_HPP_

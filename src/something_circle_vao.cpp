@@ -1,6 +1,6 @@
-#include "./something_circle_renderer.hpp"
+#include "./something_circle_vao.hpp"
 
-void Circle_Renderer::init()
+void Circle_VAO::init()
 {
     vbo_element_size[ATTRIB_CENTER] = sizeof(centers[0]);
     vbo_element_size[ATTRIB_RADIUS] = sizeof(radii[0]);
@@ -21,7 +21,7 @@ void Circle_Renderer::init()
     glBindVertexArray(vao_id);
     glGenBuffers(COUNT_ATTRIBS, vbo_ids);
 
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferData(GL_ARRAY_BUFFER,
                      vbo_element_size[attrib] * CAPACITY,
@@ -42,9 +42,9 @@ void Circle_Renderer::init()
     }
 }
 
-void Circle_Renderer::sync_buffers()
+void Circle_VAO::sync_buffers()
 {
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
                         0,
@@ -53,22 +53,23 @@ void Circle_Renderer::sync_buffers()
     }
 }
 
-void Circle_Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
+void Circle_VAO::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
 {
-    // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
-    // Crash can help to troubleshoot disappearing triangles problem in the future.
-    assert(count < CAPACITY);
-    centers[count] = center;
-    radii[count]   = radius;
-    colors[count]  = color;
-    count += 1;
+    if (count < CAPACITY) {
+        centers[count] = center;
+        radii[count]   = radius;
+        colors[count]  = color;
+        count += 1;
+    }
 }
 
-void Circle_Renderer::draw()
+void Circle_VAO::use()
 {
     glBindVertexArray(vao_id);
+}
 
-    sync_buffers();
+void Circle_VAO::draw()
+{
     const size_t QUAD_COMPONENTS = 4;
     glDrawArraysInstancedARB(GL_TRIANGLE_STRIP,
                              0,
@@ -76,7 +77,7 @@ void Circle_Renderer::draw()
                              static_cast<GLsizei>(count));
 }
 
-void Circle_Renderer::clear()
+void Circle_VAO::clear()
 {
     count = 0;
 }

@@ -2,7 +2,7 @@
 #define SOMETHING_POOF_HPP_
 
 struct Poof {
-    static constexpr Seconds LIFETIME = 5.0f;
+    static constexpr Seconds LIFETIME = 3.0f;
     static constexpr size_t CAPACITY = 1024;
     static constexpr float MAX_VELOCITY = 200.0f;
     static constexpr float MAX_ANGLE_VELOCITY = static_cast<float>(M_PI);
@@ -24,7 +24,7 @@ struct Poof {
               RGBA shade,
               Triangle<float> uv);
     void update(Seconds dt);
-    void render(Triangle_Renderer *renderer) const;
+    void render(Triangle_VAO *triangle_vao) const;
 };
 
 size_t longest_side(Triangle<float> tri)
