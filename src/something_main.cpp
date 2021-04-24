@@ -70,6 +70,16 @@ int main(int argc, char *argv[])
         panic("Could not initialize GLEW!");
     }
 
+    if (!GLEW_ARB_draw_instanced) {
+        fprintf(stderr, "Support for ARB_draw_instanced is required!\n");
+        exit(1);
+    }
+
+    if (!GLEW_ARB_instanced_arrays) {
+        fprintf(stderr, "Support for ARB_instanced_arrays is required!\n");
+        exit(1);
+    }
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
