@@ -205,18 +205,23 @@ void Game::render(Triangle_VAO *triangle_vao,
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things
         {
+            triangle_vao->use();
+            triangle_vao->clear();
+
             tile_grid.render(this, triangle_vao);
             player.render(this, triangle_vao);
             poof.render(triangle_vao);
             projectiles.render(triangle_vao);
+
+            triangle_vao->sync_buffers();
 
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
             glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+
             triangle_vao->draw();
-            triangle_vao->clear();
         }
 
         // Particle things

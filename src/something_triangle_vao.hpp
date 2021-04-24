@@ -28,6 +28,8 @@ struct Triangle_VAO {
     size_t count;
 
     void init();
+    void use();
+    void sync_buffers();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
     void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
     void draw();

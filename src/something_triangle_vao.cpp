@@ -14,15 +14,14 @@ void Triangle_VAO::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 
 void Triangle_VAO::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
 {
-    // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
-    // Crash can help to troubleshoot disappearing triangles problem in the future.
-    assert(count < CAPACITY);
-    triangles[count] = triangle;
-    colors[count][0] = rgba;
-    colors[count][1] = rgba;
-    colors[count][2] = rgba;
-    uvs[count]       = uv;
-    count += 1;
+    if(count < CAPACITY) {
+        triangles[count] = triangle;
+        colors[count][0] = rgba;
+        colors[count][1] = rgba;
+        colors[count][2] = rgba;
+        uvs[count]       = uv;
+        count += 1;
+    }
 }
 
 void Triangle_VAO::init()
@@ -65,10 +64,13 @@ void Triangle_VAO::init()
     }
 }
 
-void Triangle_VAO::draw()
+void Triangle_VAO::use()
 {
     glBindVertexArray(id);
+}
 
+void Triangle_VAO::sync_buffers()
+{
     for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
@@ -76,7 +78,10 @@ void Triangle_VAO::draw()
                         vbo_element_size[attrib] * count,
                         vbo_datas[attrib]);
     }
+}
 
+void Triangle_VAO::draw()
+{
     glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(count) * TRIANGLE_VERT_COUNT);
 }
 

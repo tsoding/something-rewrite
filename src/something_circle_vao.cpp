@@ -55,13 +55,12 @@ void Circle_VAO::sync_buffers()
 
 void Circle_VAO::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
 {
-    // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
-    // Crash can help to troubleshoot disappearing triangles problem in the future.
-    assert(count < CAPACITY);
-    centers[count] = center;
-    radii[count]   = radius;
-    colors[count]  = color;
-    count += 1;
+    if (count < CAPACITY) {
+        centers[count] = center;
+        radii[count]   = radius;
+        colors[count]  = color;
+        count += 1;
+    }
 }
 
 void Circle_VAO::draw()
