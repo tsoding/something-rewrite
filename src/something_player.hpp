@@ -2,7 +2,7 @@
 #define SOMETHING_PLAYER_HPP_
 
 #include "./something_geo.hpp"
-#include "./something_renderer.hpp"
+#include "./something_triangle_renderer.hpp"
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"
 
@@ -27,8 +27,9 @@ struct Game;
 
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
-    static constexpr size_t ATLAS_INDEX = 3;
+    // static constexpr size_t ATLAS_INDEX = 3;
     // static constexpr size_t ATLAS_INDEX = 7;
+    static constexpr size_t ATLAS_INDEX = 10;
     static constexpr float PROJECTILE_VELOCITY = 1000.0f;
     static constexpr float TELEPORTATION_DISTANCE = 300.0f;
 
@@ -36,7 +37,7 @@ struct Player {
     V2<float> vel;
     float gun_angle;
 
-    void render(const Game *game, Renderer *renderer) const;
+    void render(const Game *game, Triangle_Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
     void jump();

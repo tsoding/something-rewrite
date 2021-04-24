@@ -18,7 +18,7 @@ void Particles::update(Seconds delta_time)
     }
 }
 
-void Particles::render(Renderer *renderer) const
+void Particles::render(Triangle_Renderer *renderer) const
 {
     for (size_t i = 0; i < count; ++i) {
         renderer->fill_rect(

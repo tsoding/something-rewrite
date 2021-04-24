@@ -198,7 +198,7 @@ void Game::update(Seconds dt)
     }
 }
 
-void Game::render(Renderer *renderer) const
+void Game::render(Triangle_Renderer *renderer) const
 {
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things

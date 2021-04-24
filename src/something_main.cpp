@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     defer(delete game);
     game->init(window);
 
-    Renderer *renderer = new Renderer{};
+    Triangle_Renderer *renderer = new Triangle_Renderer{};
     defer(delete renderer);
     renderer->init();
 

@@ -16,7 +16,7 @@ struct Particles
 
     void push(V2<float> position);
     void update(Seconds delta_time);
-    void render(Renderer *renderer) const;
+    void render(Triangle_Renderer *renderer) const;
 };
 
 #endif // SOMETHING_PARTICLES_HPP_
