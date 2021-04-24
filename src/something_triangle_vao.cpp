@@ -1,6 +1,6 @@
 #include "./something_triangle_vao.hpp"
 
-void Triangle_VAO::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
+void Triangle_VAO::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 {
     Triangle<GLfloat> lower, upper;
     aabb.split_into_triangles(&lower, &upper);
@@ -16,25 +16,25 @@ void Triangle_VAO::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle
 {
     // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
     // Crash can help to troubleshoot disappearing triangles problem in the future.
-    assert(batch_buffer_size < BATCH_BUFFER_CAPACITY);
-    triangles_buffer[batch_buffer_size] = triangle;
-    colors_buffer[batch_buffer_size][0] = rgba;
-    colors_buffer[batch_buffer_size][1] = rgba;
-    colors_buffer[batch_buffer_size][2] = rgba;
-    uv_buffer[batch_buffer_size] = uv;
-    batch_buffer_size += 1;
+    assert(count < CAPACITY);
+    triangles[count] = triangle;
+    colors[count][0] = rgba;
+    colors[count][1] = rgba;
+    colors[count][2] = rgba;
+    uvs[count]       = uv;
+    count += 1;
 }
 
 void Triangle_VAO::init()
 {
-    vbo_element_size[TRIANGLE_ATTRIB] = sizeof(triangles_buffer[0]);
-    vbo_element_size[COLORS_ATTRIB] = sizeof(colors_buffer[0]);
-    vbo_element_size[UV_ATTRIB] = sizeof(uv_buffer[0]);
+    vbo_element_size[TRIANGLE_ATTRIB] = sizeof(triangles[0]);
+    vbo_element_size[COLORS_ATTRIB] = sizeof(colors[0]);
+    vbo_element_size[UV_ATTRIB] = sizeof(uvs[0]);
     static_assert(COUNT_ATTRIBS == 3);
 
-    vbo_datas[TRIANGLE_ATTRIB] = triangles_buffer;
-    vbo_datas[COLORS_ATTRIB] = colors_buffer;
-    vbo_datas[UV_ATTRIB] = uv_buffer;
+    vbo_datas[TRIANGLE_ATTRIB] = triangles;
+    vbo_datas[COLORS_ATTRIB] = colors;
+    vbo_datas[UV_ATTRIB] = uvs;
     static_assert(COUNT_ATTRIBS == 3);
 
     attrib_size[TRIANGLE_ATTRIB] = V2_COMPONENTS;
@@ -42,14 +42,14 @@ void Triangle_VAO::init()
     attrib_size[UV_ATTRIB] = V2_COMPONENTS;
     static_assert(COUNT_ATTRIBS == 3);
 
-    glGenVertexArrays(1, &vao_id);
-    glBindVertexArray(vao_id);
+    glGenVertexArrays(1, &id);
+    glBindVertexArray(id);
     glGenBuffers(COUNT_ATTRIBS, vbo_ids);
 
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferData(GL_ARRAY_BUFFER,
-                     vbo_element_size[attrib] * BATCH_BUFFER_CAPACITY,
+                     vbo_element_size[attrib] * CAPACITY,
                      vbo_datas[attrib],
                      GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(attrib);
@@ -67,22 +67,20 @@ void Triangle_VAO::init()
 
 void Triangle_VAO::draw()
 {
-    glBindVertexArray(vao_id);
+    glBindVertexArray(id);
 
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
                         0,
-                        vbo_element_size[attrib] * batch_buffer_size,
+                        vbo_element_size[attrib] * count,
                         vbo_datas[attrib]);
     }
 
-    glDrawArrays(GL_TRIANGLES,
-                 0,
-                 static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(count) * TRIANGLE_VERT_COUNT);
 }
 
 void Triangle_VAO::clear()
 {
-    batch_buffer_size = 0;
+    count = 0;
 }

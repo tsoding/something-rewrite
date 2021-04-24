@@ -26,7 +26,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
             }
         }
 
-        triangle_vao->fill_rect(player_hitbox(pos), RGBA(1.0f), uv);
+        triangle_vao->fill_aabb(player_hitbox(pos), RGBA(1.0f), uv);
     }
 
     // Payer gun

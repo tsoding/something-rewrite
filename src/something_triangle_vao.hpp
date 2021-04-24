@@ -6,11 +6,11 @@
 #include "./something_camera.hpp"
 
 struct Triangle_VAO {
-    static const size_t BATCH_BUFFER_CAPACITY = 1024;
+    static const size_t CAPACITY = 1024;
 
-    GLuint vao_id;
+    GLuint id;
 
-    enum Attrib: int {
+    enum Attrib: GLuint {
         TRIANGLE_ATTRIB = 0,
         COLORS_ATTRIB,
         UV_ATTRIB,
@@ -22,14 +22,14 @@ struct Triangle_VAO {
     void *vbo_datas[COUNT_ATTRIBS];
     GLint attrib_size[COUNT_ATTRIBS];
  
-    Triangle<GLfloat> triangles_buffer[BATCH_BUFFER_CAPACITY];
-    RGBA colors_buffer[BATCH_BUFFER_CAPACITY][3];
-    Triangle<GLfloat> uv_buffer[BATCH_BUFFER_CAPACITY];
-    size_t batch_buffer_size;
+    Triangle<GLfloat> triangles[CAPACITY];
+    RGBA colors[CAPACITY][3];
+    Triangle<GLfloat> uvs[CAPACITY];
+    size_t count;
 
     void init();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
-    void fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
+    void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
     void draw();
     void clear();
 };
