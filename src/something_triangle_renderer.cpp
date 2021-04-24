@@ -43,6 +43,7 @@ void Triangle_Renderer::init()
     static_assert(COUNT_ATTRIBS == 3);
 
     glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
     glGenBuffers(COUNT_ATTRIBS, vbo_ids);
 
     for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
@@ -66,6 +67,8 @@ void Triangle_Renderer::init()
 
 void Triangle_Renderer::draw()
 {
+    glBindVertexArray(vao_id);
+
     for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
