@@ -21,7 +21,7 @@ void Circle_VAO::init()
     glBindVertexArray(vao_id);
     glGenBuffers(COUNT_ATTRIBS, vbo_ids);
 
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferData(GL_ARRAY_BUFFER,
                      vbo_element_size[attrib] * CAPACITY,
@@ -44,7 +44,7 @@ void Circle_VAO::init()
 
 void Circle_VAO::sync_buffers()
 {
-    for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
+    for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
                         0,

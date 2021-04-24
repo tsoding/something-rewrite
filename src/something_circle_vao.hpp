@@ -6,7 +6,7 @@
 struct Circle_VAO {
     static const size_t CAPACITY = 1024;
 
-    enum Attrib: int {
+    enum Attrib: GLuint {
         ATTRIB_CENTER = 0,
         ATTRIB_RADIUS,
         ATTRIB_COLOR,
