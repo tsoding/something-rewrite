@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     defer(delete circle_renderer);
     circle_renderer->init();
 
-    Triangle_Renderer *triangle_renderer = new Triangle_Renderer{};
+    Triangle_VAO *triangle_renderer = new Triangle_VAO{};
     defer(delete triangle_renderer);
     triangle_renderer->init();
 

@@ -1,6 +1,6 @@
-#include "./something_triangle_renderer.hpp"
+#include "./something_triangle_vao.hpp"
 
-void Triangle_Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
+void Triangle_VAO::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 {
     Triangle<GLfloat> lower, upper;
     aabb.split_into_triangles(&lower, &upper);
@@ -12,7 +12,7 @@ void Triangle_Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_a
     fill_triangle(upper, shade, upper_uv);
 }
 
-void Triangle_Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
+void Triangle_VAO::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
 {
     // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
     // Crash can help to troubleshoot disappearing triangles problem in the future.
@@ -25,7 +25,7 @@ void Triangle_Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Tri
     batch_buffer_size += 1;
 }
 
-void Triangle_Renderer::init()
+void Triangle_VAO::init()
 {
     vbo_element_size[TRIANGLE_ATTRIB] = sizeof(triangles_buffer[0]);
     vbo_element_size[COLORS_ATTRIB] = sizeof(colors_buffer[0]);
@@ -65,7 +65,7 @@ void Triangle_Renderer::init()
     }
 }
 
-void Triangle_Renderer::draw()
+void Triangle_VAO::draw()
 {
     glBindVertexArray(vao_id);
 
@@ -82,7 +82,7 @@ void Triangle_Renderer::draw()
                  static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
 }
 
-void Triangle_Renderer::clear()
+void Triangle_VAO::clear()
 {
     batch_buffer_size = 0;
 }

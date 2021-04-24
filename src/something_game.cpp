@@ -199,24 +199,24 @@ void Game::update(Seconds dt)
     }
 }
 
-void Game::render(Triangle_Renderer *triangle_renderer,
+void Game::render(Triangle_VAO *triangle_vao,
                   Circle_Renderer *circle_renderer) const
 {
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things
         {
-            tile_grid.render(this, triangle_renderer);
-            player.render(this, triangle_renderer);
-            poof.render(triangle_renderer);
-            projectiles.render(triangle_renderer);
+            tile_grid.render(this, triangle_vao);
+            player.render(this, triangle_vao);
+            poof.render(triangle_vao);
+            projectiles.render(triangle_vao);
 
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
             glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            triangle_renderer->draw();
-            triangle_renderer->clear();
+            triangle_vao->draw();
+            triangle_vao->clear();
         }
 
         // Particle things

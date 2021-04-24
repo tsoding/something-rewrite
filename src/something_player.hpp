@@ -2,7 +2,7 @@
 #define SOMETHING_PLAYER_HPP_
 
 #include "./something_geo.hpp"
-#include "./something_triangle_renderer.hpp"
+#include "./something_triangle_vao.hpp"
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"
 
@@ -37,7 +37,7 @@ struct Player {
     V2<float> vel;
     float gun_angle;
 
-    void render(const Game *game, Triangle_Renderer *renderer) const;
+    void render(const Game *game, Triangle_VAO *renderer) const;
     void update(Game *game, Seconds dt);
 
     void jump();

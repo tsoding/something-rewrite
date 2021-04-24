@@ -1,6 +1,6 @@
 #include "./something_tile_grid.hpp"
 
-void Tile_Grid::render(const Game *game, Triangle_Renderer *renderer) const
+void Tile_Grid::render(const Game *game, Triangle_VAO *renderer) const
 {
     const size_t GRASS_INDEX = 8;
     const size_t DIRT_INDEX = 9;

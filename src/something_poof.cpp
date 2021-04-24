@@ -43,7 +43,7 @@ void Poof::update(Seconds dt)
     }
 }
 
-void Poof::render(Triangle_Renderer *renderer) const
+void Poof::render(Triangle_VAO *renderer) const
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (lifetimes[i] > 0.0f) {
