@@ -36,7 +36,7 @@ struct Game
     void init(SDL_Window *window);
     void handle_event(const SDL_Event *event);
     void update(Seconds dt);
-    void render(Triangle_Renderer *renderer) const;
+    void render(Triangle_Renderer *renderer, Circle_Renderer *circle_renderer) const;
 };
 
 #endif  // SOMETHING_GAME_HPP_

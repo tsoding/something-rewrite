@@ -22,7 +22,7 @@ void Game::init(SDL_Window *window)
                               "./assets/shaders/rect.frag");
 
         particle_program = Program::load_from_shader_files(
-                               "./assets/shaders/rect.vert",
+                               "./assets/shaders/circle.vert",
                                "./assets/shaders/particle.frag");
 
     }
@@ -136,7 +136,8 @@ void Game::handle_event(const SDL_Event *event)
         }
 
         camera.zoom = max(camera.zoom, MIN_ZOOM);
-    } break;
+    }
+    break;
     }
 }
 
@@ -198,35 +199,36 @@ void Game::update(Seconds dt)
     }
 }
 
-void Game::render(Triangle_Renderer *renderer) const
+void Game::render(Triangle_Renderer *triangle_renderer,
+                  Circle_Renderer *circle_renderer) const
 {
     if (!regular_program.failed && !particle_program.failed) {
         // Regular things
         {
-            tile_grid.render(this, renderer);
-            player.render(this, renderer);
-            poof.render(renderer);
-            projectiles.render(renderer);
+            tile_grid.render(this, triangle_renderer);
+            player.render(this, triangle_renderer);
+            poof.render(triangle_renderer);
+            projectiles.render(triangle_renderer);
 
             regular_program.use();
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
             glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            renderer->draw();
-            renderer->clear();
+            triangle_renderer->draw();
+            triangle_renderer->clear();
         }
 
         // Particle things
         {
-            particles.render(renderer);
+            particles.render(circle_renderer);
             particle_program.use();
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
             glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
-            renderer->draw();
-            renderer->clear();
+            circle_renderer->draw();
+            circle_renderer->clear();
         }
     }
 }

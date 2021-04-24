@@ -70,14 +70,13 @@ void Circle_Renderer::draw()
 
     sync_buffers();
     const size_t QUAD_COMPONENTS = 4;
-    glDrawArraysInstanced(GL_TRIANGLE_STRIP,
-                          0,
-                          QUAD_COMPONENTS,
-                          count);
+    glDrawArraysInstancedARB(GL_TRIANGLE_STRIP,
+                             0,
+                             QUAD_COMPONENTS,
+                             count);
 }
 
 void Circle_Renderer::clear()
 {
     count = 0;
 }
-
