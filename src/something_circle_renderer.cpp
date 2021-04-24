@@ -73,7 +73,7 @@ void Circle_Renderer::draw()
     glDrawArraysInstancedARB(GL_TRIANGLE_STRIP,
                              0,
                              QUAD_COMPONENTS,
-                             count);
+                             static_cast<GLsizei>(count));
 }
 
 void Circle_Renderer::clear()
