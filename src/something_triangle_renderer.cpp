@@ -1,6 +1,6 @@
-#include "./something_renderer.hpp"
+#include "./something_triangle_renderer.hpp"
 
-void Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
+void Triangle_Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
 {
     Triangle<GLfloat> lower, upper;
     aabb.split_into_triangles(&lower, &upper);
@@ -12,7 +12,7 @@ void Renderer::fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
     fill_triangle(upper, shade, upper_uv);
 }
 
-void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
+void Triangle_Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
 {
     // NOTE: I'm not sure if we should ignore the call if the buffer is full or crash.
     // Crash can help to troubleshoot disappearing triangles problem in the future.
@@ -25,7 +25,7 @@ void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLf
     batch_buffer_size += 1;
 }
 
-void Renderer::init()
+void Triangle_Renderer::init()
 {
     vbo_element_size[TRIANGLE_ATTRIB] = sizeof(triangles_buffer[0]);
     vbo_element_size[COLORS_ATTRIB] = sizeof(colors_buffer[0]);
@@ -43,6 +43,7 @@ void Renderer::init()
     static_assert(COUNT_ATTRIBS == 3);
 
     glGenVertexArrays(1, &vao_id);
+    glBindVertexArray(vao_id);
     glGenBuffers(COUNT_ATTRIBS, vbo_ids);
 
     for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
@@ -64,8 +65,10 @@ void Renderer::init()
     }
 }
 
-void Renderer::draw()
+void Triangle_Renderer::draw()
 {
+    glBindVertexArray(vao_id);
+
     for (int attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,
@@ -79,7 +82,7 @@ void Renderer::draw()
                  static_cast<GLsizei>(batch_buffer_size) * TRIANGLE_VERT_COUNT);
 }
 
-void Renderer::clear()
+void Triangle_Renderer::clear()
 {
     batch_buffer_size = 0;
 }

@@ -29,7 +29,7 @@ void Projectiles::update(Game *game, Seconds dt)
     }
 }
 
-void Projectiles::render(Renderer *renderer) const
+void Projectiles::render(Triangle_Renderer *renderer) const
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (states[i] == State::Aliv) {

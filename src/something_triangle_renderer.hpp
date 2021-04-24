@@ -1,11 +1,11 @@
-#ifndef SOMETHING_RENDERER_HPP_
-#define SOMETHING_RENDERER_HPP_
+#ifndef SOMETHING_TRIANGLE_RENDERER_HPP_
+#define SOMETHING_TRIANGLE_RENDERER_HPP_
 
 #include "./something_geo.hpp"
 #include "./something_rgba.hpp"
 #include "./something_camera.hpp"
 
-struct Renderer {
+struct Triangle_Renderer {
     static const size_t BATCH_BUFFER_CAPACITY = 1024;
 
     GLuint vao_id;
@@ -34,4 +34,4 @@ struct Renderer {
     void clear();
 };
 
-#endif  // SOMETHING_RENDERER_HPP_
+#endif  // SOMETHING_TRIANGLE_RENDERER_HPP_

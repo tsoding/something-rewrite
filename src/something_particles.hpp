@@ -1,6 +1,8 @@
 #ifndef SOMETHING_PARTICLES_HPP_
 #define SOMETHING_PARTICLES_HPP_
 
+#include "./something_circle_renderer.hpp"
+
 struct Particles
 {
     static constexpr size_t CAPACITY = 10;
@@ -16,7 +18,7 @@ struct Particles
 
     void push(V2<float> position);
     void update(Seconds delta_time);
-    void render(Renderer *renderer) const;
+    void render(Circle_Renderer *renderer) const;
 };
 
 #endif // SOMETHING_PARTICLES_HPP_

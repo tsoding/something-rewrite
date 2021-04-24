@@ -12,7 +12,7 @@ static AABB<float> player_hitbox(V2<float> pos)
     return AABB(pos - size * 0.5f, size);
 }
 
-void Player::render(const Game *game, Renderer *renderer) const
+void Player::render(const Game *game, Triangle_Renderer *renderer) const
 {
     // Player body
     {
