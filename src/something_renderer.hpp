@@ -18,8 +18,6 @@ struct Renderer {
     Triangle<GLfloat> uv_buffer[BATCH_BUFFER_CAPACITY];
     size_t batch_buffer_size;
 
-    Fixed_Region<1000 * 1000> shader_buffer;
-
     void init();
     void fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv);
     void fill_rect(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
