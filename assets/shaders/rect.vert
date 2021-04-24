@@ -7,9 +7,9 @@ uniform float time;
 uniform vec2 camera_position;
 uniform float camera_zoom;
 
-layout(location = 1) in vec2 vertex_position;
-layout(location = 2) in vec4 vertex_color;
-layout(location = 3) in vec2 vertex_uv;
+layout(location = 0) in vec2 vertex_position;
+layout(location = 1) in vec4 vertex_color;
+layout(location = 2) in vec2 vertex_uv;
 
 out vec4 color;
 out vec2 uv;
