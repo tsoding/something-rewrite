@@ -24,6 +24,7 @@ The `Game` object becames the central communication hub between different parts 
 
 `*NIX`:
 ```console
+$ sudo apt install libglew-dev libsdl2-dev   # may vary depending on the distro
 $ ./build.sh
 $ ./something.debug
 ```
@@ -41,4 +42,3 @@ $ ./something.debug
 > build_msys2.bat
 > something.debug.exe
 ```
-
