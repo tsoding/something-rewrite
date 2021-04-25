@@ -81,9 +81,9 @@ void Player::update(Game *game, Seconds dt)
         };
         static const size_t jump_anim_size = sizeof(jump_anim) / sizeof(jump_anim[0]);
 
-        static anim::Player jump_anim_player = {};
+        static anim::Player jump_anim_player(jump_anim, jump_anim_size);
 
-        stretch = jump_anim_player.update(dt, jump_anim, jump_anim_size);
+        stretch = jump_anim_player.update(dt);
     }
 
     const V2<float> ps[] = {

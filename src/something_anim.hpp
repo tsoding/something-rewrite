@@ -12,11 +12,19 @@ struct Segment {
 };
 
 struct Player {
-    size_t segment_index;
+    const Segment *segments;
+    size_t segments_count;
+
+    size_t segment_current;
     Seconds segment_time;
     size_t looped_count;
 
-    float update(float dt, const Segment *animation, size_t animation_size);
+    Player(const Segment *segments, size_t segments_count):
+        segments(segments),
+        segments_count(segments_count)
+    {}
+
+    float update(float dt);
 };
 
 }  // namespace anim

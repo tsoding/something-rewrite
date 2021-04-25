@@ -3,21 +3,21 @@
 namespace anim
 {
 
-float Player::update(float dt, const Segment *animation, size_t animation_size)
+float Player::update(float dt)
 {
-    const Segment *segment = &animation[segment_index];
+    const Segment *segment = &segments[segment_current];
 
     segment_time += dt;
     while (segment_time >= segment->duration) {
         segment_time -= segment->duration;
 
-        if (segment_index + 1 >= animation_size) {
+        if (segment_current + 1 >= segments_count) {
             looped_count += 1;
         }
 
-        segment_index = (segment_index + 1) % animation_size;
+        segment_current = (segment_current + 1) % segments_count;
 
-        segment = &animation[segment_index];
+        segment = &segments[segment_current];
     }
 
     const float t = segment_time / segment->duration;
