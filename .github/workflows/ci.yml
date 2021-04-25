@@ -30,6 +30,18 @@ jobs:
         env:
           CC: clang
           CXX: clang++
+  build-macos:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: brew install sdl2 pkg-config glew
+      - name: build the game
+        run: |
+          ./build.sh
+        env:
+          CC: clang
+          CXX: clang++
   build-windows-msvc:
     runs-on: windows-2019
     steps:
