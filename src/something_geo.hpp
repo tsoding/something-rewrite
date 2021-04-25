@@ -1,6 +1,8 @@
 #ifndef SOMETHING_V2_HPP_
 #define SOMETHING_V2_HPP_
 
+float squaref(float x);
+
 template <typename T, typename U>
 T lerp(T a, T b, U f)
 {

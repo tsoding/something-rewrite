@@ -5,6 +5,7 @@
 #include "./something_triangle_vao.hpp"
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"
+#include "./something_anim.hpp"
 
 enum class Direction {
     Right = 0,
@@ -25,6 +26,13 @@ constexpr V2<float> direction_to_v2(Direction direction)
 
 struct Game;
 
+static const anim::Segment jump_anim[] = {
+    {1.0f, 0.5f, 0.5f, sqrtf},
+    {0.5f, 1.5f, 0.1f, squaref},
+    {1.5f, 1.0f, 0.5f, sqrtf}
+};
+static const size_t jump_anim_size = sizeof(jump_anim) / sizeof(jump_anim[0]);
+
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
     // static constexpr size_t ATLAS_INDEX = 3;
@@ -32,6 +40,8 @@ struct Player {
     static constexpr size_t ATLAS_INDEX = 10;
     static constexpr float PROJECTILE_VELOCITY = 1000.0f;
     static constexpr float TELEPORTATION_DISTANCE = 300.0f;
+
+    anim::Player jump_anim_player;
 
     V2<float> pos;
     V2<float> vel;

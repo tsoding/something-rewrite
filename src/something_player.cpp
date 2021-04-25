@@ -1,5 +1,4 @@
 #include "./something_player.hpp"
-#include "./something_anim.hpp"
 
 const float PLAYER_WIDTH = 100.0f;
 const float PLAYER_HEIGHT = 100.0f;
@@ -74,15 +73,6 @@ void Player::update(Game *game, Seconds dt)
 {
     // Jump Animation Test
     {
-        static const anim::Segment jump_anim[] = {
-            {1.0f, 0.5f, 0.5f, sqrtf},
-            {0.5f, 1.5f, 0.1f, [](float x) { return x * x; }},
-            {1.5f, 1.0f, 0.5f, sqrtf}
-        };
-        static const size_t jump_anim_size = sizeof(jump_anim) / sizeof(jump_anim[0]);
-
-        static anim::Player jump_anim_player(jump_anim, jump_anim_size);
-
         stretch = jump_anim_player.update(dt);
     }
 
@@ -111,6 +101,7 @@ void Player::update(Game *game, Seconds dt)
 
 void Player::jump()
 {
+    jump_anim_player.reset();
     const float JUMP_VELOCITY = 1000.0f;
     vel.y = JUMP_VELOCITY;
 }

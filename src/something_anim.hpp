@@ -17,14 +17,10 @@ struct Player {
 
     size_t segment_current;
     Seconds segment_time;
-    size_t looped_count;
-
-    Player(const Segment *segments, size_t segments_count):
-        segments(segments),
-        segments_count(segments_count)
-    {}
 
     float update(float dt);
+    bool is_finished() const;
+    void reset();
 };
 
 }  // namespace anim

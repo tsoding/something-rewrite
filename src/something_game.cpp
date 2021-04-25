@@ -7,7 +7,11 @@ void Game::init(SDL_Window *window)
 {
     this->camera.zoom = 1.0f;
 
-    this->player.pos = V2(-100.0f, 0.0f);
+    {
+        this->player.pos = V2(-100.0f, 0.0f);
+        this->player.jump_anim_player.segments = jump_anim;
+        this->player.jump_anim_player.segments_count = jump_anim_size;
+    }
 
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
 
