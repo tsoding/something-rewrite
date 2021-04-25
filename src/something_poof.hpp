@@ -20,6 +20,8 @@ struct Poof {
 
     Seconds          lifetimes[CAPACITY];
 
+    size_t           last;
+
     void push(Triangle<float> triangle,
               RGBA shade,
               Triangle<float> uv);
