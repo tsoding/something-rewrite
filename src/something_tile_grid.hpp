@@ -86,8 +86,8 @@ struct Tile_Grid {
     AABB<float> get_tile_hitbox(Tile_Coord coord) const;
     AABB<float> get_tile_hitbox(World_Coord coord) const;
 
-    bool is_there_any_walls_in_region(Tile_Region region) const;
-    bool is_there_any_walls_in_region(World_Region region) const;
+    bool are_there_any_walls_in_region(Tile_Region region) const;
+    bool are_there_any_walls_in_region(World_Region region) const;
 };
 
 #endif // SOMETHING_TILE_GRID_HPP_
