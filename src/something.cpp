@@ -35,3 +35,4 @@ const int SCREEN_FPS = 60;
 #include "./something_projectiles.cpp"
 #include "./something_program.cpp"
 #include "./something_particles.cpp"
+#include "./something_anim.cpp"
