@@ -1,17 +1,5 @@
 #include "./something_player.hpp"
 
-const float PLAYER_WIDTH = 100.0f;
-const float PLAYER_HEIGHT = 100.0f;
-const RGBA PLAYER_COLOR = RGBA::RED();
-const float PLAYER_SPEED = 1000.0f;
-const float PLAYER_GUN_SIZE = 20.0f;
-
-static AABB<float> player_hitbox(V2<float> pos)
-{
-    const auto size = V2(PLAYER_WIDTH, PLAYER_HEIGHT);
-    return AABB(pos - size * 0.5f, size);
-}
-
 void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
 {
     // Player body
@@ -26,12 +14,15 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
             }
         }
 
-        const auto player_body = aabb_stretch(player_hitbox(pos), stretch);
-        triangle_vao->fill_aabb(player_body, RGBA(1.0f), uv);
+        const auto &body = game->get_aabb_body(body_index);
+        const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
+        triangle_vao->fill_aabb(player_hitbox, RGBA(1.0f), uv);
     }
 
     // Payer gun
     {
+        const auto &body = game->get_aabb_body(body_index);
+        const auto pos = body.center();
         const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
         const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
         triangle_vao->fill_triangle(gun, RGBA::RED(), {});
@@ -40,11 +31,10 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
 
 void Player::teleport(Game *game)
 {
+    auto &body = game->get_aabb_body(body_index);
+
     Triangle<GLfloat> lower, upper;
-    {
-        auto aabb = player_hitbox(pos);
-        aabb.split_into_triangles(&lower, &upper);
-    }
+    body.hitbox.split_into_triangles(&lower, &upper);
 
     Triangle<GLfloat> lower_uv, upper_uv;
     {
@@ -66,42 +56,22 @@ void Player::teleport(Game *game)
         explode_triangle(game->poof, upper, RGBA::WHITE(), upper_uv, level);
     }
 
-    pos += polar_v2(gun_angle, TELEPORTATION_DISTANCE);
+    body.hitbox.pos += polar_v2(gun_angle, TELEPORTATION_DISTANCE);
 }
 
 void Player::update(Game *game, Seconds dt)
 {
+    auto &body = game->get_aabb_body(body_index);
+
     // Jump Animation Test
     {
         if (prepare_for_jump &&
                 jump_anim_player.segment_current >= Jump_Anim_Attack) {
             const float JUMP_VELOCITY = 2000.0f;
-            vel.y = JUMP_VELOCITY;
+            body.vel.y = JUMP_VELOCITY;
             prepare_for_jump = false;
         }
         stretch = jump_anim_player.update(dt);
-    }
-
-    const V2<float> ps[] = {
-        V2(1.0f, 1.0f),
-        V2(0.0f, 1.0f),
-        V2(1.0f, 0.0f),
-    };
-    constexpr size_t ps_count = sizeof(ps) / sizeof(ps[0]);
-
-    const size_t MAX_ATTEMPTS = 8;
-
-    for (size_t attempt = 0; attempt < MAX_ATTEMPTS; ++attempt) {
-        for (size_t i = 0; i < ps_count; ++i) {
-            const auto new_vel = vel * ps[i];
-            const auto new_pos = pos + new_vel * dt;
-            if (!game->tile_grid.is_there_any_walls_in_region(World_Region(player_hitbox(new_pos)))) {
-                pos = new_pos;
-                vel = new_vel;
-                return;
-            }
-        }
-        vel *= 0.5f;
     }
 }
 
@@ -111,34 +81,35 @@ void Player::jump()
     prepare_for_jump = true;
 }
 
-void Player::move(Direction direction)
+void Player::move(Game *game, Direction direction)
 {
+    auto &body = game->get_aabb_body(body_index);
     switch(direction) {
     case Direction::Left:
-        vel.x = -PLAYER_SPEED;
+        body.vel.x = -PLAYER_SPEED;
         break;
     case Direction::Right:
-        vel.x = PLAYER_SPEED;
+        body.vel.x = PLAYER_SPEED;
         break;
     default:
         unreachable("Player::move()");
     }
 }
 
-void Player::stop()
+void Player::stop(Game *game)
 {
-    vel.x = 0.0f;
+    game->get_aabb_body(body_index).vel.x = 0.0f;
 }
 
 void Player::shoot(Game *game)
 {
-    const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
+    const auto gun_pos = game->get_aabb_body(body_index).center() + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
     game->projectiles.push(
         gun_pos,
         polar_v2(gun_angle, PROJECTILE_VELOCITY));
 }
 
-void Player::point_gun_at(V2<float> target)
+void Player::point_gun_at(Game *game, V2<float> target)
 {
-    gun_angle = angle_v2(target - pos);
+    gun_angle = angle_v2(target - game->get_aabb_body(body_index).center());
 }

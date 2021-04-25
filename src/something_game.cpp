@@ -5,18 +5,32 @@ const RGBA FAILED_BACKGROUND_COLOR = RGBA::from_abgr32(0xAA1818FF);
 
 void Game::init(SDL_Window *window)
 {
-    this->camera.zoom = 1.0f;
+    const V2<float> start = V2(1947.0f, 1818.5f);
 
+    // Player
     {
-        this->player.pos = V2(-100.0f, 0.0f);
+        this->player.body_index = allocate_aabb_body();
+        {
+            auto &player_body = get_aabb_body(this->player.body_index);
+            player_body.hitbox = AABB(start, V2(PLAYER_WIDTH, PLAYER_HEIGHT));
+        }
         this->player.jump_anim_player.segments = jump_anim;
         this->player.jump_anim_player.segments_count = Jump_Anim_Size;
     }
 
+    // Enemies
+    {
+        spawn_enemy(start);
+    }
+
+    // Camera
+    {
+        this->camera.zoom = 1.0f;
+        this->camera_follow_body = this->player.body_index;
+    }
+
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
-
     this->keyboard = SDL_GetKeyboardState(NULL);
-
     this->window = window;
 
     // Shader Programs
@@ -117,6 +131,11 @@ void Game::handle_event(const SDL_Event *event)
             player.teleport(this);
         }
         break;
+
+        case SDLK_i: {
+            println(stdout, aabb_bodies[0].hitbox);
+        }
+        break;
         }
     }
     break;
@@ -160,31 +179,23 @@ void Game::update(Seconds dt)
     // Player
     {
         if (keyboard[SDL_SCANCODE_D]) {
-            player.move(Direction::Right);
+            player.move(this, Direction::Right);
         } else if (keyboard[SDL_SCANCODE_A]) {
-            player.move(Direction::Left);
+            player.move(this, Direction::Left);
         } else {
-            player.stop();
+            player.stop(this);
         }
 
         player.update(this, dt);
-
-        const float GROUND = -200.0f;
-        const float GRAVITY = 4000.0f;
-        if (player.pos.y <= GROUND) {
-            player.pos.y = GROUND;
-            player.vel.y = 0.0f;
-        } else {
-            player.vel.y -= GRAVITY * dt;
-        }
-
-        player.point_gun_at(mouse_world);
+        player.point_gun_at(this, mouse_world);
     }
 
     // Camera
     {
         camera.update(dt);
-        camera.vel = (player.pos - camera.pos) * 4.0f;
+
+        const auto target_pos = get_aabb_body(camera_follow_body).hitbox.pos;
+        camera.vel = (target_pos - camera.pos) * 4.0f;
     }
 
     // Poof
@@ -201,6 +212,20 @@ void Game::update(Seconds dt)
     {
         particles.update(dt);
     }
+
+    // Enemies
+    {
+        for (size_t i = 0; i < enemies_size; ++i) {
+            enemies[i].update(this, dt);
+        }
+    }
+
+    // Bodies
+    {
+        for (size_t i = 0; i < aabb_bodies_size; ++i) {
+            aabb_bodies[i].update(this, dt);
+        }
+    }
 }
 
 void Game::render(Triangle_VAO *triangle_vao,
@@ -216,6 +241,9 @@ void Game::render(Triangle_VAO *triangle_vao,
             player.render(this, triangle_vao);
             poof.render(triangle_vao);
             projectiles.render(triangle_vao);
+            for (size_t i = 0; i < enemies_size; ++i) {
+                enemies[i].render(this, triangle_vao);
+            }
 
             triangle_vao->sync_buffers();
 
@@ -249,4 +277,33 @@ void Game::render(Triangle_VAO *triangle_vao,
 Seconds Game::time() const
 {
     return static_cast<float>(SDL_GetTicks()) / 1000.0f;
+}
+
+const AABB_Body &Game::get_aabb_body(Index<AABB_Body> body_index) const
+{
+    assert(body_index.unwrap < AABB_BODIES_CAPACITY);
+    return aabb_bodies[body_index.unwrap];
+}
+
+AABB_Body &Game::get_aabb_body(Index<AABB_Body> body_index)
+{
+    assert(body_index.unwrap < AABB_BODIES_CAPACITY);
+    return aabb_bodies[body_index.unwrap];
+}
+
+Index<AABB_Body> Game::allocate_aabb_body()
+{
+    assert(aabb_bodies_size < AABB_BODIES_CAPACITY);
+    return {aabb_bodies_size++};
+}
+
+void Game::spawn_enemy(V2<float> pos)
+{
+    if (enemies_size < ENEMIES_CAPACITY) {
+        enemies[enemies_size].state = Enemy::Alive;
+        enemies[enemies_size].body_index = allocate_aabb_body();
+        get_aabb_body(enemies[enemies_size].body_index).hitbox =
+            AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f));
+        enemies_size += 1;
+    }
 }
