@@ -88,13 +88,11 @@ int main(int argc, char *argv[])
     }
 
     if (!GLEW_ARB_draw_instanced) {
-        fprintf(stderr, "Support for ARB_draw_instanced is required!\n");
-        exit(1);
+        fprintf(stderr, "ARB_draw_instanced is not supported; game may not work properly!!\n");
     }
 
     if (!GLEW_ARB_instanced_arrays) {
-        fprintf(stderr, "Support for ARB_instanced_arrays is required!\n");
-        exit(1);
+        fprintf(stderr, "ARB_instanced_arrays is not supported; game may not work properly!!\n");
     }
 
     glEnable(GL_BLEND);
