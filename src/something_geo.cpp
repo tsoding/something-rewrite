@@ -1,5 +1,10 @@
 #include "./something_geo.hpp"
 
+float squaref(float x)
+{
+    return x * x;
+}
+
 V2<float> rotate_v2(V2<float> v, float angle)
 {
     return V2(cosf(angle) * v.x - sinf(angle) * v.y,

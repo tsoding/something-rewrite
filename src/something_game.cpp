@@ -7,7 +7,11 @@ void Game::init(SDL_Window *window)
 {
     this->camera.zoom = 1.0f;
 
-    this->player.pos = V2(-100.0f, 0.0f);
+    {
+        this->player.pos = V2(-100.0f, 0.0f);
+        this->player.jump_anim_player.segments = jump_anim;
+        this->player.jump_anim_player.segments_count = Jump_Anim_Size;
+    }
 
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
 
@@ -166,7 +170,7 @@ void Game::update(Seconds dt)
         player.update(this, dt);
 
         const float GROUND = -200.0f;
-        const float GRAVITY = 3000.0f;
+        const float GRAVITY = 4000.0f;
         if (player.pos.y <= GROUND) {
             player.pos.y = GROUND;
             player.vel.y = 0.0f;
@@ -219,7 +223,7 @@ void Game::render(Triangle_VAO *triangle_vao,
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
-            glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            glUniform1f(regular_program.u_time, time());
 
             triangle_vao->draw();
         }
@@ -235,9 +239,14 @@ void Game::render(Triangle_VAO *triangle_vao,
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
-            glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            glUniform1f(particle_program.u_time, time());
 
             circle_vao->draw();
         }
     }
+}
+
+Seconds Game::time() const
+{
+    return static_cast<float>(SDL_GetTicks()) / 1000.0f;
 }
