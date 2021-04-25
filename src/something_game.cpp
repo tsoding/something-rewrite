@@ -5,16 +5,22 @@ const RGBA FAILED_BACKGROUND_COLOR = RGBA::from_abgr32(0xAA1818FF);
 
 void Game::init(SDL_Window *window)
 {
+    const V2<float> start = V2(1947.0f, 1818.5f);
+
     // Player
     {
         this->player.body_index = allocate_aabb_body();
         {
             auto &player_body = get_aabb_body(this->player.body_index);
-            player_body.hitbox = AABB(V2(1947.0f, 1818.5f),
-                                      V2(PLAYER_WIDTH, PLAYER_HEIGHT));
+            player_body.hitbox = AABB(start, V2(PLAYER_WIDTH, PLAYER_HEIGHT));
         }
         this->player.jump_anim_player.segments = jump_anim;
         this->player.jump_anim_player.segments_count = Jump_Anim_Size;
+    }
+
+    // Enemies
+    {
+        spawn_enemy(start);
     }
 
     // Camera
@@ -187,7 +193,7 @@ void Game::update(Seconds dt)
     // Camera
     {
         camera.update(dt);
-        
+
         const auto target_pos = get_aabb_body(camera_follow_body).hitbox.pos;
         camera.vel = (target_pos - camera.pos) * 4.0f;
     }
@@ -228,6 +234,9 @@ void Game::render(Triangle_VAO *triangle_vao,
             player.render(this, triangle_vao);
             poof.render(triangle_vao);
             projectiles.render(triangle_vao);
+            for (size_t i = 0; i < enemies_size; ++i) {
+                enemies[i].render(this, triangle_vao);
+            }
 
             triangle_vao->sync_buffers();
 
@@ -279,4 +288,14 @@ Index<AABB_Body> Game::allocate_aabb_body()
 {
     assert(aabb_bodies_size < AABB_BODIES_CAPACITY);
     return {aabb_bodies_size++};
+}
+
+void Game::spawn_enemy(V2<float> pos)
+{
+    if (enemies_size < ENEMIES_CAPACITY) {
+        enemies[enemies_size].body_index = allocate_aabb_body();
+        get_aabb_body(enemies[enemies_size].body_index).hitbox =
+            AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f));
+        enemies_size += 1;
+    }
 }

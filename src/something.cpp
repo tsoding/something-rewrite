@@ -42,3 +42,4 @@ struct Index {
 #include "./something_particles.cpp"
 #include "./something_anim.cpp"
 #include "./something_aabb_body.cpp"
+#include "./something_enemy.cpp"
