@@ -6,6 +6,13 @@
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"
 #include "./something_anim.hpp"
+#include "./something_aabb_body.hpp"
+
+const float PLAYER_WIDTH = 100.0f;
+const float PLAYER_HEIGHT = 100.0f;
+const RGBA PLAYER_COLOR = RGBA::RED();
+const float PLAYER_SPEED = 1000.0f;
+const float PLAYER_GUN_SIZE = 20.0f;
 
 enum class Direction {
     Right = 0,
@@ -52,8 +59,8 @@ struct Player {
     anim::Player jump_anim_player;
     bool prepare_for_jump;
 
-    V2<float> pos;
-    V2<float> vel;
+
+    Index<AABB_Body> body_index;
     float gun_angle;
     float stretch;
 
@@ -61,11 +68,11 @@ struct Player {
     void update(Game *game, Seconds dt);
 
     void jump();
-    void move(Direction direction);
-    void stop();
+    void move(Game *game, Direction direction);
+    void stop(Game *game);
     void shoot(Game *game);
     void teleport(Game *game);
-    void point_gun_at(V2<float> target);
+    void point_gun_at(Game *game, V2<float> target);
 };
 
 #endif // SOMETHING_PLAYER_HPP_

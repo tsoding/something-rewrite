@@ -21,6 +21,11 @@ const int SCREEN_WIDTH  = 1920;
 const int SCREEN_HEIGHT = 1080;
 const int SCREEN_FPS = 60;
 
+template <typename T>
+struct Index {
+    size_t unwrap;
+};
+
 #include "./something_atlas.cpp"
 #include "./something_texture.cpp"
 #include "./something_game.cpp"
@@ -36,3 +41,4 @@ const int SCREEN_FPS = 60;
 #include "./something_program.cpp"
 #include "./something_particles.cpp"
 #include "./something_anim.cpp"
+#include "./something_aabb_body.cpp"
