@@ -13,23 +13,20 @@ void Poof::push(Triangle<float> triangle,
                 RGBA shade,
                 Triangle<float> uv)
 {
-    for (size_t i = 0; i < CAPACITY; ++i) {
-        if (lifetimes[i] <= 0.0f) {
-            triangles[i] = triangle;
-            shades[i]    = shade;
-            uvs[i]       = uv;
+    triangles[last] = triangle;
+    shades[last]    = shade;
+    uvs[last]       = uv;
 
-            positions[i] = V2(0.0f);
-            velocities[i] = polar_v2(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
+    positions[last]  = V2(0.0f);
+    velocities[last] = polar_v2(random01() * 2.0f * static_cast<float>(M_PI), random01() * MAX_VELOCITY);
 
-            angles[i] = 0.0f;
-            angle_velocities[i] = random01() * MAX_ANGLE_VELOCITY;
-            pivots[i] = point_on_triangle(triangle, random01(), random01());
+    angles[last] = 0.0f;
+    angle_velocities[last] = random01() * MAX_ANGLE_VELOCITY;
+    pivots[last] = point_on_triangle(triangle, random01(), random01());
 
-            lifetimes[i] = LIFETIME;
-            return;
-        }
-    }
+    lifetimes[last] = LIFETIME;
+
+    last = (last + 1) % CAPACITY;
 }
 
 void Poof::update(Seconds dt)
