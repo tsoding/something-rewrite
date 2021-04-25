@@ -1,4 +1,5 @@
 #include "./something_player.hpp"
+#include "./something_anim.hpp"
 
 const float PLAYER_WIDTH = 100.0f;
 const float PLAYER_HEIGHT = 100.0f;
@@ -26,9 +27,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
             }
         }
 
-        const auto player_body = aabb_stretch(
-                                     player_hitbox(pos),
-                                     1.0f + sinf(8.0f * game->time()) * 0.5f);
+        const auto player_body = aabb_stretch(player_hitbox(pos), stretch);
         triangle_vao->fill_aabb(player_body, RGBA(1.0f), uv);
     }
 
@@ -73,6 +72,20 @@ void Player::teleport(Game *game)
 
 void Player::update(Game *game, Seconds dt)
 {
+    // Jump Animation Test
+    {
+        static const anim::Segment jump_anim[] = {
+            {1.0f, 0.5f, 0.5f, sqrtf},
+            {0.5f, 1.5f, 0.1f, [](float x) { return x * x; }},
+            {1.5f, 1.0f, 0.5f, sqrtf}
+        };
+        static const size_t jump_anim_size = sizeof(jump_anim) / sizeof(jump_anim[0]);
+
+        static anim::Player jump_anim_player = {};
+
+        stretch = jump_anim_player.update(dt, jump_anim, jump_anim_size);
+    }
+
     const V2<float> ps[] = {
         V2(1.0f, 1.0f),
         V2(0.0f, 1.0f),

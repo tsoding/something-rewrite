@@ -250,6 +250,8 @@ struct AABB {
 
 };
 
+// TODO: t == 0 in aabb_stretch() should mean no stretch
+// It makes default zero initialization of the structures easier if you store the "stretch factor" as the field.
 AABB<float> aabb_stretch(AABB<float> aabb, float t)
 {
     const auto bottom_pos = aabb.pos + aabb.size * V2(0.5f, 0.0f);
