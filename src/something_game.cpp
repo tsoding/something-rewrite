@@ -10,7 +10,7 @@ void Game::init(SDL_Window *window)
     {
         this->player.pos = V2(-100.0f, 0.0f);
         this->player.jump_anim_player.segments = jump_anim;
-        this->player.jump_anim_player.segments_count = jump_anim_size;
+        this->player.jump_anim_player.segments_count = Jump_Anim_Size;
     }
 
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
@@ -170,7 +170,7 @@ void Game::update(Seconds dt)
         player.update(this, dt);
 
         const float GROUND = -200.0f;
-        const float GRAVITY = 3000.0f;
+        const float GRAVITY = 4000.0f;
         if (player.pos.y <= GROUND) {
             player.pos.y = GROUND;
             player.vel.y = 0.0f;

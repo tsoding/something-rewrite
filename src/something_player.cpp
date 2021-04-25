@@ -3,7 +3,7 @@
 const float PLAYER_WIDTH = 100.0f;
 const float PLAYER_HEIGHT = 100.0f;
 const RGBA PLAYER_COLOR = RGBA::RED();
-const float PLAYER_SPEED = 500.0f;
+const float PLAYER_SPEED = 1000.0f;
 const float PLAYER_GUN_SIZE = 20.0f;
 
 static AABB<float> player_hitbox(V2<float> pos)
@@ -73,6 +73,12 @@ void Player::update(Game *game, Seconds dt)
 {
     // Jump Animation Test
     {
+        if (prepare_for_jump &&
+                jump_anim_player.segment_current >= Jump_Anim_Attack) {
+            const float JUMP_VELOCITY = 2000.0f;
+            vel.y = JUMP_VELOCITY;
+            prepare_for_jump = false;
+        }
         stretch = jump_anim_player.update(dt);
     }
 
@@ -102,8 +108,7 @@ void Player::update(Game *game, Seconds dt)
 void Player::jump()
 {
     jump_anim_player.reset();
-    const float JUMP_VELOCITY = 1000.0f;
-    vel.y = JUMP_VELOCITY;
+    prepare_for_jump = true;
 }
 
 void Player::move(Direction direction)

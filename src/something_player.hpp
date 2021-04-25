@@ -26,12 +26,20 @@ constexpr V2<float> direction_to_v2(Direction direction)
 
 struct Game;
 
-static const anim::Segment jump_anim[] = {
-    {1.0f, 0.5f, 0.5f, sqrtf},
-    {0.5f, 1.5f, 0.1f, squaref},
-    {1.5f, 1.0f, 0.5f, sqrtf}
+enum Jump_Anim: size_t {
+    Jump_Anim_Prepare = 0,
+    Jump_Anim_Attack,
+    Jump_Anim_Recover,
+    Jump_Anim_Size
 };
-static const size_t jump_anim_size = sizeof(jump_anim) / sizeof(jump_anim[0]);
+
+const float Jump_Anim_Intensity = 0.20f;
+
+static const anim::Segment jump_anim[Jump_Anim_Size] = {
+    {1.0f,                       1.0f - Jump_Anim_Intensity, 0.05f, sqrtf},
+    {1.0f - Jump_Anim_Intensity, 1.0f + Jump_Anim_Intensity, 0.1f,  squaref},
+    {1.0f + Jump_Anim_Intensity, 1.0f,                       0.25f,  sqrtf}
+};
 
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
@@ -42,6 +50,7 @@ struct Player {
     static constexpr float TELEPORTATION_DISTANCE = 300.0f;
 
     anim::Player jump_anim_player;
+    bool prepare_for_jump;
 
     V2<float> pos;
     V2<float> vel;
