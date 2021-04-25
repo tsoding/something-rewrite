@@ -933,7 +933,7 @@ namespace aids
     template <typename... Args>
     [[noreturn]] void todo(Args... args)
     {
-        panic("TODO: ", args...);
+        panic("TODO(#50): ", args...);
     }
 
     template <typename T, typename... Args>
