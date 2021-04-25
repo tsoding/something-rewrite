@@ -219,7 +219,7 @@ void Game::render(Triangle_VAO *triangle_vao,
             glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(regular_program.u_camera_zoom, camera.zoom);
-            glUniform1f(regular_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            glUniform1f(regular_program.u_time, time());
 
             triangle_vao->draw();
         }
@@ -235,9 +235,14 @@ void Game::render(Triangle_VAO *triangle_vao,
             glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
             glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
             glUniform1f(particle_program.u_camera_zoom, camera.zoom);
-            glUniform1f(particle_program.u_time, static_cast<float>(SDL_GetTicks()) / 1000.0f);
+            glUniform1f(particle_program.u_time, time());
 
             circle_vao->draw();
         }
     }
+}
+
+Seconds Game::time() const
+{
+    return static_cast<float>(SDL_GetTicks()) / 1000.0f;
 }

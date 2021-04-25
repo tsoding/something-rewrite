@@ -247,7 +247,16 @@ struct AABB {
                a2.y >= b1.y &&
                b2.y >= a1.y;
     }
+
 };
+
+AABB<float> aabb_stretch(AABB<float> aabb, float t)
+{
+    const auto bottom_pos = aabb.pos + aabb.size * V2(0.5f, 0.0f);
+    const auto new_size = aabb.size * V2(2.0f - t, t);
+    const auto new_pos = bottom_pos - new_size * V2(0.5f, 0.0f);
+    return AABB<float>(new_pos, new_size);
+}
 
 template <typename T>
 void print1(FILE *stream, AABB<T> aabb)
