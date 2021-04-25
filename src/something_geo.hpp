@@ -252,7 +252,7 @@ struct AABB {
 
 };
 
-// TODO: t == 0 in aabb_stretch() should mean no stretch
+// TODO(#49): t == 0 in aabb_stretch() should mean no stretch
 // It makes default zero initialization of the structures easier if you store the "stretch factor" as the field.
 AABB<float> aabb_stretch(AABB<float> aabb, float t)
 {
