@@ -53,7 +53,7 @@ struct Player {
     // static constexpr size_t ATLAS_INDEX = 3;
     // static constexpr size_t ATLAS_INDEX = 7;
     static constexpr size_t ATLAS_INDEX = 10;
-    static constexpr float PROJECTILE_VELOCITY = 1000.0f;
+    static constexpr float PROJECTILE_VELOCITY = 2000.0f;
     static constexpr float TELEPORTATION_DISTANCE = 300.0f;
 
     anim::Player jump_anim_player;

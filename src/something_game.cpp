@@ -213,6 +213,13 @@ void Game::update(Seconds dt)
         particles.update(dt);
     }
 
+    // Enemies
+    {
+        for (size_t i = 0; i < enemies_size; ++i) {
+            enemies[i].update(this, dt);
+        }
+    }
+
     // Bodies
     {
         for (size_t i = 0; i < aabb_bodies_size; ++i) {
@@ -293,6 +300,7 @@ Index<AABB_Body> Game::allocate_aabb_body()
 void Game::spawn_enemy(V2<float> pos)
 {
     if (enemies_size < ENEMIES_CAPACITY) {
+        enemies[enemies_size].state = Enemy::Alive;
         enemies[enemies_size].body_index = allocate_aabb_body();
         get_aabb_body(enemies[enemies_size].body_index).hitbox =
             AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f));

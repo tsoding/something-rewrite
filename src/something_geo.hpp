@@ -250,6 +250,11 @@ struct AABB {
                b2.y >= a1.y;
     }
 
+    bool contains(const V2<T> &that) const
+    {
+        return this->pos.x <= that.x && that.x <= (this->pos.x + this->size.x)
+               && this->pos.y <= that.y && that.y <= (this->pos.y + this->size.y);
+    }
 };
 
 // TODO(#49): t == 0 in aabb_stretch() should mean no stretch
