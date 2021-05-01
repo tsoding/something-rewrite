@@ -13,10 +13,14 @@ struct Enemy {
 
     State state;
 
+    float direction;
+
     void render(const Game *game, Triangle_VAO *triangle_vao) const;
     void update(Game *game, Seconds dt);
 
     void kill(Game *game);
+
+    float dummy_idle_direction(const Game *game) const;
 };
 
 #endif // SOMETHING_ENEMY_HPP_

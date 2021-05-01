@@ -28,3 +28,22 @@ void AABB_Body::update(const Game *game, Seconds dt)
         vel *= 0.5f;
     }
 }
+
+void AABB_Body::move(Direction direction, float speed)
+{
+    switch(direction) {
+    case Direction::Left:
+        vel.x = -speed;
+        break;
+    case Direction::Right:
+        vel.x = speed;
+        break;
+    default:
+        unreachable("AABB_Body::move()");
+    }
+}
+
+void AABB_Body::stop()
+{
+    vel.x = 0.0f;
+}

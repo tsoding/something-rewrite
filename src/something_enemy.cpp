@@ -6,7 +6,12 @@ void Enemy::render(const Game *game, Triangle_VAO *triangle_vao) const
     if (state == Alive) {
         const auto &body = game->get_aabb_body(body_index);
         const size_t ATLAS_INDEX = 6;
-        const auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+
+        if (dummy_idle_direction(game) < 0.0) {
+            uv = uv.flip_horizontally();
+        }
+
         triangle_vao->fill_aabb(body.hitbox, RGBA(1.0f), uv);
     }
 }
@@ -14,13 +19,18 @@ void Enemy::render(const Game *game, Triangle_VAO *triangle_vao) const
 void Enemy::update(Game *game, Seconds)
 {
     if (state == Alive) {
-        const auto &body = game->get_aabb_body(body_index);
+        auto &body = game->get_aabb_body(body_index);
         for (size_t i = 0; i < Projectiles::CAPACITY; ++i) {
             if (game->projectiles.states[i] == Projectiles::State::Aliv && body.hitbox.contains(game->projectiles.positions[i])) {
                 game->projectiles.states[i] = Projectiles::State::Ded;
                 kill(game);
                 game->spawn_enemy(V2(1947.0f, 1818.5f));
             }
+        }
+
+        {
+            const float ENEMY_SPEED = 500.0f;
+            body.vel.x = dummy_idle_direction(game) * ENEMY_SPEED;
         }
     }
 }
@@ -51,3 +61,11 @@ void Enemy::kill(Game *game)
     state = Ded;
 }
 
+
+float Enemy::dummy_idle_direction(const Game *game) const
+{
+    const Seconds time = game->time();
+    const Seconds period = 1.0f;
+    const float direction = static_cast<float>(2 * (static_cast<int>(floorf(time / period)) & 1) - 1);
+    return direction;
+}
