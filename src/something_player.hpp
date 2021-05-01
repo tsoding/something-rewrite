@@ -14,23 +14,6 @@ const RGBA PLAYER_COLOR = RGBA::RED();
 const float PLAYER_SPEED = 1000.0f;
 const float PLAYER_GUN_SIZE = 20.0f;
 
-enum class Direction {
-    Right = 0,
-    Left,
-};
-
-constexpr V2<float> direction_to_v2(Direction direction)
-{
-    switch (direction) {
-    case Direction::Right:
-        return V2(1.0f, 0.0f);
-    case Direction::Left:
-        return V2(-1.0f, 0.0f);
-    default:
-        return V2(0.0f);
-    }
-}
-
 struct Game;
 
 enum Jump_Anim: size_t {

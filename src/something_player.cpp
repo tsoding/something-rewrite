@@ -83,22 +83,12 @@ void Player::jump()
 
 void Player::move(Game *game, Direction direction)
 {
-    auto &body = game->get_aabb_body(body_index);
-    switch(direction) {
-    case Direction::Left:
-        body.vel.x = -PLAYER_SPEED;
-        break;
-    case Direction::Right:
-        body.vel.x = PLAYER_SPEED;
-        break;
-    default:
-        unreachable("Player::move()");
-    }
+    game->get_aabb_body(body_index).move(direction, PLAYER_SPEED);
 }
 
 void Player::stop(Game *game)
 {
-    game->get_aabb_body(body_index).vel.x = 0.0f;
+    game->get_aabb_body(body_index).stop();
 }
 
 void Player::shoot(Game *game)
