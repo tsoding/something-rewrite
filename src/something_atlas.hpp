@@ -9,6 +9,8 @@ struct Atlas {
     Dynamic_Array<AABB<float>> uvs;
 
     static Atlas from_config(const char *file_path, int margin);
+
+    AABB<float> get_uv(Index<AABB<float>> uv_index) const;
 };
 
 #endif // SOMETHING_ATLAS_HPP_

@@ -1,0 +1,27 @@
+#include "./something_item.hpp"
+
+void Item::render(const Game *game, Triangle_VAO *triangle_vao) const
+{
+    if (state == State::Alive) {
+        const float ITEM_SIZE = 128.0f;
+        const float ITEM_IDLE_AMPLITUDE = ITEM_SIZE * 0.125f;
+        const float ITEM_IDLE_FREQUENCY = 4.0f;
+
+        const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * ITEM_IDLE_AMPLITUDE;
+
+        triangle_vao->fill_aabb(
+            AABB(pos + offset - V2(ITEM_SIZE * 0.5f),
+                 V2(ITEM_SIZE)),
+            RGBA(1.0f),
+            game->atlas.get_uv(uv_index).flip_vertically());
+    }
+}
+
+Item Item::make_tea(V2<float> pos)
+{
+    Item item = {};
+    item.pos = pos;
+    item.state = State::Alive;
+    item.uv_index = {11};
+    return item;
+}

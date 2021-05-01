@@ -11,10 +11,12 @@
 #include "./something_particles.hpp"
 #include "./something_aabb_body.hpp"
 #include "./something_enemy.hpp"
+#include "./something_item.hpp"
 
 struct Game {
     static const size_t AABB_BODIES_CAPACITY = 1024;
     static const size_t ENEMIES_CAPACITY = 1024;
+    static const size_t ITEMS_CAPACITY = 1024;
 
     bool quit;
 
@@ -41,8 +43,12 @@ struct Game {
 
     AABB_Body aabb_bodies[AABB_BODIES_CAPACITY];
     size_t aabb_bodies_size;
+
     Enemy enemies[ENEMIES_CAPACITY];
     size_t enemies_size;
+
+    Item items[ITEMS_CAPACITY];
+    size_t items_size;
 
     Seconds time() const;
 
