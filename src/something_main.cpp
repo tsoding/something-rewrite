@@ -65,11 +65,9 @@ int main(int argc, char *argv[])
     defer(SDL_DestroyWindow(window));
 
     {
-    #if defined(__APPLE__)
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    #endif
 
         int major;
         int minor;
