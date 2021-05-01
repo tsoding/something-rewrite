@@ -32,7 +32,7 @@ static const anim::Segment jump_anim[Jump_Anim_Size] = {
 };
 
 // TODO(#64): Player does not have any health
-// TODO: Player can't collect the items to heal themselves
+// TODO(#65): Player can't collect the items to heal themselves
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
     // static constexpr size_t ATLAS_INDEX = 3;
