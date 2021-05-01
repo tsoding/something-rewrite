@@ -14,13 +14,21 @@ void Enemy::render(const Game *game, Triangle_VAO *triangle_vao) const
 void Enemy::update(Game *game, Seconds)
 {
     if (state == Alive) {
-        const auto &body = game->get_aabb_body(body_index);
+        auto &body = game->get_aabb_body(body_index);
         for (size_t i = 0; i < Projectiles::CAPACITY; ++i) {
             if (game->projectiles.states[i] == Projectiles::State::Aliv && body.hitbox.contains(game->projectiles.positions[i])) {
                 game->projectiles.states[i] = Projectiles::State::Ded;
                 kill(game);
                 game->spawn_enemy(V2(1947.0f, 1818.5f));
             }
+        }
+
+        {
+            const float ENEMY_SPEED = 500.0f;
+            const Seconds time = game->time();
+            const Seconds period = 1.0f;
+            const float direction = static_cast<float>(2 * (static_cast<int>(floorf(time / period)) & 1) - 1);
+            body.vel.x = direction * ENEMY_SPEED;
         }
     }
 }

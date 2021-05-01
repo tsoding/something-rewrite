@@ -302,6 +302,7 @@ void Game::spawn_enemy(V2<float> pos)
     if (enemies_size < ENEMIES_CAPACITY) {
         enemies[enemies_size].state = Enemy::Alive;
         enemies[enemies_size].body_index = allocate_aabb_body();
+        enemies[enemies_size].direction = 1.0f;
         get_aabb_body(enemies[enemies_size].body_index).hitbox =
             AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f));
         enemies_size += 1;

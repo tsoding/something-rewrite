@@ -13,6 +13,8 @@ struct Enemy {
 
     State state;
 
+    float direction;
+
     void render(const Game *game, Triangle_VAO *triangle_vao) const;
     void update(Game *game, Seconds dt);
 
