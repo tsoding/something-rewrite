@@ -70,3 +70,9 @@ Atlas Atlas::from_config(const char *file_path, int margin)
 
     return result;
 }
+
+AABB<float> Atlas::get_uv(Index<AABB<float>> uv_index) const
+{
+    assert(uv_index.unwrap < uvs.size);
+    return uvs.data[uv_index.unwrap];
+}

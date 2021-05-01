@@ -77,6 +77,11 @@ void Game::init(SDL_Window *window)
                               lerp(0.0f, MAX_PARTICLE_REGION, random01())));
         }
     }
+
+    // Items
+    {
+        items[items_size++] = Item::make_tea(start);
+    }
 }
 
 AABB<float> compute_gl_viewport(int w, int h);
@@ -226,6 +231,13 @@ void Game::update(Seconds dt)
             aabb_bodies[i].update(this, dt);
         }
     }
+
+    // Items
+    {
+        for (size_t i = 0; i < aabb_bodies_size; ++i) {
+            items[i].update(this, dt);
+        }
+    }
 }
 
 void Game::render(Triangle_VAO *triangle_vao,
@@ -243,6 +255,9 @@ void Game::render(Triangle_VAO *triangle_vao,
             projectiles.render(triangle_vao);
             for (size_t i = 0; i < enemies_size; ++i) {
                 enemies[i].render(this, triangle_vao);
+            }
+            for (size_t i = 0; i < items_size; ++i) {
+                items[i].render(this, triangle_vao);
             }
 
             triangle_vao->sync_buffers();
