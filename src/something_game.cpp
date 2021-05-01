@@ -231,13 +231,6 @@ void Game::update(Seconds dt)
             aabb_bodies[i].update(this, dt);
         }
     }
-
-    // Items
-    {
-        for (size_t i = 0; i < aabb_bodies_size; ++i) {
-            items[i].update(this, dt);
-        }
-    }
 }
 
 void Game::render(Triangle_VAO *triangle_vao,
