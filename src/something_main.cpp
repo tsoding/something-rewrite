@@ -43,7 +43,7 @@ AABB<float> compute_gl_viewport(int w, int h)
                V2(n_width, n_height));
 }
 
-// TODO: no sound system
+// TODO(#63): no sound system
 
 // TODO(#4): hot-reloadable configuration
 int main(int argc, char *argv[])
