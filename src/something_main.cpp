@@ -64,26 +64,11 @@ int main(int argc, char *argv[])
     }
     defer(SDL_DestroyWindow(window));
 
-    SDL_GL_CreateContext(window);
-
-    if (GLEW_OK != glewInit()) {
-        panic("Could not initialize GLEW!");
-    }
-
-    if (!GLEW_ARB_draw_instanced) {
-        fprintf(stderr, "Support for ARB_draw_instanced is required!\n");
-        exit(1);
-    }
-
-    if (!GLEW_ARB_instanced_arrays) {
-        fprintf(stderr, "Support for ARB_instanced_arrays is required!\n");
-        exit(1);
-    }
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
         int major;
         int minor;
         SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
@@ -94,8 +79,27 @@ int main(int argc, char *argv[])
         println(stdout, "GL version ", major, ".", minor);
     }
 
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
+    SDL_GL_CreateContext(window);
+
+    if (GLEW_OK != glewInit()) {
+        panic("Could not initialize GLEW!");
+    }
+
+    if (!GLEW_ARB_draw_instanced) {
+        fprintf(stderr, "ARB_draw_instanced is not supported; game may not work properly!!\n");
+    }
+
+    if (!GLEW_ARB_instanced_arrays) {
+        fprintf(stderr, "ARB_instanced_arrays is not supported; game may not work properly!!\n");
+    }
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if (GLEW_ARB_debug_output) {
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback(MessageCallback, 0);
+    }
 
     // NOTE: The game object could be too big to put on the stack.
     // So we are allocating it on the heap.
