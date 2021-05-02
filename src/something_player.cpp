@@ -19,7 +19,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
         triangle_vao->fill_aabb(player_hitbox, RGBA(1.0f), uv);
     }
 
-    // Payer gun
+    // Player gun
     {
         const auto &body = game->get_aabb_body(body_index);
         const auto pos = body.center();

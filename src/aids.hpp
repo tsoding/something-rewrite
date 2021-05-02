@@ -585,7 +585,10 @@ namespace aids
         if (!data) return {};
 
         size_t read_size = fread(data, 1, size, f);
-        if (read_size != (size_t) size && ferror(f)) return {};
+        if (read_size != (size_t) size && ferror(f)) {
+            ator->template dealloc<char>(data, size);
+            return {};
+        }
 
         return some(String_View {static_cast<size_t>(size), static_cast<const char*>(data)});
     }
@@ -598,6 +601,9 @@ namespace aids
     ////////////////////////////////////////////////////////////
     // DYNAMIC ARRAY
     ////////////////////////////////////////////////////////////
+
+    template <typename... Args>
+    [[noreturn]] void panic(Args... args);
 
     template <typename T, typename Ator = Mtor>
     struct Dynamic_Array
@@ -646,6 +652,26 @@ namespace aids
             }
 
             return false;
+        }
+
+        T &operator[](size_t index)
+        {
+#ifndef AIDS_DISABLE_RANGE_CHECKS
+            if (index >= size) {
+                panic("Dynamic_Array: index out-of-bounds");
+            }
+#endif // AIDS_DISABLE_RANGE_CHECKS
+            return data[index];
+        }
+
+        const T &operator[](size_t index) const
+        {
+#ifndef AIDS_DISABLE_RANGE_CHECKS
+            if (index >= size) {
+                panic("Dynamic_Array: index out-of-bounds");
+            }
+#endif // AIDS_DISABLE_RANGE_CHECKS
+            return data[index];
         }
     };
 
@@ -933,7 +959,7 @@ namespace aids
     template <typename... Args>
     [[noreturn]] void todo(Args... args)
     {
-        panic("TODO(#50): ", args...);
+        panic("TODO: ", args...);
     }
 
     template <typename T, typename... Args>
@@ -1153,6 +1179,13 @@ namespace aids
             print(stream, i == 0 ? "" : ", ", Hex<char> { hex_bytes.unwrap.data[i] });
         }
         print(stream, "]");
+    }
+
+    struct Newline {};
+    
+    void print1(FILE *stream, Newline)
+    {
+        print(stream, '\n');
     }
 
     ////////////////////////////////////////////////////////////

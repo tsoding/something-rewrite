@@ -8,8 +8,6 @@
 #include "./something_anim.hpp"
 #include "./something_aabb_body.hpp"
 
-const float PLAYER_WIDTH = 100.0f;
-const float PLAYER_HEIGHT = 100.0f;
 const RGBA PLAYER_COLOR = RGBA::RED();
 const float PLAYER_SPEED = 1000.0f;
 const float PLAYER_GUN_SIZE = 20.0f;

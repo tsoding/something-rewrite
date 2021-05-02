@@ -4,3 +4,5 @@ dependencies
 *.obj
 *.pdb
 *.ilk
+config_indexer
+src/config_index.hpp
