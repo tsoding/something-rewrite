@@ -9,5 +9,8 @@ set LIBS=dependencies\SDL2\lib\x64\SDL2.lib ^
          dependencies\GLEW\lib\glew32s.lib ^
          opengl32.lib User32.lib Gdi32.lib Shell32.lib
 
+cl.exe %CXXFLAGS% /Fe"config_indexer.exe" src/config_indexer.cpp
+config_indexer assets/vars.conf >src/config_index.hpp
+
 cl.exe %CXXFLAGS% %INCLUDES% /Fe"something.debug.exe" src/something.cpp ^
     /link %LIBS% -SUBSYSTEM:windows
