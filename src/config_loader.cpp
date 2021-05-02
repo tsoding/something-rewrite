@@ -15,7 +15,7 @@ Maybe<size_t> config_index_by_name(String_View name)
     return {};
 }
 
-// TODO: reload_config_from_file panics instead of providing error recoverable interface
+// TODO(#68): reload_config_from_file panics instead of providing error recoverable interface
 void reload_config_from_file(const char *file_path)
 {
 
