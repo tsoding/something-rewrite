@@ -97,10 +97,9 @@ int main(int argc, char **argv)
     println(stdout);
     if (bake) {
         for (size_t i = 0; i < config_defs.size; ++i) {
-            print(stdout, "#define ", config_defs[i].name, " ");
             switch (config_defs[i].type) {
             case Config_Type::Float:
-                println(stdout, config_values[i].as_float);
+                println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_float, ";");
                 break;
             default:
                 unreachable("baked config_values macros");
