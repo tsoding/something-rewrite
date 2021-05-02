@@ -10,7 +10,7 @@ if [ `uname` = "Darwin" ]; then
 	CXXFLAGS+=" -framework OpenGL"
 fi
 
-$CXX $CXXFLAGS `pkg-config --cflags $PKGS` -o config_indexer src/config_indexer.cpp `pkg-config --libs $PKGS`
+$CXX $CXXFLAGS -o config_indexer src/config_indexer.cpp
 
 # TODO(#67): there is no "release" build that utilizes the `--bake` flag of the `config_indexer`
 ./config_indexer ./assets/vars.conf > ./src/config_index.hpp
