@@ -1,5 +1,6 @@
 #include "./something_program.hpp"
 #include "./something_game.hpp"
+#include "./config_loader.hpp"
 
 const Seconds DELTA_TIME_SECS = 1.0f / static_cast<Seconds>(SCREEN_FPS);
 const Milliseconds DELTA_TIME_MS =
@@ -103,6 +104,8 @@ int main(int argc, char *argv[])
         glDebugMessageCallback(MessageCallback, 0);
     }
 
+    reload_config_from_file("./assets/vars.conf");
+
     // NOTE: The game object could be too big to put on the stack.
     // So we are allocating it on the heap.
     Game *game = new Game{};
@@ -123,6 +126,7 @@ int main(int argc, char *argv[])
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 game->regular_program.reload();
                 game->particle_program.reload();
+                reload_config_from_file("./assets/vars.conf");
             } else {
                 game->handle_event(&event);
             }

@@ -3,10 +3,6 @@
 void Item::render(const Game *game, Triangle_VAO *triangle_vao) const
 {
     if (state == State::Alive) {
-        const float ITEM_SIZE = 128.0f;
-        const float ITEM_IDLE_AMPLITUDE = ITEM_SIZE * 0.125f;
-        const float ITEM_IDLE_FREQUENCY = 4.0f;
-
         const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * ITEM_IDLE_AMPLITUDE;
 
         triangle_vao->fill_aabb(

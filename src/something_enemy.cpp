@@ -28,10 +28,7 @@ void Enemy::update(Game *game, Seconds)
             }
         }
 
-        {
-            const float ENEMY_SPEED = 500.0f;
-            body.vel.x = dummy_idle_direction(game) * ENEMY_SPEED;
-        }
+        body.vel.x = dummy_idle_direction(game) * ENEMY_SPEED;
     }
 }
 
