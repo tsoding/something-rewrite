@@ -32,9 +32,9 @@ Maybe<size_t> where_var_is_defined(const Dynamic_Array<Config_Def> &defs,
     return {};
 }
 
-void usage(const char *program, FILE *stderr)
+void usage(const char *program, FILE *stream)
 {
-    println(stderr, "Usage: ", program, " [--bake] <vars.conf>");
+    println(stream, "Usage: ", program, " [--bake] <vars.conf>");
 }
 
 int main(int argc, char **argv)
