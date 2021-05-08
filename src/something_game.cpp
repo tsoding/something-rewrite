@@ -10,13 +10,9 @@ void Game::init(SDL_Window *window)
 
     // Player
     {
-        this->player.body_index = allocate_aabb_body();
-        {
-            auto &player_body = get_aabb_body(this->player.body_index);
-            player_body.hitbox = AABB(start, V2(PLAYER_WIDTH, PLAYER_HEIGHT));
-        }
-        this->player.jump_anim_player.segments = jump_anim;
-        this->player.jump_anim_player.segments_count = Jump_Anim_Size;
+        this->player = Player::with_body(
+                           this->allocate_aabb_body(
+                               AABB(start, V2(PLAYER_WIDTH, PLAYER_HEIGHT))));
     }
 
     // Enemies
@@ -300,20 +296,24 @@ AABB_Body &Game::get_aabb_body(Index<AABB_Body> body_index)
     return aabb_bodies[body_index.unwrap];
 }
 
-Index<AABB_Body> Game::allocate_aabb_body()
+Index<AABB_Body> Game::allocate_aabb_body(AABB<float> hitbox)
 {
     assert(aabb_bodies_size < AABB_BODIES_CAPACITY);
-    return {aabb_bodies_size++};
+    Index<AABB_Body> result = {aabb_bodies_size};
+    aabb_bodies[aabb_bodies_size] = AABB_Body::from_hitbox(hitbox);
+    aabb_bodies_size += 1;
+    return result;
 }
 
 void Game::spawn_enemy(V2<float> pos)
 {
     if (enemies_size < ENEMIES_CAPACITY) {
         enemies[enemies_size].state = Enemy::Alive;
-        enemies[enemies_size].body_index = allocate_aabb_body();
+        enemies[enemies_size].body_index =
+            allocate_aabb_body(
+                AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f)));
         enemies[enemies_size].direction = 1.0f;
-        get_aabb_body(enemies[enemies_size].body_index).hitbox =
-            AABB(pos, V2(100.0f * 2.0f, 80.0f * 2.0f));
+
         enemies_size += 1;
     }
 }
