@@ -51,3 +51,4 @@ struct Index {
 #include "./something_aabb_body.cpp"
 #include "./something_enemy.cpp"
 #include "./something_item.cpp"
+#include "./something_renderer.cpp"

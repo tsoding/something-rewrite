@@ -16,4 +16,4 @@ config_indexer assets/vars.conf >src/config_index.hpp
 
 dir *.exe
 
-rem TODO: no release build on CI for msys2
+rem TODO(#73): no release build on CI for msys2

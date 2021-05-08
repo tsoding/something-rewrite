@@ -2,7 +2,7 @@
 #define SOMETHING_PLAYER_HPP_
 
 #include "./something_geo.hpp"
-#include "./something_triangle_vao.hpp"
+#include "./something_renderer.hpp"
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"
 #include "./something_anim.hpp"
@@ -39,7 +39,7 @@ struct Player {
     float stretch;
     float health;
 
-    void render(const Game *game, Triangle_VAO *triangle_vao) const;
+    void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
     void jump();

@@ -15,7 +15,7 @@ static const anim::Segment jump_anim[Jump_Anim_Size] = {
     {1.0f + Jump_Anim_Intensity, 1.0f,                       0.25f,  sqrtf}
 };
 
-void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
+void Player::render(const Game *game, Renderer *renderer) const
 {
     const auto &body = game->get_aabb_body(body_index);
 
@@ -32,7 +32,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
         }
 
         const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
-        triangle_vao->fill_aabb(player_hitbox, RGBA(1.0f), uv);
+        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv);
     }
 
     // Player gun
@@ -40,7 +40,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
         const auto pos = body.center();
         const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
         const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
-        triangle_vao->fill_triangle(gun, RGBA::RED(), {});
+        renderer->fill_triangle(gun, RGBA::RED(), {});
     }
 
     // Player health
@@ -50,7 +50,7 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
         const V2 offset =
             V2(HEALTH_BAR_WIDTH, body.hitbox.size.y) * V2(-0.5f, 0.5f) +
             V2(0.0f, HEALTH_BAR_PADDING);
-        triangle_vao->fill_aabb(
+        renderer->fill_aabb(
             AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
             HEALTH_BAR_COLOR,
             game->atlas.get_uv({0}));

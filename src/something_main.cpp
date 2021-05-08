@@ -114,21 +114,21 @@ int main(int argc, char *argv[])
     defer(delete game);
     game->init(window);
 
-    Circle_VAO *circle_vao = new Circle_VAO{};
-    defer(delete circle_vao);
-    circle_vao->init();
-
-    Triangle_VAO *triangle_vao = new Triangle_VAO{};
-    defer(delete triangle_vao);
-    triangle_vao->init();
+    Renderer *renderer = new Renderer{};
+    defer(delete renderer);
+    renderer->init(Program::load_from_shader_files(
+                       "./assets/shaders/rect.vert",
+                       "./assets/shaders/rect.frag"),
+                   Program::load_from_shader_files(
+                       "./assets/shaders/circle.vert",
+                       "./assets/shaders/particle.frag"));
 
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
-                game->regular_program.reload();
-                game->particle_program.reload();
+                renderer->reload_programs();
                 reload_config_from_file("./assets/vars.conf");
             }
 #endif
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
             glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
 
-        if (game->regular_program.failed || game->particle_program.failed) {
+        if (renderer->programs_failed()) {
             glClearColor(FAILED_BACKGROUND_COLOR.r,
                          FAILED_BACKGROUND_COLOR.g,
                          FAILED_BACKGROUND_COLOR.b,
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
         }
         glClear(GL_COLOR_BUFFER_BIT);
 
-        game->render(triangle_vao, circle_vao);
+        game->render(renderer);
 
         SDL_GL_SwapWindow(window);
 

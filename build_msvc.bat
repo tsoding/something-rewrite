@@ -15,4 +15,4 @@ config_indexer assets/vars.conf >src/config_index.hpp
 cl.exe %CXXFLAGS% %INCLUDES% /Fe"something.debug.exe" src/something.cpp ^
     /link %LIBS% -SUBSYSTEM:windows
 
-rem TODO: no release build on CI for msvc
+rem TODO(#74): no release build on CI for msvc

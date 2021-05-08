@@ -29,18 +29,6 @@ void Game::init(SDL_Window *window)
     this->keyboard = SDL_GetKeyboardState(NULL);
     this->window = window;
 
-    // Shader Programs
-    {
-        regular_program = Program::load_from_shader_files(
-                              "./assets/shaders/rect.vert",
-                              "./assets/shaders/rect.frag");
-
-        particle_program = Program::load_from_shader_files(
-                               "./assets/shaders/circle.vert",
-                               "./assets/shaders/particle.frag");
-
-    }
-
     // Testing tiles
     {
         for (int i = 0; i < 10; ++i) {
@@ -229,53 +217,23 @@ void Game::update(Seconds dt)
     }
 }
 
-void Game::render(Triangle_VAO *triangle_vao,
-                  Circle_VAO *circle_vao) const
+void Game::render(Renderer *renderer) const
 {
-    if (!regular_program.failed && !particle_program.failed) {
-        // Regular things
-        {
-            triangle_vao->use();
-            triangle_vao->clear();
-
-            tile_grid.render(this, triangle_vao);
-            player.render(this, triangle_vao);
-            poof.render(triangle_vao);
-            projectiles.render(triangle_vao);
-            for (size_t i = 0; i < enemies_size; ++i) {
-                enemies[i].render(this, triangle_vao);
-            }
-            for (size_t i = 0; i < items_size; ++i) {
-                items[i].render(this, triangle_vao);
-            }
-
-            triangle_vao->sync_buffers();
-
-            regular_program.use();
-            glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
-            glUniform2f(regular_program.u_camera_position, camera.pos.x, camera.pos.y);
-            glUniform1f(regular_program.u_camera_zoom, camera.zoom);
-            glUniform1f(regular_program.u_time, time());
-
-            triangle_vao->draw();
+    renderer->clear();
+    {
+        tile_grid.render(this, renderer);
+        player.render(this, renderer);
+        poof.render(renderer);
+        projectiles.render(renderer);
+        for (size_t i = 0; i < enemies_size; ++i) {
+            enemies[i].render(this, renderer);
         }
-
-        // Particle things
-        {
-            circle_vao->use();
-            circle_vao->clear();
-            particles.render(circle_vao);
-            circle_vao->sync_buffers();
-
-            particle_program.use();
-            glUniform2f(particle_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
-            glUniform2f(particle_program.u_camera_position, camera.pos.x, camera.pos.y);
-            glUniform1f(particle_program.u_camera_zoom, camera.zoom);
-            glUniform1f(particle_program.u_time, time());
-
-            circle_vao->draw();
+        for (size_t i = 0; i < items_size; ++i) {
+            items[i].render(this, renderer);
         }
+        particles.render(renderer);
     }
+    renderer->draw(this);
 }
 
 Seconds Game::time() const

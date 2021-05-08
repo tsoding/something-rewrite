@@ -40,11 +40,11 @@ void Poof::update(Seconds dt)
     }
 }
 
-void Poof::render(Triangle_VAO *triangle_vao) const
+void Poof::render(Renderer *renderer) const
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (lifetimes[i] > 0.0f) {
-            triangle_vao->fill_triangle(
+            renderer->fill_triangle(
                 rotate_triangle(
                     triangles[i] + positions[i],
                     angles[i],
