@@ -82,9 +82,17 @@ jobs:
         run: |
           msys2 -c 'pacman --noconfirm -Suuy'
           msys2 -c 'pacman --noconfirm -Suu'
-      - name: Build
+      - name: debug build
         run: |
           build_msys2.bat
+        shell: cmd
+        env:
+          CC: gcc
+          CXX: g++
+          PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\${{ matrix.msystem_lower }}\bin;D:\a\_temp\msys
+      - name: release build
+        run: |
+          build_msys2.bat --release
         shell: cmd
         env:
           CC: gcc

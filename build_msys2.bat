@@ -10,10 +10,13 @@ set /p PKGLIBS=<temp.txt
 del temp.txt
 
 %CXX% %CXXFLAGS% -o config_indexer.exe src/config_indexer.cpp
-config_indexer assets/vars.conf >src/config_index.hpp
 
-%CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lopengl32 -static
+if "%~1"=="--release" (
+    config_indexer --bake assets/vars.conf >src/config_index.hpp
+    %CXX% %CXXFLAGS% -O3 %PKGSCFLAGS% -DSOMETHING_RELEASE -o something.release.exe src/something.cpp %PKGLIBS% -lopengl32 -static
+) else (
+    config_indexer assets/vars.conf >src/config_index.hpp
+    %CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lopengl32 -static
+)
 
 dir *.exe
-
-rem TODO(#73): no release build on CI for msys2
