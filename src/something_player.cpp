@@ -45,11 +45,13 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
 
     // Player health
     {
+        const float health_p = health / PLAYER_MAX_HEALTH;
+
         const V2 offset =
             V2(HEALTH_BAR_WIDTH, body.hitbox.size.y) * V2(-0.5f, 0.5f) +
             V2(0.0f, HEALTH_BAR_PADDING);
         triangle_vao->fill_aabb(
-            AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT)),
+            AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
             HEALTH_BAR_COLOR,
             game->atlas.get_uv({0}));
     }
