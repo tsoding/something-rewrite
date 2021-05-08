@@ -1,4 +1,5 @@
 something.debug
+something.release
 dependencies
 *.exe
 *.obj

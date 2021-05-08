@@ -13,6 +13,7 @@ jobs:
       - name: build the game
         run: |
           ./build.sh
+          ./build.sh --release
         env:
           CC: gcc
           CXX: g++
@@ -27,6 +28,7 @@ jobs:
       - name: build the game
         run: |
           ./build.sh
+          ./build.sh --release
         env:
           CC: clang
           CXX: clang++
@@ -39,6 +41,7 @@ jobs:
       - name: build the game
         run: |
           ./build.sh
+          ./build.sh --release
         env:
           CC: clang
           CXX: clang++
@@ -64,7 +67,7 @@ jobs:
         include: [
           { msystem: MINGW64, msystem_lower: mingw64, arch: x86_64 }
 #          { msystem: MINGW32, msystem_lower: mingw32, arch: i686   }
-        ]          
+        ]
     steps:
       - uses: actions/checkout@v1
         with:
