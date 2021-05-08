@@ -1,11 +1,11 @@
 #include "./something_item.hpp"
 
-void Item::render(const Game *game, Triangle_VAO *triangle_vao) const
+void Item::render(const Game *game, Renderer *renderer) const
 {
     if (state == State::Alive) {
         const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * ITEM_IDLE_AMPLITUDE;
 
-        triangle_vao->fill_aabb(
+        renderer->fill_aabb(
             AABB(pos + offset - V2(ITEM_SIZE * 0.5f),
                  V2(ITEM_SIZE)),
             RGBA(1.0f),

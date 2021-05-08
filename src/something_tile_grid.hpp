@@ -1,6 +1,8 @@
 #ifndef SOMETHING_TILE_GRID_HPP_
 #define SOMETHING_TILE_GRID_HPP_
 
+#include "something_renderer.hpp"
+
 struct Tile {
     static constexpr float SIZE = 128.0f;
 
@@ -75,7 +77,7 @@ struct Tile_Grid {
 
     Tile tiles[ROWS][COLS];
 
-    void render(const Game *game, Triangle_VAO *triangle_vao) const;
+    void render(const Game *game, Renderer *renderer) const;
     Tile *get_tile(Mem_Coord coord);
     Tile *get_tile(Tile_Coord coord);
     Tile *get_tile(World_Coord coord);

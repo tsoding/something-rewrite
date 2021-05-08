@@ -1,7 +1,7 @@
 #include "./something_enemy.hpp"
 #include "./something_projectiles.hpp"
 
-void Enemy::render(const Game *game, Triangle_VAO *triangle_vao) const
+void Enemy::render(const Game *game, Renderer *renderer) const
 {
     if (state == Alive) {
         const auto &body = game->get_aabb_body(body_index);
@@ -12,7 +12,7 @@ void Enemy::render(const Game *game, Triangle_VAO *triangle_vao) const
             uv = uv.flip_horizontally();
         }
 
-        triangle_vao->fill_aabb(body.hitbox, RGBA(1.0f), uv);
+        renderer->fill_aabb(body.hitbox, RGBA(1.0f), uv);
     }
 }
 

@@ -15,7 +15,7 @@ struct Enemy {
 
     float direction;
 
-    void render(const Game *game, Triangle_VAO *triangle_vao) const;
+    void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
     void kill(Game *game);
