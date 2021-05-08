@@ -59,6 +59,7 @@ jobs:
         # this replaces default PowerShell, which can't fail the build
         run: |
           ./build_msvc.bat
+          ./build_msvc.bat --release
   build-windows-msys2-mingw:
     runs-on: windows-latest
     strategy:
