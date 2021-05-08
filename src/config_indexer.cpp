@@ -1,8 +1,8 @@
 #include "aids.hpp"
+using namespace aids;
 #include "./config_def.hpp"
 #include "./config_parser.hpp"
 
-using namespace aids;
 
 void print1(FILE *stream, Config_Type type)
 {
@@ -10,6 +10,10 @@ void print1(FILE *stream, Config_Type type)
     case Config_Type::Float:
         print(stream, "Config_Type::Float");
         break;
+    case Config_Type::Color:
+        print(stream, "Config_Type::Color");
+        break;
+    case Config_Type::Count:
     default:
         unreachable("print1(Config_Type)");
     }
@@ -101,6 +105,10 @@ int main(int argc, char **argv)
             case Config_Type::Float:
                 println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_float, ";");
                 break;
+            case Config_Type::Color:
+                println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_color, ";");
+                break;
+            case Config_Type::Count:
             default:
                 unreachable("baked config_values macros");
             }
@@ -124,6 +132,10 @@ int main(int argc, char **argv)
             case Config_Type::Float:
                 println(stdout, " config_values[", i, "].as_float");
                 break;
+            case Config_Type::Color:
+                println(stdout, " config_values[", i, "].as_color");
+                break;
+            case Config_Type::Count:
             default:
                 unreachable("config_values macros");
             }

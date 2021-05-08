@@ -1,8 +1,11 @@
 #ifndef CONFIG_DEF_HPP_
 #define CONFIG_DEF_HPP_
 
+#include "./something_rgba.hpp"
+
 enum class Config_Type: size_t {
     Float = 0,
+    Color,
     Count
 };
 
@@ -12,9 +15,12 @@ struct Config_Def {
 };
 
 union Config_Value {
-    int as_int;
     float as_float;
-    aids::String_View as_rgba;
+    RGBA as_color;
 };
+static_assert(
+    static_cast<size_t>(Config_Type::Count) == 2,
+    "Config_Type definition has changed. "
+    "Please update Config_Value definition accordingly");
 
 #endif // CONFIG_DEF_HPP_
