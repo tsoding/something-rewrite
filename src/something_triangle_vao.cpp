@@ -71,6 +71,10 @@ void Triangle_VAO::use()
 
 void Triangle_VAO::sync_buffers()
 {
+    static_assert(
+        sizeof(RGBA) == sizeof(GLfloat) * RGBA_COMPONENTS,
+        "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the RGBA structure.");
+
     for (GLuint attrib = 0; attrib < COUNT_ATTRIBS; ++attrib) {
         glBindBuffer(GL_ARRAY_BUFFER, vbo_ids[attrib]);
         glBufferSubData(GL_ARRAY_BUFFER,

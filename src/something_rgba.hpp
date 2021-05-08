@@ -1,8 +1,6 @@
 #ifndef SOMETHING_RGBA_HPP_
 #define SOMETHING_RGBA_HPP_
 
-#include <GL/gl.h>
-
 const size_t RGBA_COMPONENTS = 4;
 
 struct RGBA {
@@ -59,10 +57,6 @@ struct RGBA {
         return RGBA(r, g, b, alpha);
     }
 };
-
-static_assert(
-    sizeof(RGBA) == sizeof(GLfloat) * RGBA_COMPONENTS,
-    "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the RGBA structure.");
 
 void print1(FILE *stream, RGBA rgba)
 {
