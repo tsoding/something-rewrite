@@ -13,6 +13,9 @@ void print1(FILE *stream, Config_Type type)
     case Config_Type::Color:
         print(stream, "Config_Type::Color");
         break;
+    case Config_Type::Int:
+        print(stream, "Config_Type::Int");
+        break;
     case Config_Type::Count:
     default:
         unreachable("print1(Config_Type)");
@@ -106,7 +109,10 @@ int main(int argc, char **argv)
                 println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_float, ";");
                 break;
             case Config_Type::Color:
-                println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_color, ";");
+                println(stdout, "const RGBA ", config_defs[i].name, " = ", config_values[i].as_color, ";");
+                break;
+            case Config_Type::Int:
+                println(stdout, "const int ", config_defs[i].name, " = ", config_values[i].as_int, ";");
                 break;
             case Config_Type::Count:
             default:
@@ -127,18 +133,8 @@ int main(int argc, char **argv)
         println(stdout, "Config_Value config_values[CONFIG_CAPACITY] = {};");
         println(stdout);
         for (size_t i = 0; i < config_defs.size; ++i) {
-            print(stdout, "#define ", config_defs[i].name);
-            switch (config_defs[i].type) {
-            case Config_Type::Float:
-                println(stdout, " config_values[", i, "].as_float");
-                break;
-            case Config_Type::Color:
-                println(stdout, " config_values[", i, "].as_color");
-                break;
-            case Config_Type::Count:
-            default:
-                unreachable("config_values macros");
-            }
+            println(stdout, "#define ", config_defs[i].name,
+                    " config_values[", i, "].as_", config_type_name(config_defs[i].type));
         }
         println(stdout);
     }

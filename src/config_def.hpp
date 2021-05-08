@@ -6,6 +6,7 @@
 enum class Config_Type: size_t {
     Float = 0,
     Color,
+    Int,
     Count
 };
 
@@ -16,10 +17,11 @@ struct Config_Def {
 
 union Config_Value {
     float as_float;
+    int as_int;
     RGBA as_color;
 };
 static_assert(
-    static_cast<size_t>(Config_Type::Count) == 2,
+    static_cast<size_t>(Config_Type::Count) == 3,
     "Config_Type definition has changed. "
     "Please update Config_Value definition accordingly");
 
