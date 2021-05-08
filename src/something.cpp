@@ -26,6 +26,13 @@ struct Index {
     size_t unwrap;
 };
 
+#ifdef SOMETHING_RELEASE
+#include "./something_rgba.hpp"
+#include "./config_index.hpp"
+#else
+#include "./config_loader.cpp"
+#endif // SOMETHING_RELEASE
+
 #include "./something_atlas.cpp"
 #include "./something_texture.cpp"
 #include "./something_game.cpp"
@@ -44,4 +51,3 @@ struct Index {
 #include "./something_aabb_body.cpp"
 #include "./something_enemy.cpp"
 #include "./something_item.cpp"
-#include "./config_loader.cpp"

@@ -1,4 +1,3 @@
-#include "./config_index.hpp"
 #include "./something_game.hpp"
 
 const RGBA BACKGROUND_COLOR = RGBA::from_abgr32(0x181818FF);

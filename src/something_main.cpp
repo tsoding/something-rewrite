@@ -104,7 +104,9 @@ int main(int argc, char *argv[])
         glDebugMessageCallback(MessageCallback, 0);
     }
 
+#ifndef SOMETHING_RELEASE
     reload_config_from_file("./assets/vars.conf");
+#endif
 
     // NOTE: The game object could be too big to put on the stack.
     // So we are allocating it on the heap.
@@ -123,13 +125,15 @@ int main(int argc, char *argv[])
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
+#ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 game->regular_program.reload();
                 game->particle_program.reload();
                 reload_config_from_file("./assets/vars.conf");
-            } else {
-                game->handle_event(&event);
             }
+#endif
+
+            game->handle_event(&event);
         }
 
         game->update(DELTA_TIME_SECS);
