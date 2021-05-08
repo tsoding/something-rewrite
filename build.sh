@@ -4,7 +4,7 @@ set -xe
 
 CXX="${CXX:-g++}"
 PKGS="sdl2 glew"
-CXXFLAGS="-Wall -Wextra -std=c++17 -pedantic -fno-exceptions -ggdb"
+CXXFLAGS="-Wall -Wextra -Wswitch-enum -std=c++17 -pedantic -fno-exceptions -ggdb"
 
 if [ `uname` = "Darwin" ]; then
 	CXXFLAGS+=" -framework OpenGL"

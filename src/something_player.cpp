@@ -1,7 +1,24 @@
 #include "./something_player.hpp"
 
+enum Jump_Anim: size_t {
+    Jump_Anim_Prepare = 0,
+    Jump_Anim_Attack,
+    Jump_Anim_Recover,
+    Jump_Anim_Size
+};
+
+const float Jump_Anim_Intensity = 0.20f;
+
+static const anim::Segment jump_anim[Jump_Anim_Size] = {
+    {1.0f,                       1.0f - Jump_Anim_Intensity, 0.05f, sqrtf},
+    {1.0f - Jump_Anim_Intensity, 1.0f + Jump_Anim_Intensity, 0.1f,  squaref},
+    {1.0f + Jump_Anim_Intensity, 1.0f,                       0.25f,  sqrtf}
+};
+
 void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
 {
+    const auto &body = game->get_aabb_body(body_index);
+
     // Player body
     {
         auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
@@ -14,18 +31,29 @@ void Player::render(const Game *game, Triangle_VAO *triangle_vao) const
             }
         }
 
-        const auto &body = game->get_aabb_body(body_index);
         const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
         triangle_vao->fill_aabb(player_hitbox, RGBA(1.0f), uv);
     }
 
     // Player gun
     {
-        const auto &body = game->get_aabb_body(body_index);
         const auto pos = body.center();
         const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
         const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
         triangle_vao->fill_triangle(gun, RGBA::RED(), {});
+    }
+
+    // Player health
+    {
+        const float health_p = health / PLAYER_MAX_HEALTH;
+
+        const V2 offset =
+            V2(HEALTH_BAR_WIDTH, body.hitbox.size.y) * V2(-0.5f, 0.5f) +
+            V2(0.0f, HEALTH_BAR_PADDING);
+        triangle_vao->fill_aabb(
+            AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
+            HEALTH_BAR_COLOR,
+            game->atlas.get_uv({0}));
     }
 }
 
@@ -102,4 +130,14 @@ void Player::shoot(Game *game)
 void Player::point_gun_at(Game *game, V2<float> target)
 {
     gun_angle = angle_v2(target - game->get_aabb_body(body_index).center());
+}
+
+Player Player::with_body(Index<AABB_Body> body_index)
+{
+    Player player = {};
+    player.body_index = body_index;
+    player.jump_anim_player.segments = jump_anim;
+    player.jump_anim_player.segments_count = Jump_Anim_Size;
+    player.health = PLAYER_MAX_HEALTH;
+    return player;
 }

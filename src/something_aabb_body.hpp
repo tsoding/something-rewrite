@@ -30,6 +30,8 @@ struct AABB_Body {
     void update(const Game *game, Seconds dt);
     void move(Direction direction, float speed);
     void stop();
+
+    static AABB_Body from_hitbox(AABB<float> hitbox);
 };
 
 #endif // SOMETHING_AABB_BODY_HPP_

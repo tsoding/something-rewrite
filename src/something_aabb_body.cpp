@@ -47,3 +47,11 @@ void AABB_Body::stop()
 {
     vel.x = 0.0f;
 }
+
+AABB_Body AABB_Body::from_hitbox(AABB<float> hitbox)
+{
+    AABB_Body self = {};
+    self.vel = V2(0.0f);
+    self.hitbox = hitbox;
+    return self;
+}

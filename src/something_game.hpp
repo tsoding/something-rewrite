@@ -61,7 +61,7 @@ struct Game {
 
     const AABB_Body &get_aabb_body(Index<AABB_Body> body_index) const;
     AABB_Body &get_aabb_body(Index<AABB_Body> body_index);
-    Index<AABB_Body> allocate_aabb_body();
+    Index<AABB_Body> allocate_aabb_body(AABB<float> aabb);
 };
 
 #endif  // SOMETHING_GAME_HPP_

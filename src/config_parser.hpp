@@ -6,6 +6,11 @@ const char *config_type_name(Config_Type type)
     switch (type) {
     case Config_Type::Float:
         return "float";
+    case Config_Type::Color:
+        return "color";
+    case Config_Type::Int:
+        return "int";
+    case Config_Type::Count:
     default:
         aids::unreachable("config_type_name");
     }
@@ -14,7 +19,7 @@ const char *config_type_name(Config_Type type)
 bool config_type_by_name(aids::String_View name, Config_Type *type)
 {
     static_assert(
-        static_cast<size_t>(Config_Type::Count) == 1,
+        static_cast<size_t>(Config_Type::Count) == 3,
         "Config_Type defintion was changed. "
         "Adjust the code below and the condition "
         "above to reflect the changes.");
@@ -23,6 +28,16 @@ bool config_type_by_name(aids::String_View name, Config_Type *type)
 
     if (name == "float"_sv) {
         *type = Config_Type::Float;
+        return true;
+    }
+
+    if (name == "color"_sv) {
+        *type = Config_Type::Color;
+        return true;
+    }
+
+    if (name == "int"_sv) {
+        *type = Config_Type::Int;
         return true;
     }
 
@@ -52,6 +67,28 @@ aids::Maybe<Config_Value> parse_config_value(aids::String_View value_sv, Config_
     }
     break;
 
+    case Config_Type::Color: {
+        const auto color_u32 = value_sv.from_hex<uint32_t>();
+        if (!color_u32.has_value) {
+            return {};
+        }
+
+        result.as_color = RGBA::from_u32(color_u32.unwrap);
+    }
+    break;
+
+    case Config_Type::Int: {
+        const auto value = value_sv.as_integer<int>();
+
+        if (!value.has_value) {
+            return {};
+        }
+
+        result.as_int = value.unwrap;
+    }
+    break;
+
+    case Config_Type::Count:
     default:
         aids::unreachable("parse_config_value");
     }
@@ -70,7 +107,7 @@ void parse_config_content(aids::String_View lines,
         String_View line = lines.chop_by_delim('\n');
         line = line.chop_by_delim('#').trim();
         if (line.count > 0) {
-            Config_Def def = {};
+            Config_Value_Def def = {};
 
             // Name
             def.name = line.chop_by_delim(':').trim();

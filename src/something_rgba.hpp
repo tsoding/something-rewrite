@@ -16,6 +16,14 @@ struct RGBA {
         r(r), g(g), b(b), a(a)
     {}
 
+    static constexpr RGBA from_u32(uint32_t rgba)
+    {
+        return RGBA(static_cast<float>(((rgba >> (3 * 8)) & 0xFF) / 255.0f),
+                    static_cast<float>(((rgba >> (2 * 8)) & 0xFF) / 255.0f),
+                    static_cast<float>(((rgba >> (1 * 8)) & 0xFF) / 255.0f),
+                    static_cast<float>(((rgba >> (0 * 8)) & 0xFF) / 255.0f));
+    }
+
     static constexpr RGBA RED()
     {
         return RGBA(1.0f, 0.0f, 0.0f, 1.0f);
@@ -50,8 +58,9 @@ struct RGBA {
     }
 };
 
-static_assert(
-    sizeof(RGBA) == sizeof(GLfloat) * RGBA_COMPONENTS,
-    "Looks like compiler did an oopsie-doopsie and padded something incorrectly in the RGBA structure.");
+void print1(FILE *stream, RGBA rgba)
+{
+    print(stream, "RGBA(", rgba.r, ",", rgba.g, ",", rgba.b, ",", rgba.a, ")");
+}
 
 #endif  // SOMETHING_RGBA_HPP_
