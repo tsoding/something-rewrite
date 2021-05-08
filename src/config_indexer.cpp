@@ -22,12 +22,12 @@ void print1(FILE *stream, Config_Type type)
     }
 }
 
-void print1(FILE *stream, Config_Def def)
+void print1(FILE *stream, Config_Value_Def def)
 {
     print(stream, "{\"", def.name, "\"_sv, ", def.type,"}");
 }
 
-Maybe<size_t> where_var_is_defined(const Dynamic_Array<Config_Def> &defs,
+Maybe<size_t> where_var_is_defined(const Dynamic_Array<Config_Value_Def> &defs,
                                    const Dynamic_Array<size_t> &def_lines,
                                    String_View var_name)
 {
@@ -77,25 +77,25 @@ int main(int argc, char **argv)
             "Could not read file `", vars_conf_path, "`: ", strerror(errno));
     defer(destroy(vars_conf_content));
 
-    Dynamic_Array<Config_Def> config_defs = {};
-    defer(destroy(config_defs));
+    Dynamic_Array<Config_Value_Def> config_value_defs = {};
+    defer(destroy(config_value_defs));
 
-    Dynamic_Array<size_t> config_def_lines = {};
-    defer(destroy(config_def_lines));
+    Dynamic_Array<size_t> config_value_def_lines = {};
+    defer(destroy(config_value_def_lines));
 
     Dynamic_Array<Config_Value> config_values = {};
     defer(destroy(config_values));
 
-    const auto action = [&](Config_Def def, Config_Value value, size_t line_number) {
-        auto place = where_var_is_defined(config_defs, config_def_lines, def.name);
+    const auto action = [&](Config_Value_Def def, Config_Value value, size_t line_number) {
+        auto place = where_var_is_defined(config_value_defs, config_value_def_lines, def.name);
         if (place.has_value) {
             panic(vars_conf_path, ":", line_number, ": `", def.name, "` is already defined", Newline(),
                   vars_conf_path, ":", place.unwrap, ": it was defined first time here");
         }
 
         config_values.push(value);
-        config_defs.push(def);
-        config_def_lines.push(line_number);
+        config_value_defs.push(def);
+        config_value_def_lines.push(line_number);
     };
     parse_config_content(vars_conf_content, vars_conf_path, action);
 
@@ -103,16 +103,16 @@ int main(int argc, char **argv)
     println(stdout, "#define CONFIG_INDEX_HPP_");
     println(stdout);
     if (bake) {
-        for (size_t i = 0; i < config_defs.size; ++i) {
-            switch (config_defs[i].type) {
+        for (size_t i = 0; i < config_value_defs.size; ++i) {
+            switch (config_value_defs[i].type) {
             case Config_Type::Float:
-                println(stdout, "const float ", config_defs[i].name, " = ", config_values[i].as_float, ";");
+                println(stdout, "const float ", config_value_defs[i].name, " = ", config_values[i].as_float, ";");
                 break;
             case Config_Type::Color:
-                println(stdout, "const RGBA ", config_defs[i].name, " = ", config_values[i].as_color, ";");
+                println(stdout, "const RGBA ", config_value_defs[i].name, " = ", config_values[i].as_color, ";");
                 break;
             case Config_Type::Int:
-                println(stdout, "const int ", config_defs[i].name, " = ", config_values[i].as_int, ";");
+                println(stdout, "const int ", config_value_defs[i].name, " = ", config_values[i].as_int, ";");
                 break;
             case Config_Type::Count:
             default:
@@ -123,18 +123,18 @@ int main(int argc, char **argv)
     } else {
         println(stdout, "#include \"./config_def.hpp\"");
         println(stdout);
-        println(stdout, "const size_t CONFIG_CAPACITY = ", config_defs.size, ";");
-        println(stdout, "const Config_Def config_defs[CONFIG_CAPACITY] = {");
-        for (size_t i = 0; i < config_defs.size; ++i) {
-            println(stdout, "   {\"", config_defs[i].name, "\"_sv, ", config_defs[i].type,"},");
+        println(stdout, "const size_t CONFIG_CAPACITY = ", config_value_defs.size, ";");
+        println(stdout, "const Config_Value_Def config_value_defs[CONFIG_CAPACITY] = {");
+        for (size_t i = 0; i < config_value_defs.size; ++i) {
+            println(stdout, "   {\"", config_value_defs[i].name, "\"_sv, ", config_value_defs[i].type,"},");
         }
         println(stdout, "};");
         println(stdout);
         println(stdout, "Config_Value config_values[CONFIG_CAPACITY] = {};");
         println(stdout);
-        for (size_t i = 0; i < config_defs.size; ++i) {
-            println(stdout, "#define ", config_defs[i].name,
-                    " config_values[", i, "].as_", config_type_name(config_defs[i].type));
+        for (size_t i = 0; i < config_value_defs.size; ++i) {
+            println(stdout, "#define ", config_value_defs[i].name,
+                    " config_values[", i, "].as_", config_type_name(config_value_defs[i].type));
         }
         println(stdout);
     }

@@ -107,7 +107,7 @@ void parse_config_content(aids::String_View lines,
         String_View line = lines.chop_by_delim('\n');
         line = line.chop_by_delim('#').trim();
         if (line.count > 0) {
-            Config_Def def = {};
+            Config_Value_Def def = {};
 
             // Name
             def.name = line.chop_by_delim(':').trim();

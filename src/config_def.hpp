@@ -10,7 +10,7 @@ enum class Config_Type: size_t {
     Count
 };
 
-struct Config_Def {
+struct Config_Value_Def {
     aids::String_View name;
     Config_Type type;
 };
@@ -20,6 +20,7 @@ union Config_Value {
     int as_int;
     RGBA as_color;
 };
+
 static_assert(
     static_cast<size_t>(Config_Type::Count) == 3,
     "Config_Type definition has changed. "

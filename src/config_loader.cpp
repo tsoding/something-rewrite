@@ -7,7 +7,7 @@ static String_View config_file_content_owner = {};
 Maybe<size_t> config_index_by_name(String_View name)
 {
     for (size_t i = 0; i < CONFIG_CAPACITY; ++i) {
-        if (config_defs[i].name == name) {
+        if (config_value_defs[i].name == name) {
             return {true, i};
         }
     }
@@ -30,14 +30,14 @@ void reload_config_from_file(const char *file_path)
 
     config_file_content_owner = content;
 
-    const auto callback = [&](Config_Def def, Config_Value value, size_t line_number) {
+    const auto callback = [&](Config_Value_Def def, Config_Value value, size_t line_number) {
         const auto index =
             unwrap_or_panic(
                 config_index_by_name(def.name),
                 file_path, ":", line_number, ": The application knows nothing about `", def.name, "`. Please regenerate the config index by rebuilding the application.");
 
-        if (config_defs[index].type != def.type) {
-            panic(file_path, ":", line_number, "The application expects ", def.name, " to have type ", config_type_name(config_defs[index].type), " but the configuration file defines it as ", config_type_name(def.type), ". Please regenerate the config index by rebuilding the application.");
+        if (config_value_defs[index].type != def.type) {
+            panic(file_path, ":", line_number, "The application expects ", def.name, " to have type ", config_type_name(config_value_defs[index].type), " but the configuration file defines it as ", config_type_name(def.type), ". Please regenerate the config index by rebuilding the application.");
         }
 
         config_values[index] = value;
