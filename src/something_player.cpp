@@ -32,7 +32,7 @@ void Player::render(const Game *game, Renderer *renderer) const
         }
 
         const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
-        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
+        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv, PRIDE_PROGRAM_ASSET);
     }
 
     // Player gun

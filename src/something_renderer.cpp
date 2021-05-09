@@ -12,13 +12,17 @@ void Renderer::init()
         Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/rect.frag");
     shaders[RECT_VERT_SHADER_ASSET] =
         Shader::make(GL_VERTEX_SHADER, "./assets/shaders/rect.vert");
-    static_assert(COUNT_SHADER_ASSETS == 4);
+    shaders[HSL_FRAG_SHADER_ASSET] =
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/hsl.frag");
+    static_assert(COUNT_SHADER_ASSETS == 5);
 
     programs[REGULAR_PROGRAM_ASSET] =
         Program::make({RECT_VERT_SHADER_ASSET}, {RECT_FRAG_SHADER_ASSET});
     programs[PARTICLE_PROGRAM_ASSET] =
         Program::make({CIRCLE_VERT_SHADER_ASSET}, {PARTICLE_FRAG_SHADER_ASSET});
-    static_assert(COUNT_PROGRAM_ASSETS == 2);
+    programs[PRIDE_PROGRAM_ASSET] =
+        Program::make({RECT_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
+    static_assert(COUNT_PROGRAM_ASSETS == 3);
 }
 
 void Renderer::clear()
@@ -68,7 +72,7 @@ void Renderer::draw(const Game *game)
             programs[batch.program].use();
             glDrawArrays(
                 GL_TRIANGLES,
-                batch.first,
+                batch.first * TRIANGLE_VERT_COUNT,
                 batch.count * TRIANGLE_VERT_COUNT);
         }
     } else {
@@ -118,7 +122,7 @@ void Renderer::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
 
 void Renderer::fill_circle(V2<GLfloat> /*center*/, GLfloat /*radius*/, RGBA /*color*/)
 {
-    // todo("TODO: Renderer::fill_circle is not implemented");
+    // TODO: Renderer::fill_circle is not implemented;
 }
 
 Shader &Renderer::get_shader(Index<Shader> index)
