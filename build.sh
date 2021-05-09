@@ -16,7 +16,7 @@ while [ $# -gt 0 ]; do
             export SOMETHING_RELEASE="1"
             ;;
         *)
-            echo "ERROR: Unknown flag `$1`"
+            echo "ERROR: Unknown flag $1"
             exit 1
             ;;
     esac
