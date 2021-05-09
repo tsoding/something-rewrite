@@ -60,7 +60,7 @@ struct RGBA {
 
 void print1(FILE *stream, RGBA rgba)
 {
-    print(stream, "RGBA(", rgba.r, ",", rgba.g, ",", rgba.b, ",", rgba.a, ")");
+    print(stream, "RGBA(", rgba.r, "f,", rgba.g, "f,", rgba.b, "f,", rgba.a, "f)");
 }
 
 #endif  // SOMETHING_RGBA_HPP_
