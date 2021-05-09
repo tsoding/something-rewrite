@@ -7,18 +7,36 @@
 
 struct Game;
 
+enum Shader_Asset: size_t {
+    CIRCLE_VERT_SHADER_ASSET = 0,
+    PARTICLE_FRAG_SHADER_ASSET,
+    RECT_FRAG_SHADER_ASSET,
+    RECT_VERT_SHADER_ASSET,
+    COUNT_SHADER_ASSETS,
+};
+
+enum Program_Asset: size_t {
+    REGULAR_PROGRAM_ASSET = 0,
+    PARTICLE_PROGRAM_ASSET,
+    COUNT_PROGRAM_ASSETS
+};
+
 struct Renderer {
     Triangle_VAO triangle_vao;
     Circle_VAO circle_vao;
 
-    Program regular_program;
-    Program particle_program;
+    bool loaded;
 
-    void init(Program regular_program, Program particle_program);
+    Shader shaders[COUNT_SHADER_ASSETS];
+    Program programs[COUNT_PROGRAM_ASSETS];
+
+    void init();
     void clear();
     void draw(const Game *game);
-    void reload_programs();
-    bool programs_failed() const;
+    bool reload();
+
+    Shader &get_shader(Index<Shader> shader_index);
+    const Shader &get_shader(Index<Shader> shader_index) const;
 
     void fill_triangle(Triangle<GLfloat> triangle,
                        RGBA rgba,

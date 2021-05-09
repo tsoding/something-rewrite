@@ -5,10 +5,16 @@ struct Shader {
     GLuint id;
     GLenum type;
     const char *file_path;
-    bool failed;
+    bool loaded;
 
-    static Shader load_from_file(const char *file_path,
-                                 GLenum shader_type);
+    static constexpr Shader make(GLenum shader_type, const char *file_path)
+    {
+        Shader self = {};
+        self.file_path = file_path;
+        self.type = shader_type;
+        return self;
+    }
+
     bool reload();
 };
 

@@ -1,12 +1,25 @@
 #include "./something_renderer.hpp"
 
-void Renderer::init(Program regular_program, Program particle_program)
+void Renderer::init()
 {
-    this->regular_program = regular_program;
-    this->particle_program = particle_program;
-
     triangle_vao.init();
     circle_vao.init();
+
+    shaders[CIRCLE_VERT_SHADER_ASSET] =
+        Shader::make(GL_VERTEX_SHADER, "./assets/shaders/circle.vert");
+    shaders[PARTICLE_FRAG_SHADER_ASSET] =
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/particle.frag");
+    shaders[RECT_FRAG_SHADER_ASSET] =
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/rect.frag");
+    shaders[RECT_VERT_SHADER_ASSET] =
+        Shader::make(GL_VERTEX_SHADER, "./assets/shaders/rect.vert");
+    static_assert(COUNT_SHADER_ASSETS == 4);
+
+    programs[REGULAR_PROGRAM_ASSET] =
+        Program::make({RECT_VERT_SHADER_ASSET}, {RECT_FRAG_SHADER_ASSET});
+    programs[PARTICLE_PROGRAM_ASSET] =
+        Program::make({CIRCLE_VERT_SHADER_ASSET}, {PARTICLE_FRAG_SHADER_ASSET});
+    static_assert(COUNT_PROGRAM_ASSETS == 2);
 }
 
 void Renderer::clear()
@@ -15,33 +28,41 @@ void Renderer::clear()
     circle_vao.clear();
 }
 
-void Renderer::reload_programs()
+bool Renderer::reload()
 {
-    regular_program.reload();
-    particle_program.reload();
-}
+    loaded = false;
 
-bool Renderer::programs_failed() const
-{
-    return regular_program.failed || particle_program.failed;
+    for (size_t i = 0; i < COUNT_SHADER_ASSETS; ++i) {
+        if (!shaders[i].reload()) {
+            return loaded;
+        }
+    }
+
+    for (size_t i = 0; i < COUNT_PROGRAM_ASSETS; ++i) {
+        if (!programs[i].relink(this)) {
+            return loaded;
+        }
+    }
+
+    loaded = true;
+    return loaded;
 }
 
 void Renderer::draw(const Game *game)
 {
-    if (!regular_program.failed && !particle_program.failed) {
+    if (loaded) {
+        glClearColor(BACKGROUND_COLOR.r,
+                     BACKGROUND_COLOR.g,
+                     BACKGROUND_COLOR.b,
+                     BACKGROUND_COLOR.a);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         // Triangles
         {
             triangle_vao.use();
             triangle_vao.sync_buffers();
-
-            regular_program.use();
-            glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
-            glUniform2f(regular_program.u_camera_position, game->camera.pos.x, game->camera.pos.y);
-            glUniform1f(regular_program.u_camera_zoom, game->camera.zoom);
-            glUniform1f(regular_program.u_time, game->time());
-
-            glUniform1f(regular_program.u_time, game->time());
-
+            programs[REGULAR_PROGRAM_ASSET].use();
+            programs[REGULAR_PROGRAM_ASSET].sync_uniforms(game);
             triangle_vao.draw();
         }
 
@@ -49,19 +70,16 @@ void Renderer::draw(const Game *game)
         {
             circle_vao.use();
             circle_vao.sync_buffers();
-
-            particle_program.use();
-            glUniform2f(regular_program.u_resolution, SCREEN_WIDTH, SCREEN_HEIGHT);
-            glUniform2f(regular_program.u_camera_position,
-                        game->camera.pos.x,
-                        game->camera.pos.y);
-            glUniform1f(regular_program.u_camera_zoom, game->camera.zoom);
-            glUniform1f(regular_program.u_time, game->time());
-
-            glUniform1f(regular_program.u_time, game->time());
-
+            programs[PARTICLE_PROGRAM_ASSET].use();
+            programs[PARTICLE_PROGRAM_ASSET].sync_uniforms(game);
             circle_vao.draw();
         }
+    } else {
+        glClearColor(FAILED_BACKGROUND_COLOR.r,
+                     FAILED_BACKGROUND_COLOR.g,
+                     FAILED_BACKGROUND_COLOR.b,
+                     FAILED_BACKGROUND_COLOR.a);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
 
@@ -79,3 +97,16 @@ void Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
 {
     circle_vao.fill_circle(center, radius, color);
 }
+
+Shader &Renderer::get_shader(Index<Shader> index)
+{
+    assert(index.unwrap < COUNT_SHADER_ASSETS);
+    return shaders[index.unwrap];
+}
+
+const Shader &Renderer::get_shader(Index<Shader> index) const
+{
+    assert(index.unwrap < COUNT_SHADER_ASSETS);
+    return shaders[index.unwrap];
+}
+
