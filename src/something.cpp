@@ -38,7 +38,6 @@ struct Index {
 #include "./something_game.cpp"
 #include "./something_player.cpp"
 #include "./something_triangle_vao.cpp"
-#include "./something_circle_vao.cpp"
 #include "./something_camera.cpp"
 #include "./something_main.cpp"
 #include "./something_geo.cpp"
@@ -52,3 +51,4 @@ struct Index {
 #include "./something_enemy.cpp"
 #include "./something_item.cpp"
 #include "./something_renderer.cpp"
+#include "./something_shader.cpp"

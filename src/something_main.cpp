@@ -116,19 +116,15 @@ int main(int argc, char *argv[])
 
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
-    renderer->init(Program::load_from_shader_files(
-                       "./assets/shaders/rect.vert",
-                       "./assets/shaders/rect.frag"),
-                   Program::load_from_shader_files(
-                       "./assets/shaders/circle.vert",
-                       "./assets/shaders/particle.frag"));
+    renderer->init();
+    renderer->reload();
 
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
-                renderer->reload_programs();
+                renderer->reload();
                 reload_config_from_file("./assets/vars.conf");
             }
 #endif
@@ -145,19 +141,6 @@ int main(int argc, char *argv[])
             const auto viewport = compute_gl_viewport(w, h).map(floorf).cast_to<GLint>();
             glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
-
-        if (renderer->programs_failed()) {
-            glClearColor(FAILED_BACKGROUND_COLOR.r,
-                         FAILED_BACKGROUND_COLOR.g,
-                         FAILED_BACKGROUND_COLOR.b,
-                         FAILED_BACKGROUND_COLOR.a);
-        } else {
-            glClearColor(BACKGROUND_COLOR.r,
-                         BACKGROUND_COLOR.g,
-                         BACKGROUND_COLOR.b,
-                         BACKGROUND_COLOR.a);
-        }
-        glClear(GL_COLOR_BUFFER_BIT);
 
         game->render(renderer);
 

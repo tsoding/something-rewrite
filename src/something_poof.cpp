@@ -50,7 +50,8 @@ void Poof::render(Renderer *renderer) const
                     angles[i],
                     pivots[i] + positions[i]),
                 shades[i].with_alpha(lifetimes[i] / LIFETIME),
-                uvs[i]);
+                uvs[i],
+                PRIDE_PROGRAM_ASSET);
         }
     }
 }

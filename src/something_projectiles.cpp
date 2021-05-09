@@ -37,7 +37,7 @@ void Projectiles::render(Renderer *renderer) const
                 equilateral_triangle(
                     positions[i],
                     RADIUS,
-                    angle_v2(velocities[i])), COLOR, {});
+                    angle_v2(velocities[i])), COLOR, {}, REGULAR_PROGRAM_ASSET);
         }
     }
 }

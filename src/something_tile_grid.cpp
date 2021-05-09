@@ -17,12 +17,14 @@ void Tile_Grid::render(const Game *game, Renderer *renderer) const
                     renderer->fill_aabb(
                         tile_aabb,
                         RGBA::WHITE(),
-                        game->atlas.uvs.data[DIRT_INDEX].flip_vertically());
+                        game->atlas.uvs.data[DIRT_INDEX].flip_vertically(),
+                        REGULAR_PROGRAM_ASSET);
                 } else {
                     renderer->fill_aabb(
                         tile_aabb,
                         RGBA::WHITE(),
-                        game->atlas.uvs.data[GRASS_INDEX].flip_vertically());
+                        game->atlas.uvs.data[GRASS_INDEX].flip_vertically(),
+                        REGULAR_PROGRAM_ASSET);
                 }
             }
         }
