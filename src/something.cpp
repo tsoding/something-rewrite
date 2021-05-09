@@ -52,3 +52,4 @@ struct Index {
 #include "./something_enemy.cpp"
 #include "./something_item.cpp"
 #include "./something_renderer.cpp"
+#include "./something_shader.cpp"
