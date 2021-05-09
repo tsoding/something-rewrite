@@ -12,7 +12,7 @@ void Enemy::render(const Game *game, Renderer *renderer) const
             uv = uv.flip_horizontally();
         }
 
-        renderer->fill_aabb(body.hitbox, RGBA(1.0f), uv);
+        renderer->fill_aabb(body.hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
     }
 }
 

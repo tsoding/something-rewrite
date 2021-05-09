@@ -32,7 +32,7 @@ void Player::render(const Game *game, Renderer *renderer) const
         }
 
         const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
-        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv);
+        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
     }
 
     // Player gun
@@ -40,7 +40,7 @@ void Player::render(const Game *game, Renderer *renderer) const
         const auto pos = body.center();
         const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
         const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
-        renderer->fill_triangle(gun, RGBA::RED(), {});
+        renderer->fill_triangle(gun, RGBA::RED(), {}, REGULAR_PROGRAM_ASSET);
     }
 
     // Player health
@@ -53,7 +53,8 @@ void Player::render(const Game *game, Renderer *renderer) const
         renderer->fill_aabb(
             AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
             HEALTH_BAR_COLOR,
-            game->atlas.get_uv({0}));
+            game->atlas.get_uv({0}),
+            REGULAR_PROGRAM_ASSET);
     }
 }
 

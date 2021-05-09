@@ -3,7 +3,6 @@
 void Renderer::init()
 {
     triangle_vao.init();
-    circle_vao.init();
 
     shaders[CIRCLE_VERT_SHADER_ASSET] =
         Shader::make(GL_VERTEX_SHADER, "./assets/shaders/circle.vert");
@@ -25,7 +24,7 @@ void Renderer::init()
 void Renderer::clear()
 {
     triangle_vao.clear();
-    circle_vao.clear();
+    batch_size = 0;
 }
 
 bool Renderer::reload()
@@ -57,22 +56,20 @@ void Renderer::draw(const Game *game)
                      BACKGROUND_COLOR.a);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Triangles
-        {
-            triangle_vao.use();
-            triangle_vao.sync_buffers();
-            programs[REGULAR_PROGRAM_ASSET].use();
-            programs[REGULAR_PROGRAM_ASSET].sync_uniforms(game);
-            triangle_vao.draw();
+        for (size_t i = 0; i < COUNT_PROGRAM_ASSETS; ++i) {
+            programs[i].use();
+            programs[i].sync_uniforms(game);
         }
 
-        // Circles
-        {
-            circle_vao.use();
-            circle_vao.sync_buffers();
-            programs[PARTICLE_PROGRAM_ASSET].use();
-            programs[PARTICLE_PROGRAM_ASSET].sync_uniforms(game);
-            circle_vao.draw();
+        triangle_vao.use();
+        triangle_vao.sync_buffers();
+        for (size_t i = 0; i < batch_size; ++i) {
+            const auto &batch = batches[i];
+            programs[batch.program].use();
+            glDrawArrays(
+                GL_TRIANGLES,
+                batch.first,
+                batch.count * TRIANGLE_VERT_COUNT);
         }
     } else {
         glClearColor(FAILED_BACKGROUND_COLOR.r,
@@ -83,19 +80,45 @@ void Renderer::draw(const Game *game)
     }
 }
 
-void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv)
+void Renderer::batch_programs(Program_Asset program_asset, GLsizei count)
+{
+    if (batch_size == 0) {
+        assert(batch_size < CAPACITY);
+        batches[batch_size].program = program_asset;
+        batches[batch_size].first = 0;
+        batches[batch_size].count = 0;
+        batch_size += 1;
+    }
+
+    if (batches[batch_size - 1].program != program_asset) {
+        assert(batch_size < CAPACITY);
+        batches[batch_size].program = program_asset;
+        batches[batch_size].first =
+            batches[batch_size - 1].first + batches[batch_size - 1].count;
+        batches[batch_size].count = 0;
+        batch_size += 1;
+    }
+
+    batches[batch_size - 1].count += count;
+}
+
+void Renderer::fill_triangle(Triangle<GLfloat> triangle, RGBA rgba, Triangle<GLfloat> uv,
+                             Program_Asset program_asset)
 {
     triangle_vao.fill_triangle(triangle, rgba, uv);
+    batch_programs(program_asset, 1);
 }
 
-void Renderer::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb)
+void Renderer::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
+                         Program_Asset program_asset)
 {
     triangle_vao.fill_aabb(aabb, shade, uv_aabb);
+    batch_programs(program_asset, 2);
 }
 
-void Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color)
+void Renderer::fill_circle(V2<GLfloat> /*center*/, GLfloat /*radius*/, RGBA /*color*/)
 {
-    circle_vao.fill_circle(center, radius, color);
+    // todo("TODO: Renderer::fill_circle is not implemented");
 }
 
 Shader &Renderer::get_shader(Index<Shader> index)

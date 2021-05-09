@@ -2,7 +2,6 @@
 #define SOMETHING_RENDERER_HPP_
 
 #include "./something_triangle_vao.hpp"
-#include "./something_circle_vao.hpp"
 #include "./something_program.hpp"
 
 struct Game;
@@ -21,14 +20,23 @@ enum Program_Asset: size_t {
     COUNT_PROGRAM_ASSETS
 };
 
+struct Batch {
+    GLint first;
+    GLsizei count;
+    Program_Asset program;
+};
+
 struct Renderer {
+    constexpr static size_t CAPACITY = 1024;
+
     Triangle_VAO triangle_vao;
-    Circle_VAO circle_vao;
 
     bool loaded;
 
     Shader shaders[COUNT_SHADER_ASSETS];
     Program programs[COUNT_PROGRAM_ASSETS];
+    Batch batches[CAPACITY];
+    size_t batch_size;
 
     void init();
     void clear();
@@ -38,10 +46,14 @@ struct Renderer {
     Shader &get_shader(Index<Shader> shader_index);
     const Shader &get_shader(Index<Shader> shader_index) const;
 
+    void batch_programs(Program_Asset program_asset, GLsizei count);
+
     void fill_triangle(Triangle<GLfloat> triangle,
                        RGBA rgba,
-                       Triangle<GLfloat> uv);
-    void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb);
+                       Triangle<GLfloat> uv,
+                       Program_Asset program_asset);
+    void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
+                   Program_Asset program_asset);
     void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color);
 };
 

@@ -9,7 +9,7 @@ void Item::render(const Game *game, Renderer *renderer) const
             AABB(pos + offset - V2(ITEM_SIZE * 0.5f),
                  V2(ITEM_SIZE)),
             RGBA(1.0f),
-            game->atlas.get_uv(uv_index).flip_vertically());
+            game->atlas.get_uv(uv_index).flip_vertically(), REGULAR_PROGRAM_ASSET);
     }
 }
 
