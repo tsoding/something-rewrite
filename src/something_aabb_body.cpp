@@ -2,7 +2,6 @@
 
 void AABB_Body::update(const Game *game, Seconds dt)
 {
-    const float GRAVITY = 4000.0f;
     vel.y -= GRAVITY * dt;
 
     const V2<float> ps[] = {
