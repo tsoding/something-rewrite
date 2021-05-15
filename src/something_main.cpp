@@ -47,6 +47,7 @@ AABB<float> compute_gl_viewport(int w, int h)
 // TODO(#63): no sound system
 
 // TODO(#4): hot-reloadable configuration
+const char *const VARS_CONF_PATH = "./assets/vars.conf";
 int main(int argc, char *argv[])
 {
     (void) argc;
@@ -105,7 +106,9 @@ int main(int argc, char *argv[])
     }
 
 #ifndef SOMETHING_RELEASE
-    reload_config_from_file("./assets/vars.conf");
+    if (!reload_config_from_file(VARS_CONF_PATH)) {
+        println(stderr, config_reload_error_message());
+    }
 #endif
 
     // NOTE: The game object could be too big to put on the stack.
@@ -125,7 +128,11 @@ int main(int argc, char *argv[])
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 renderer->reload();
-                reload_config_from_file("./assets/vars.conf");
+                if (!reload_config_from_file(VARS_CONF_PATH)) {
+                    // TODO(#85): reload_config_from_file error messages should displayed inside of the game window
+                    // That may require implementing font rendering and the usual jazz
+                    println(stderr, config_reload_error_message());
+                }
             }
 #endif
 
