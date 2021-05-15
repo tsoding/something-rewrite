@@ -46,7 +46,6 @@ AABB<float> compute_gl_viewport(int w, int h)
 
 // TODO(#63): no sound system
 
-// TODO(#4): hot-reloadable configuration
 const char *const VARS_CONF_PATH = "./assets/vars.conf";
 int main(int argc, char *argv[])
 {
