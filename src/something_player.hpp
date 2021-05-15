@@ -1,7 +1,7 @@
 #ifndef SOMETHING_PLAYER_HPP_
 #define SOMETHING_PLAYER_HPP_
 
-#include "./something_geo.hpp"
+#include "./something_math.hpp"
 #include "./something_renderer.hpp"
 #include "./something_poof.hpp"
 #include "./something_tile_grid.hpp"

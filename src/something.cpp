@@ -40,7 +40,7 @@ struct Index {
 #include "./something_triangle_vao.cpp"
 #include "./something_camera.cpp"
 #include "./something_main.cpp"
-#include "./something_geo.cpp"
+#include "./something_math.cpp"
 #include "./something_poof.cpp"
 #include "./something_tile_grid.cpp"
 #include "./something_projectiles.cpp"

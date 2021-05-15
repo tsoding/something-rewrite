@@ -7,8 +7,7 @@
 struct Game;
 
 enum Shader_Asset: size_t {
-    CIRCLE_VERT_SHADER_ASSET = 0,
-    PARTICLE_FRAG_SHADER_ASSET,
+    PARTICLE_FRAG_SHADER_ASSET = 0,
     RECT_FRAG_SHADER_ASSET,
     RECT_VERT_SHADER_ASSET,
     HSL_FRAG_SHADER_ASSET,
@@ -56,7 +55,7 @@ struct Renderer {
                        Program_Asset program_asset);
     void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
                    Program_Asset program_asset);
-    void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color);
+    void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA rgba, Program_Asset program_asset);
 };
 
 #endif // SOMETHING_RENDERER_HPP_

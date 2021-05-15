@@ -1,7 +1,7 @@
 #ifndef SOMETHING_ATLAS_HPP_
 #define SOMETHING_ATLAS_HPP_
 
-#include "./something_geo.hpp"
+#include "./something_math.hpp"
 
 struct Atlas {
     Texture texture;
