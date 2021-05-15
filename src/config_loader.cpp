@@ -30,18 +30,30 @@ void reload_config_from_file(const char *file_path)
 
     config_file_content_owner = content;
 
-    const auto callback = [&](Config_Value_Def def, Config_Value value, size_t line_number) {
+    Parser parser = {};
+    parser.content = config_file_content_owner;
+
+    while (parser.next() == Parser::SUCCESS) {
         const auto index =
             unwrap_or_panic(
-                config_index_by_name(def.name),
-                file_path, ":", line_number, ": The application knows nothing about `", def.name, "`. Please regenerate the config index by rebuilding the application.");
+                config_index_by_name(parser.def.name),
+                file_path, ":", parser.line_number, ": The application knows nothing about `", parser.def.name, "`. Please regenerate the config index by rebuilding the application.");
 
-        if (config_value_defs[index].type != def.type) {
-            panic(file_path, ":", line_number, "The application expects ", def.name, " to have type ", config_type_name(config_value_defs[index].type), " but the configuration file defines it as ", config_type_name(def.type), ". Please regenerate the config index by rebuilding the application.");
+        if (config_value_defs[index].type != parser.def.type) {
+            panic(file_path, ":", parser.line_number, "The application expects ", parser.def.name, " to have type ", config_type_name(config_value_defs[index].type), " but the configuration file defines it as ", config_type_name(parser.def.type), ". Please regenerate the config index by rebuilding the application.");
         }
 
-        config_values[index] = value;
-    };
+        config_values[index] = parser.value;
+    }
 
-    parse_config_content(config_file_content_owner, file_path, callback);
+    switch (parser.status) {
+    case Parser::INVALID_TYPE:
+        panic(file_path, ":", parser.line_number, ": `", parser.invalid_type.name, "` is not a valid type");
+    case Parser::INVALID_VALUE:
+        panic(file_path, ":", parser.line_number, ": could not parse `", parser.invalid_value.value, "` as `", config_type_name(parser.invalid_value.expected_type), "`");
+    case Parser::SUCCESS:
+        unreachable("Parser::SUCCESS");
+    case Parser::FINISHED:
+    {}
+    }
 }

@@ -86,18 +86,35 @@ int main(int argc, char **argv)
     Dynamic_Array<Config_Value> config_values = {};
     defer(destroy(config_values));
 
-    const auto action = [&](Config_Value_Def def, Config_Value value, size_t line_number) {
-        auto place = where_var_is_defined(config_value_defs, config_value_def_lines, def.name);
+    Parser parser = {};
+    parser.content = vars_conf_content;
+
+    while (parser.next() == Parser::SUCCESS) {
+        auto place = where_var_is_defined(
+                         config_value_defs,
+                         config_value_def_lines,
+                         parser.def.name);
+
         if (place.has_value) {
-            panic(vars_conf_path, ":", line_number, ": `", def.name, "` is already defined", Newline(),
+            panic(vars_conf_path, ":", parser.line_number, ": `", parser.def.name, "` is already defined", Newline(),
                   vars_conf_path, ":", place.unwrap, ": it was defined first time here");
         }
 
-        config_values.push(value);
-        config_value_defs.push(def);
-        config_value_def_lines.push(line_number);
-    };
-    parse_config_content(vars_conf_content, vars_conf_path, action);
+        config_values.push(parser.value);
+        config_value_defs.push(parser.def);
+        config_value_def_lines.push(parser.line_number);
+    }
+
+    switch (parser.status) {
+    case Parser::INVALID_TYPE:
+        panic(vars_conf_path, ":", parser.line_number, ": `", parser.invalid_type.name, "` is not a valid type");
+    case Parser::INVALID_VALUE:
+        panic(vars_conf_path, ":", parser.line_number, ": could not parse `", parser.invalid_value.value, "` as `", config_type_name(parser.invalid_value.expected_type), "`");
+    case Parser::SUCCESS:
+        unreachable("Parser::SUCCESS");
+    case Parser::FINISHED:
+    {}
+    }
 
     println(stdout, "#ifndef CONFIG_INDEX_HPP_");
     println(stdout, "#define CONFIG_INDEX_HPP_");
