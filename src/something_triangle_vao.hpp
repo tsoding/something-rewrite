@@ -1,7 +1,7 @@
 #ifndef SOMETHING_TRIANGLE_VAO_HPP_
 #define SOMETHING_TRIANGLE_VAO_HPP_
 
-#include "./something_geo.hpp"
+#include "./something_math.hpp"
 #include "./something_rgba.hpp"
 #include "./something_camera.hpp"
 
