@@ -4,8 +4,6 @@ void Renderer::init()
 {
     triangle_vao.init();
 
-    shaders[CIRCLE_VERT_SHADER_ASSET] =
-        Shader::make(GL_VERTEX_SHADER, "./assets/shaders/circle.vert");
     shaders[PARTICLE_FRAG_SHADER_ASSET] =
         Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/particle.frag");
     shaders[RECT_FRAG_SHADER_ASSET] =
@@ -14,12 +12,12 @@ void Renderer::init()
         Shader::make(GL_VERTEX_SHADER, "./assets/shaders/rect.vert");
     shaders[HSL_FRAG_SHADER_ASSET] =
         Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/hsl.frag");
-    static_assert(COUNT_SHADER_ASSETS == 5);
+    static_assert(COUNT_SHADER_ASSETS == 4);
 
     programs[REGULAR_PROGRAM_ASSET] =
         Program::make({RECT_VERT_SHADER_ASSET}, {RECT_FRAG_SHADER_ASSET});
     programs[PARTICLE_PROGRAM_ASSET] =
-        Program::make({CIRCLE_VERT_SHADER_ASSET}, {PARTICLE_FRAG_SHADER_ASSET});
+        Program::make({RECT_VERT_SHADER_ASSET}, {PARTICLE_FRAG_SHADER_ASSET});
     programs[PRIDE_PROGRAM_ASSET] =
         Program::make({RECT_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
     static_assert(COUNT_PROGRAM_ASSETS == 3);
