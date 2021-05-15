@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 renderer->reload();
                 if (!reload_config_from_file(VARS_CONF_PATH)) {
-                    // TODO: reload_config_from_file error messages should displayed inside of the game window
+                    // TODO(#85): reload_config_from_file error messages should displayed inside of the game window
                     // That may require implementing font rendering and the usual jazz
                     println(stderr, config_reload_error_message());
                 }
