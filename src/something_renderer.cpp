@@ -120,9 +120,13 @@ void Renderer::fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
     batch_programs(program_asset, 2);
 }
 
-void Renderer::fill_circle(V2<GLfloat> /*center*/, GLfloat /*radius*/, RGBA /*color*/)
+void Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color,
+                           Program_Asset program_asset)
 {
-    // TODO(#79): Renderer::fill_circle is not implemented;
+    fill_aabb(AABB(center - V2(radius), V2(radius) * 2.0f),
+             color,
+             AABB(V2(0.0f), V2(1.0f)),
+             program_asset);
 }
 
 Shader &Renderer::get_shader(Index<Shader> index)
