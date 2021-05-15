@@ -14,7 +14,6 @@ const float PLAYER_GUN_SIZE = 20.0f;
 
 struct Game;
 
-// TODO(#64): Player does not have any health
 // TODO(#65): Player can't collect the items to heal themselves
 struct Player {
     // static constexpr size_t ATLAS_INDEX = 6;
