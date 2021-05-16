@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 renderer->reload();
-                // TODO: game does not indicate that vars.conf failed loading
+                // TODO(#87): game does not indicate that vars.conf failed loading
                 reload_config_from_file(VARS_CONF_PATH);
             }
 #endif
