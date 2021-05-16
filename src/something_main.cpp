@@ -105,9 +105,7 @@ int main(int argc, char *argv[])
     }
 
 #ifndef SOMETHING_RELEASE
-    if (!reload_config_from_file(VARS_CONF_PATH)) {
-        println(stderr, config_reload_error_message());
-    }
+    reload_config_from_file(VARS_CONF_PATH);
 #endif
 
     // NOTE: The game object could be too big to put on the stack.
@@ -127,11 +125,8 @@ int main(int argc, char *argv[])
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
                 renderer->reload();
-                if (!reload_config_from_file(VARS_CONF_PATH)) {
-                    // TODO(#85): reload_config_from_file error messages should displayed inside of the game window
-                    // That may require implementing font rendering and the usual jazz
-                    println(stderr, config_reload_error_message());
-                }
+                // TODO: game does not indicate that vars.conf failed loading
+                reload_config_from_file(VARS_CONF_PATH);
             }
 #endif
 
