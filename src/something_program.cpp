@@ -4,7 +4,6 @@ bool Program::relink(Renderer *renderer)
 {
     loaded = false;
 
-    println(stderr, "LOG: compiling the shader program");
     glDeleteProgram(this->id);
 
     const auto &vert_shader = renderer->get_shader(vert_shader_index);
