@@ -4,22 +4,22 @@ void Renderer::init()
 {
     triangle_vao.init();
 
-    shaders[PARTICLE_FRAG_SHADER_ASSET] =
-        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/particle.frag");
-    shaders[RECT_FRAG_SHADER_ASSET] =
-        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/rect.frag");
-    shaders[RECT_VERT_SHADER_ASSET] =
-        Shader::make(GL_VERTEX_SHADER, "./assets/shaders/rect.vert");
+    shaders[GRADIENT_CIRCLE_FRAG_SHADER_ASSET] =
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/frag/gradient_circle.frag");
+    shaders[TEXTURE_COLOR_FRAG_SHADER_ASSET] =
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/frag/texture_color.frag");
+    shaders[TRIANGLE_CAMERA_VERT_SHADER_ASSET] =
+        Shader::make(GL_VERTEX_SHADER, "./assets/shaders/vert/triangle_camera.vert");
     shaders[HSL_FRAG_SHADER_ASSET] =
-        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/hsl.frag");
+        Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/frag/hsl.frag");
     static_assert(COUNT_SHADER_ASSETS == 4);
 
     programs[REGULAR_PROGRAM_ASSET] =
-        Program::make({RECT_VERT_SHADER_ASSET}, {RECT_FRAG_SHADER_ASSET});
+        Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {TEXTURE_COLOR_FRAG_SHADER_ASSET});
     programs[PARTICLE_PROGRAM_ASSET] =
-        Program::make({RECT_VERT_SHADER_ASSET}, {PARTICLE_FRAG_SHADER_ASSET});
+        Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {GRADIENT_CIRCLE_FRAG_SHADER_ASSET});
     programs[PRIDE_PROGRAM_ASSET] =
-        Program::make({RECT_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
+        Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
     static_assert(COUNT_PROGRAM_ASSETS == 3);
 }
 
@@ -122,9 +122,9 @@ void Renderer::fill_circle(V2<GLfloat> center, GLfloat radius, RGBA color,
                            Program_Asset program_asset)
 {
     fill_aabb(AABB(center - V2(radius), V2(radius) * 2.0f),
-             color,
-             AABB(V2(0.0f), V2(1.0f)),
-             program_asset);
+              color,
+              AABB(V2(0.0f), V2(1.0f)),
+              program_asset);
 }
 
 Shader &Renderer::get_shader(Index<Shader> index)

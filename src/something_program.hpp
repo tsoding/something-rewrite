@@ -14,7 +14,7 @@ struct Program {
     Index<Shader> vert_shader_index;
     Index<Shader> frag_shader_index;
 
-    GLuint u_atlas;
+    GLuint u_image;
     GLuint u_resolution;
     GLuint u_time;
     GLuint u_camera_position;

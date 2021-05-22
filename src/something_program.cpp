@@ -36,7 +36,7 @@ bool Program::relink(Renderer *renderer)
 
     glUseProgram(this->id);
 
-    u_atlas           = glGetUniformLocation(this->id, "atlas");
+    u_image           = glGetUniformLocation(this->id, "image");
     u_resolution      = glGetUniformLocation(this->id, "resolution");
     u_camera_position = glGetUniformLocation(this->id, "camera_position");
     u_camera_zoom     = glGetUniformLocation(this->id, "camera_zoom");

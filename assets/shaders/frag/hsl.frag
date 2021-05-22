@@ -1,3 +1,5 @@
+// A fragment shader that generates a simple KappaPride animation
+// based on `time`.
 #version 330 core
 
 precision mediump float;
