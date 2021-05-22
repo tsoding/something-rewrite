@@ -2,7 +2,7 @@
 
 precision mediump float;
 
-uniform sampler2D atlas;
+uniform sampler2D image;
 uniform float time;
 
 in vec4 color;
@@ -15,5 +15,5 @@ vec3 hsl2rgb(vec3 c) {
 }
 
 void main() {
-    output_color = texture(atlas, uv) * vec4(hsl2rgb(vec3((time - uv.x - uv.y) * 0.5, 1.0, 0.80)), color.w);
+    output_color = texture(image, uv) * vec4(hsl2rgb(vec3((time - uv.x - uv.y) * 0.5, 1.0, 0.80)), color.w);
 }
