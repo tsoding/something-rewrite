@@ -27,7 +27,7 @@ Font Font::from_file(const char *file_path)
 AABB<GLfloat> Font::char_uv(char c) const
 {
     if (32 <= c && c <= 126) {
-        // TODO: Font::char_uv should be implementing entirely in a shader
+        // TODO(#89): Font::char_uv should be implementing entirely in a shader
         const size_t char_index  = c - 32;
         const auto char_pos_cell = V2(char_index % COLS, char_index / COLS);
         const auto char_pos_pix  = char_pos_cell * char_size_pix;
