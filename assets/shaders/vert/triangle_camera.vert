@@ -1,3 +1,5 @@
+// Vertex shader that renders a triangle with a particular `uv`
+// coordinates and `color` with applied camera_projection
 #version 330 core
 
 precision mediump float;

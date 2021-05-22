@@ -36,7 +36,7 @@ bool Program::relink(Renderer *renderer)
 
     glUseProgram(this->id);
 
-    u_atlas           = glGetUniformLocation(this->id, "atlas");
+    u_image           = glGetUniformLocation(this->id, "image");
     u_resolution      = glGetUniformLocation(this->id, "resolution");
     u_camera_position = glGetUniformLocation(this->id, "camera_position");
     u_camera_zoom     = glGetUniformLocation(this->id, "camera_zoom");
@@ -57,5 +57,6 @@ void Program::sync_uniforms(const Game *game)
     glUniform2f(u_camera_position, game->camera.pos.x, game->camera.pos.y);
     glUniform1f(u_camera_zoom, game->camera.zoom);
     glUniform1f(u_time, game->time());
-    glUniform1f(u_time, game->time());
+    glUniform1i(u_image, image_unit);
 }
+

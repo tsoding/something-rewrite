@@ -66,7 +66,7 @@ Atlas Atlas::from_config(const char *file_path, int margin)
         atlas_row += 2 * margin + textures.data[i].height;
     }
 
-    result.gl_texture = GL_Texture::from_texture(result.texture);
+    result.gl_texture = GL_Texture::from_texture(result.texture, GL_TEXTURE0);
 
     return result;
 }

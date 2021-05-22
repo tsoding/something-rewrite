@@ -7,9 +7,9 @@
 struct Game;
 
 enum Shader_Asset: size_t {
-    PARTICLE_FRAG_SHADER_ASSET = 0,
-    RECT_FRAG_SHADER_ASSET,
-    RECT_VERT_SHADER_ASSET,
+    GRADIENT_CIRCLE_FRAG_SHADER_ASSET = 0,
+    TEXTURE_COLOR_FRAG_SHADER_ASSET,
+    TRIANGLE_CAMERA_VERT_SHADER_ASSET,
     HSL_FRAG_SHADER_ASSET,
     COUNT_SHADER_ASSETS,
 };
@@ -18,6 +18,7 @@ enum Program_Asset: size_t {
     REGULAR_PROGRAM_ASSET = 0,
     PARTICLE_PROGRAM_ASSET,
     PRIDE_PROGRAM_ASSET,
+    FONT_PROGRAM_ASSET,
     COUNT_PROGRAM_ASSETS
 };
 
@@ -55,7 +56,10 @@ struct Renderer {
                        Program_Asset program_asset);
     void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
                    Program_Asset program_asset);
-    void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA rgba, Program_Asset program_asset);
+    void fill_circle(V2<GLfloat> center,
+                     GLfloat radius,
+                     RGBA rgba,
+                     Program_Asset program_asset);
 };
 
 #endif // SOMETHING_RENDERER_HPP_

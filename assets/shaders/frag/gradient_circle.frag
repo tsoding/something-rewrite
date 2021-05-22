@@ -1,3 +1,6 @@
+// A fragment shader that generates a texture for a gradient circle
+// with a given `color`
+
 #version 330 core
 
 precision mediump float;
