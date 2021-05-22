@@ -57,5 +57,6 @@ void Program::sync_uniforms(const Game *game)
     glUniform2f(u_camera_position, game->camera.pos.x, game->camera.pos.y);
     glUniform1f(u_camera_zoom, game->camera.zoom);
     glUniform1f(u_time, game->time());
-    glUniform1f(u_time, game->time());
+    glUniform1i(u_image, image_unit);
 }
+

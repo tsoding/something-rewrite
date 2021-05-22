@@ -20,12 +20,16 @@ struct Program {
     GLuint u_camera_position;
     GLuint u_camera_zoom;
 
+    int image_unit;
+
     constexpr static Program make(Index<Shader> vert_shader_index,
-                                  Index<Shader> frag_shader_index)
+                                  Index<Shader> frag_shader_index,
+                                  int image_unit = 0)
     {
         Program self = {};
         self.vert_shader_index = vert_shader_index;
         self.frag_shader_index = frag_shader_index;
+        self.image_unit = image_unit;
         return self;
     }
 

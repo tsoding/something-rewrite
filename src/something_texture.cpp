@@ -206,7 +206,7 @@ void Texture::save_to_png_file(const char *file_path)
     }
 }
 
-GL_Texture GL_Texture::from_texture(Texture texture, GLenum unit)
+GL_Texture GL_Texture::from_texture(Texture texture, GLenum unit, bool nearest)
 {
     GL_Texture result = {};
 
@@ -215,8 +215,13 @@ GL_Texture GL_Texture::from_texture(Texture texture, GLenum unit)
     glGenTextures(1, &result.id);
     glBindTexture(GL_TEXTURE_2D, result.id);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    if (nearest) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    } else {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    }
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

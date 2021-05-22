@@ -12,7 +12,7 @@ void Renderer::init()
         Shader::make(GL_VERTEX_SHADER, "./assets/shaders/vert/triangle_camera.vert");
     shaders[HSL_FRAG_SHADER_ASSET] =
         Shader::make(GL_FRAGMENT_SHADER, "./assets/shaders/frag/hsl.frag");
-    static_assert(COUNT_SHADER_ASSETS == 4);
+    static_assert(COUNT_SHADER_ASSETS == 4, "The amount of shader assets have changed");
 
     programs[REGULAR_PROGRAM_ASSET] =
         Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {TEXTURE_COLOR_FRAG_SHADER_ASSET});
@@ -20,7 +20,9 @@ void Renderer::init()
         Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {GRADIENT_CIRCLE_FRAG_SHADER_ASSET});
     programs[PRIDE_PROGRAM_ASSET] =
         Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
-    static_assert(COUNT_PROGRAM_ASSETS == 3);
+    programs[FONT_PROGRAM_ASSET] =
+        Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {TEXTURE_COLOR_FRAG_SHADER_ASSET}, 1);
+    static_assert(COUNT_PROGRAM_ASSETS == 4, "The amount of program assets have changed");
 }
 
 void Renderer::clear()

@@ -18,6 +18,7 @@ enum Program_Asset: size_t {
     REGULAR_PROGRAM_ASSET = 0,
     PARTICLE_PROGRAM_ASSET,
     PRIDE_PROGRAM_ASSET,
+    FONT_PROGRAM_ASSET,
     COUNT_PROGRAM_ASSETS
 };
 
@@ -55,7 +56,10 @@ struct Renderer {
                        Program_Asset program_asset);
     void fill_aabb(AABB<float> aabb, RGBA shade, AABB<float> uv_aabb,
                    Program_Asset program_asset);
-    void fill_circle(V2<GLfloat> center, GLfloat radius, RGBA rgba, Program_Asset program_asset);
+    void fill_circle(V2<GLfloat> center,
+                     GLfloat radius,
+                     RGBA rgba,
+                     Program_Asset program_asset);
 };
 
 #endif // SOMETHING_RENDERER_HPP_
