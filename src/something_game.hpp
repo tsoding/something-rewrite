@@ -12,6 +12,7 @@
 #include "./something_aabb_body.hpp"
 #include "./something_enemy.hpp"
 #include "./something_item.hpp"
+#include "./something_font.hpp"
 
 struct Game {
     static const size_t AABB_BODIES_CAPACITY = 1024;
@@ -23,8 +24,9 @@ struct Game {
     const Uint8 *keyboard;
     SDL_Window *window;
 
-    // Game Entities
     Atlas atlas;
+    Font font;
+
     Player player;
     Camera camera;
     Tile_Grid tile_grid;

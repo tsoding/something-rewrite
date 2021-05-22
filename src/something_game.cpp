@@ -26,6 +26,8 @@ void Game::init(SDL_Window *window)
     }
 
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
+    this->font = Font::from_file("./assets/textures/charmap-cellphone_white.png");
+
     this->keyboard = SDL_GetKeyboardState(NULL);
     this->window = window;
 

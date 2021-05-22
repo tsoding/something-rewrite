@@ -30,7 +30,7 @@ struct Texture {
 struct GL_Texture {
     GLuint id;
 
-    static GL_Texture from_texture(Texture texture);
+    static GL_Texture from_texture(Texture texture, GLenum unit);
 };
 
 #endif  // SOMETHING_TEXTURE_HPP_

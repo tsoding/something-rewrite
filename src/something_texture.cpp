@@ -206,9 +206,11 @@ void Texture::save_to_png_file(const char *file_path)
     }
 }
 
-GL_Texture GL_Texture::from_texture(Texture texture)
+GL_Texture GL_Texture::from_texture(Texture texture, GLenum unit)
 {
     GL_Texture result = {};
+
+    glActiveTexture(unit);
 
     glGenTextures(1, &result.id);
     glBindTexture(GL_TEXTURE_2D, result.id);
