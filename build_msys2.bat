@@ -9,7 +9,7 @@ pkg-config --libs %PKGS% >temp.txt
 set /p PKGLIBS=<temp.txt
 del temp.txt
 
-%CXX% %CXXFLAGS% -o config_indexer.exe src/config_indexer.cpp
+%CXX% %CXXFLAGS% -o config_indexer.exe src/config_indexer.cpp src/config_parser.cpp
 
 setlocal
 for %%i in (%*) do (

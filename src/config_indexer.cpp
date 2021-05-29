@@ -1,9 +1,8 @@
-#define AIDS_IMPLEMENTATION
 #include "aids.hpp"
 using namespace aids;
+
 #include "./config_def.hpp"
 #include "./config_parser.hpp"
-
 
 void print1(FILE *stream, Config_Type type)
 {
@@ -161,3 +160,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+#define AIDS_IMPLEMENTATION
+#include "aids.hpp"

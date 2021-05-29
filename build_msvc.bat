@@ -18,7 +18,7 @@ for %%i in (%*) do (
     )
 )
 
-cl.exe %CXXFLAGS% /Fe"config_indexer.exe" src/config_indexer.cpp
+cl.exe %CXXFLAGS% /Fe"config_indexer.exe" src/config_indexer.cpp src/config_parser.cpp
 
 if defined SOMETHING_RELEASE (
     config_indexer --bake assets/vars.conf >src/config_index.hpp

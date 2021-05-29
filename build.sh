@@ -24,7 +24,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-$CXX $CXXFLAGS -o config_indexer src/config_indexer.cpp
+$CXX $CXXFLAGS -o config_indexer src/config_indexer.cpp src/config_parser.cpp
 
 if [ "$SOMETHING_RELEASE" ]; then
     ./config_indexer --bake ./assets/vars.conf > ./src/config_index.hpp
