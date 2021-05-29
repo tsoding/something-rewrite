@@ -1,6 +1,12 @@
 #ifndef SOMETHING_RGBA_HPP_
 #define SOMETHING_RGBA_HPP_
 
+#include "./aids.hpp"
+
+#include <cstdlib>
+#include <cstdint>
+#include <cstdio>
+
 const size_t RGBA_COMPONENTS = 4;
 
 struct RGBA {
@@ -58,9 +64,9 @@ struct RGBA {
     }
 };
 
-void print1(FILE *stream, RGBA rgba)
+inline void print1(FILE *stream, RGBA rgba)
 {
-    print(stream, "RGBA(", rgba.r, "f,", rgba.g, "f,", rgba.b, "f,", rgba.a, "f)");
+    aids::print(stream, "RGBA(", rgba.r, "f,", rgba.g, "f,", rgba.b, "f,", rgba.a, "f)");
 }
 
 #endif  // SOMETHING_RGBA_HPP_

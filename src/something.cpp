@@ -4,9 +4,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <SDL2/SDL_opengl.h>
 
-#define AIDS_IMPLEMENTATION
 #include "./aids.hpp"
-
 using namespace aids;
 
 typedef float Seconds;
@@ -32,6 +30,7 @@ struct Index {
 #include "./config_index.hpp"
 #else
 #include "./config_loader.cpp"
+#include "./config_parser.cpp"
 #endif // SOMETHING_RELEASE
 
 #include "./something_atlas.cpp"
@@ -54,3 +53,7 @@ struct Index {
 #include "./something_renderer.cpp"
 #include "./something_shader.cpp"
 #include "./something_font.cpp"
+
+
+#define AIDS_IMPLEMENTATION
+#include "./aids.hpp"
