@@ -98,7 +98,7 @@ V2<float> window_to_viewport(SDL_Window *window, V2<Sint32> p)
 
 V2<float> viewport_to_world(const Camera &camera, V2<float> p)
 {
-    return (p - V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * 0.5f) * camera.zoom + camera.pos;
+    return (p - V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f)) * V2(camera.zoom) + camera.pos;
 }
 
 void Game::handle_event(const SDL_Event *event)
@@ -184,7 +184,7 @@ void Game::update(Seconds dt)
         camera.update(dt);
 
         const auto target_pos = get_aabb_body(camera_follow_body).hitbox.pos;
-        camera.vel = (target_pos - camera.pos) * 4.0f;
+        camera.vel = (target_pos - camera.pos) * V2(4.0f);
     }
 
     // Poof

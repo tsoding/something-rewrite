@@ -18,7 +18,7 @@ float length(V2<float> v)
 
 V2<float> polar_v2(float angle, float mag)
 {
-    return V2<float>(cosf(angle), sinf(angle)) * mag;
+    return V2<float>(cosf(angle), sinf(angle)) * V2(mag);
 }
 
 float angle_v2(V2<float> v)
@@ -32,7 +32,7 @@ void split_triangle(const Triangle<float> &tri,
 {
     V2<float> ps[TRIANGLE_VERT_COUNT] = {};
     for (size_t i = 0; i < TRIANGLE_VERT_COUNT; ++i) {
-        ps[i] = lerp(tri.vs[i], tri.vs[(i + 1) % TRIANGLE_VERT_COUNT], fs[i]);
+        ps[i] = lerp(tri.vs[i], tri.vs[(i + 1) % TRIANGLE_VERT_COUNT], V2(fs[i]));
     }
 
     for (size_t i = 0; i < TRIANGLE_VERT_COUNT; ++i) {
@@ -51,7 +51,7 @@ void split_triangle(const Triangle<float> &tri,
     const auto a = tri.vs[side];
     const auto b = tri.vs[(side + 1) % TRIANGLE_VERT_COUNT];
     const auto c = tri.vs[(side + 2) % TRIANGLE_VERT_COUNT];
-    const auto q = lerp(a, b, f);
+    const auto q = lerp(a, b, V2(f));
 
     output[0] = Triangle(c, q, a);
     output[1] = Triangle(c, q, b);

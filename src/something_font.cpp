@@ -46,8 +46,8 @@ void Font::render_text(Renderer *renderer, const char *text, V2<GLfloat> positio
     const size_t n = strlen(text);
     for (size_t i = 0; i < n; ++i) {
         renderer->fill_aabb(
-            AABB(position + (char_size_pix * V2<size_t>(i, 0)).cast_to<GLfloat>() * scale,
-                 char_size_pix.cast_to<GLfloat>() * scale),
+            AABB(position + (char_size_pix * V2<size_t>(i, 0)).cast_to<GLfloat>() * V2(scale),
+                 char_size_pix.cast_to<GLfloat>() * V2(scale)),
             color,
             char_uv(text[i]),
             FONT_PROGRAM_ASSET);

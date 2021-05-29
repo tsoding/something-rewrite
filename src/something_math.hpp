@@ -3,8 +3,8 @@
 
 float squaref(float x);
 
-template <typename T, typename U>
-T lerp(T a, T b, U f)
+template <typename T>
+T lerp(T a, T b, T f)
 {
     return a + (b - a) * f;
 }
@@ -39,7 +39,6 @@ struct V2 {
         x(x), y(y)
     {}
 
-
     template <typename U>
     V2<U> cast_to() const
     {
@@ -51,6 +50,11 @@ struct V2 {
     V2<U> map(U (*f)(T)) const
     {
         return V2<U>(f(x), f(y));
+    }
+
+    V2<T> lift(T (*op)(T, T), V2<T> that) const
+    {
+        return V2<T>(op(x, that.x), op(y, that.y));
     }
 };
 
@@ -68,37 +72,7 @@ V2<T> operator+(V2<T> a, V2<T> b)
 template <typename T>
 V2<T> &operator+=(V2<T> &a, V2<T> b)
 {
-    a.x += b.x;
-    a.y += b.y;
-    return a;
-}
-
-template <typename T>
-V2<T> &operator*=(V2<T> &a, T s)
-{
-    a.x *= s;
-    a.y *= s;
-    return a;
-}
-
-template <typename T>
-V2<T> &operator-=(V2<T> &a, V2<T> b)
-{
-    a.x -= b.x;
-    a.y -= b.y;
-    return a;
-}
-
-template <typename T>
-V2<T> operator-(V2<T> a, V2<T> b)
-{
-    return V2<T>(a.x - b.x, a.y - b.y);
-}
-
-template <typename T>
-V2<T> operator*(V2<T> a, T s)
-{
-    return V2<T>(a.x * s, a.y * s);
+    return a = a + b;
 }
 
 template <typename T>
@@ -108,27 +82,33 @@ V2<T> operator*(V2<T> a, V2<T> b)
 }
 
 template <typename T>
-V2<T> operator*(T s, V2<T> a)
+V2<T> &operator*=(V2<T> &a, V2<T> b)
 {
-    return V2<T>(a.x * s, a.y * s);
+    return a = a * b;
 }
 
 template <typename T>
-V2<T> operator/(V2<T> a, T s)
+V2<T> operator-(V2<T> a, V2<T> b)
 {
-    return V2<T>(a.x / s, a.y / s);
+    return V2<T>(a.x - b.x, a.y - b.y);
 }
 
 template <typename T>
-V2<T> operator/(T s, V2<T> a)
+V2<T> &operator-=(V2<T> &a, V2<T> b)
 {
-    return V2<T>(a.x / s, a.y / s);
+    return a = a - b;
 }
 
 template <typename T>
 V2<T> operator/(V2<T> a, V2<T> b)
 {
     return V2<T>(a.x / b.x, a.y / b.y);
+}
+
+template <typename T>
+V2<T> &operator/=(V2<T> &a, V2<T> b)
+{
+    return a = a / b;
 }
 
 template <typename T>
