@@ -21,6 +21,10 @@ void Particles::update(Seconds delta_time)
 void Particles::render(Renderer *renderer) const
 {
     for (size_t i = 0; i < count; ++i) {
-        renderer->fill_circle(positions[i], SIZE, COLOR, PARTICLE_PROGRAM_ASSET);
+        renderer->fill_aabb(
+            AABB(positions[i] - V2(SIZE), V2(SIZE + SIZE)),
+            COLOR,
+            AABB(V2(0.0f), V2(1.0f)),
+            PARTICLE_PROGRAM_ASSET);
     }
 }
