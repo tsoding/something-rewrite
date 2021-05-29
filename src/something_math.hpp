@@ -51,6 +51,11 @@ struct V2 {
     {
         return V2<U>(f(x), f(y));
     }
+
+    V2<T> lift(T (*op)(T, T), V2<T> that) const
+    {
+        return V2<T>(op(x, that.x), op(y, that.y));
+    }
 };
 
 V2<float> polar_v2(float angle, float mag);
