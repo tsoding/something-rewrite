@@ -3,8 +3,8 @@
 
 float squaref(float x);
 
-template <typename T, typename U>
-T lerp(T a, T b, U f)
+template <typename T>
+T lerp(T a, T b, T f)
 {
     return a + (b - a) * f;
 }

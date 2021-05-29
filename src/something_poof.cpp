@@ -6,7 +6,7 @@ V2<float> point_on_triangle(Triangle<float> triangle,
     const auto a = triangle.vs[0];
     const auto b = triangle.vs[1];
     const auto c = triangle.vs[2];
-    return lerp(a, lerp(b, c, f0), f1);
+    return lerp(a, lerp(b, c, V2(f0)), V2(f1));
 }
 
 void Poof::push(Triangle<float> triangle,
