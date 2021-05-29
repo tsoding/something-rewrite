@@ -33,7 +33,7 @@ void Poof::update(Seconds dt)
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (lifetimes[i] > 0.0f) {
-            positions[i] += velocities[i] * dt;
+            positions[i] += velocities[i] * V2(dt);
             angles[i] += angle_velocities[i] * dt;
             lifetimes[i] -= dt;
         }

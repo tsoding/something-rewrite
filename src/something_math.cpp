@@ -18,7 +18,7 @@ float length(V2<float> v)
 
 V2<float> polar_v2(float angle, float mag)
 {
-    return V2<float>(cosf(angle), sinf(angle)) * mag;
+    return V2<float>(cosf(angle), sinf(angle)) * V2(mag);
 }
 
 float angle_v2(V2<float> v)

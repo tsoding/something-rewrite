@@ -3,7 +3,7 @@
 void Item::render(const Game *game, Renderer *renderer) const
 {
     if (state == State::Alive) {
-        const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * ITEM_IDLE_AMPLITUDE;
+        const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * V2(ITEM_IDLE_AMPLITUDE);
 
         renderer->fill_aabb(
             AABB(pos + offset - V2(ITEM_SIZE * 0.5f),

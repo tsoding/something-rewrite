@@ -14,7 +14,7 @@ void Particles::push(V2<float> position)
 void Particles::update(Seconds delta_time)
 {
     for (size_t i = 0; i < count; ++i) {
-        positions[i] += velocities[i] * delta_time;
+        positions[i] += velocities[i] * V2(delta_time);
     }
 }
 

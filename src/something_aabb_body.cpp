@@ -16,7 +16,7 @@ void AABB_Body::update(const Game *game, Seconds dt)
     for (size_t attempt = 0; attempt < MAX_ATTEMPTS; ++attempt) {
         for (size_t i = 0; i < ps_count; ++i) {
             const auto new_vel = vel * ps[i];
-            const auto new_hitbox = AABB(hitbox.pos + new_vel * dt,
+            const auto new_hitbox = AABB(hitbox.pos + new_vel * V2(dt),
                                          hitbox.size);
             if (!game->tile_grid.are_there_any_walls_in_region(World_Region(new_hitbox))) {
                 hitbox = new_hitbox;
@@ -24,7 +24,7 @@ void AABB_Body::update(const Game *game, Seconds dt)
                 return;
             }
         }
-        vel *= 0.5f;
+        vel *= V2(0.5f);
     }
 }
 

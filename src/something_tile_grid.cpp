@@ -43,12 +43,12 @@ Mem_Coord Tile_Coord::to_mem() const
 
 World_Coord Tile_Coord::to_world() const
 {
-    return unwrap.cast_to<float>() * Tile::SIZE;
+    return unwrap.cast_to<float>() * V2(Tile::SIZE);
 }
 
 Tile_Coord World_Coord::to_tile() const
 {
-    return Tile_Coord((unwrap / Tile::SIZE).map(floorf).cast_to<int>());
+    return Tile_Coord((unwrap / V2(Tile::SIZE)).map(floorf).cast_to<int>());
 }
 
 Tile *Tile_Grid::get_tile(Mem_Coord coord)
@@ -94,7 +94,7 @@ const Tile *Tile_Grid::get_tile(World_Coord coord) const
 AABB<float> Tile_Grid::get_tile_hitbox(Tile_Coord coord) const
 {
     return AABB<float>(
-               coord.unwrap.cast_to<float>() * Tile::SIZE,
+               coord.unwrap.cast_to<float>() * V2(Tile::SIZE),
                V2(Tile::SIZE));
 }
 

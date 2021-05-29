@@ -2,5 +2,5 @@
 
 void Camera::update(Seconds dt)
 {
-    pos += vel * dt;
+    pos += vel * V2(dt);
 }

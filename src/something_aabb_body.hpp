@@ -24,7 +24,7 @@ struct AABB_Body {
 
     inline V2<float> center() const
     {
-        return hitbox.pos + hitbox.size * 0.5f;
+        return hitbox.pos + hitbox.size * V2(0.5f);
     }
 
     void update(const Game *game, Seconds dt);
