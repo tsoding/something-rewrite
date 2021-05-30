@@ -103,97 +103,110 @@ V2<float> viewport_to_world(const Camera &camera, V2<float> p)
 
 void Game::handle_event(const SDL_Event *event)
 {
-    switch (event->type) {
-    case SDL_QUIT: {
-        quit = true;
-    }
-    break;
-
-    case SDL_KEYDOWN: {
-        switch (event->key.keysym.sym) {
-        case SDLK_SPACE: {
-            player.jump();
+    // Game Input
+    {
+        switch (event->type) {
+        case SDL_QUIT: {
+            quit = true;
         }
         break;
 
-        case SDLK_q: {
-            player.teleport(this);
+        case SDL_KEYDOWN: {
+            switch (event->key.keysym.sym) {
+            case SDLK_SPACE: {
+                player.jump();
+            }
+            break;
+
+            case SDLK_e: {
+                player.teleport(this);
+            }
+            break;
+
+            case SDLK_i: {
+                println(stdout, aabb_bodies[0].hitbox);
+            }
+            break;
+            }
         }
         break;
 
-        case SDLK_i: {
-            println(stdout, aabb_bodies[0].hitbox);
+        case SDL_MOUSEMOTION: {
+            mouse_window = V2(event->motion.x, event->motion.y);
         }
         break;
 
+        case SDL_MOUSEWHEEL: {
+            const float MIN_ZOOM = 1e-3f;
+            if (event->wheel.y > 0) {
+                camera.zoom *= 0.75f;
+            } else if (event->wheel.y < 0) {
+                camera.zoom *= 1.75f;
+            }
+
+            camera.zoom = max(camera.zoom, MIN_ZOOM);
+        }
+        break;
+
+        case SDL_MOUSEBUTTONDOWN: {
 #ifndef SOMETHING_RELEASE
-        case SDLK_F3: {
-            editor = !editor;
-        }
-        break;
-
-        case SDLK_z: {
-            editor_tool = Editor_Tool::Tiles;
-        }
-        break;
-
-        case SDLK_x: {
-            editor_tool = Editor_Tool::Enemies;
-        }
-        break;
-#endif
-        }
-    }
-    break;
-
-    case SDL_MOUSEMOTION: {
-        mouse_window = V2(event->motion.x, event->motion.y);
-    }
-    break;
-
-    case SDL_MOUSEBUTTONDOWN: {
-#ifndef SOMETHING_RELEASE
-        if (editor) {
-            // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
-            switch (editor_tool) {
-            case Editor_Tool::Tiles: {
-                Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
-                if (tile != NULL) {
-                    tile->wall = !tile->wall;
+            if (editor) {
+                // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
+                switch (editor_tool) {
+                case Editor_Tool::Tiles: {
+                    Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
+                    if (tile != NULL) {
+                        tile->wall = !tile->wall;
+                    }
                 }
-            }
-            break;
+                break;
 
-            case Editor_Tool::Enemies: {
-                spawn_enemy(mouse_world);
-            }
-            break;
+                case Editor_Tool::Enemies: {
+                    spawn_enemy(mouse_world);
+                }
+                break;
 
-            case Editor_Tool::Count:
-            default:
-                aids::unreachable();
+                case Editor_Tool::Count:
+                default:
+                    aids::unreachable();
+                }
+            } else {
+                player.shoot(this);
             }
-        } else {
-            player.shoot(this);
-        }
 #else
-        player.shoot(this);
+            player.shoot(this);
 #endif
-    }
-    break;
-
-    case SDL_MOUSEWHEEL: {
-        const float MIN_ZOOM = 1e-3f;
-        if (event->wheel.y > 0) {
-            camera.zoom *= 0.75f;
-        } else if (event->wheel.y < 0) {
-            camera.zoom *= 1.75f;
         }
+        break;
+        }
+    }
 
-        camera.zoom = max(camera.zoom, MIN_ZOOM);
+    // Editor Input
+#ifndef SOMETHING_RELEASE
+    {
+        switch (event->type) {
+        case SDL_KEYDOWN: {
+            switch (event->key.keysym.sym) {
+            case SDLK_q: {
+                editor = !editor;
+            }
+            break;
+
+            case SDLK_z: {
+                editor_tool = Editor_Tool::Tiles;
+            }
+            break;
+
+            case SDLK_x: {
+                editor_tool = Editor_Tool::Enemies;
+            }
+            break;
+            }
+        }
+        break;
+        }
     }
-    break;
-    }
+#endif // SOMETHING_RELEASE
 }
 
 void Game::update(Seconds dt)
