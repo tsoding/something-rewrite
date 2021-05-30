@@ -61,6 +61,7 @@ Atlas Atlas::from_config(const char *file_path, int margin)
             const float uv_h = static_cast<float>(h) / static_cast<float>(atlas_height);
 
             result.uvs.push(AABB(V2(uv_x, uv_y), V2(uv_w, uv_h)));
+            result.sizes.push(V2(w, h));
         }
 
         atlas_row += 2 * margin + textures.data[i].height;
@@ -71,8 +72,16 @@ Atlas Atlas::from_config(const char *file_path, int margin)
     return result;
 }
 
-AABB<float> Atlas::get_uv(Index<AABB<float>> uv_index) const
+AABB<float> Atlas::get_uv(Index<AABB<float>> texture_index) const
 {
-    assert(uv_index.unwrap < uvs.size);
-    return uvs.data[uv_index.unwrap];
+    assert(texture_index.unwrap < uvs.size);
+    return uvs.data[texture_index.unwrap];
+}
+
+V2<float> Atlas::get_size(Index<AABB<float>> texture_index, float height) const
+{
+    assert(texture_index.unwrap < uvs.size);
+    const auto size = sizes.data[texture_index.unwrap].cast_to<float>();
+    const auto aspect = size.x / size.y;
+    return V2(height * aspect, height);
 }

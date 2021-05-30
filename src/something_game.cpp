@@ -233,12 +233,17 @@ void Game::render(Renderer *renderer) const
         }
         particles.render(renderer);
 
+        const auto mouse_screen =
+            window_to_viewport(window, mouse_window) -
+            V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
+        const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
+        const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+
         renderer->fill_aabb(
-            AABB(mouse_world - V2(MOUSE_CURSOR_SIZE),
-                 V2(MOUSE_CURSOR_SIZE * 2)),
+            AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
             MOUSE_CURSOR_COLOR,
-            atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically(),
-            REGULAR_PROGRAM_ASSET);
+            cursor_texture_uv,
+            SCREEN_PROGRAM_ASSET);
     }
     renderer->draw(this);
 }
