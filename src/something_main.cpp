@@ -120,8 +120,6 @@ int main(int argc, char *argv[])
 
     Renderer *renderer = new Renderer{};
     defer(delete renderer);
-    renderer->init();
-    renderer->reload();
 
     while (!game->quit) {
         SDL_Event event;
@@ -146,8 +144,6 @@ int main(int argc, char *argv[])
             const auto viewport = compute_gl_viewport(w, h).map(floorf).cast_to<GLint>();
             glViewport(viewport.pos.x, viewport.pos.y, viewport.size.x, viewport.size.y);
         }
-
-        game->render(renderer);
 
         SDL_GL_SwapWindow(window);
 

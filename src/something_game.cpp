@@ -6,6 +6,12 @@ void Game::init(SDL_Window *window)
 {
     const V2<float> start = V2(1947.0f, 1818.5f);
 
+    // Renderer
+    {
+        renderer.init();
+        renderer.reload();
+    }
+
     // Player
     {
         this->player = Player::with_body(
@@ -211,6 +217,8 @@ void Game::handle_event(const SDL_Event *event)
 
 void Game::update(Seconds dt)
 {
+    renderer.clear();
+
     // Mouse
     {
         mouse_world =
@@ -219,6 +227,11 @@ void Game::update(Seconds dt)
                 window_to_viewport(
                     window,
                     mouse_window));
+    }
+
+    // Tile Grid
+    {
+        tile_grid.render(this, &renderer);
     }
 
     // Player
@@ -233,6 +246,7 @@ void Game::update(Seconds dt)
 
         player.update(this, dt);
         player.point_gun_at(this, mouse_world);
+        player.render(this, &renderer);
     }
 
     // Camera
@@ -246,22 +260,26 @@ void Game::update(Seconds dt)
     // Poof
     {
         poof.update(dt);
+        poof.render(&renderer);
     }
 
     // Projectiles
     {
         projectiles.update(this, dt);
+        projectiles.render(&renderer);
     }
 
     // Particles
     {
         particles.update(dt);
+        particles.render(&renderer);
     }
 
     // Enemies
     {
         for (size_t i = 0; i < enemies_size; ++i) {
             enemies[i].update(this, dt);
+            enemies[i].render(this, &renderer);
         }
     }
 
@@ -271,25 +289,16 @@ void Game::update(Seconds dt)
             aabb_bodies[i].update(this, dt);
         }
     }
-}
 
-void Game::render(Renderer *renderer) const
-{
-    renderer->clear();
+    // Items
     {
-        tile_grid.render(this, renderer);
-        player.render(this, renderer);
-        poof.render(renderer);
-        projectiles.render(renderer);
-        for (size_t i = 0; i < enemies_size; ++i) {
-            enemies[i].render(this, renderer);
-        }
         for (size_t i = 0; i < items_size; ++i) {
-            items[i].render(this, renderer);
+            items[i].render(this, &renderer);
         }
-        particles.render(renderer);
+    }
 
 #ifndef SOMETHING_RELEASE
+    {
         if (editor) {
             // Tools Panel
             {
@@ -306,7 +315,7 @@ void Game::render(Renderer *renderer) const
                         tools_panel_pos
                         + V2(i, static_cast<size_t>(0)).cast_to<float>()
                         * V2(TOOL_BUTTON_SIZE + TOOLS_PANEL_PADDING);
-                    renderer->fill_aabb(
+                    renderer.fill_aabb(
                         AABB(tool_pos, V2(TOOL_BUTTON_SIZE)),
                         tool == editor_tool ? editor_tool_color(tool) : RGBA(1.0f),
                         atlas.get_uv({0}),
@@ -322,7 +331,7 @@ void Game::render(Renderer *renderer) const
                 const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
                 const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
 
-                renderer->fill_aabb(
+                renderer.fill_aabb(
                     AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
                     MOUSE_CURSOR_COLOR,
                     cursor_texture_uv,
@@ -343,15 +352,16 @@ void Game::render(Renderer *renderer) const
                 V2(DEBUG_TEXT_PADDING) * V2(-1.0f, 1.0f);
 
             font.render_text(
-                renderer,
+                &renderer,
                 debug_text,
                 debug_position,
                 DEBUG_TEXT_SCALE,
                 DEBUG_TEXT_COLOR);
         }
-#endif
     }
-    renderer->draw(this);
+#endif
+
+    renderer.draw(this);
 }
 
 Seconds Game::time() const
