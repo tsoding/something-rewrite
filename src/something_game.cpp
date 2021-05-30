@@ -125,6 +125,23 @@ void Game::handle_event(const SDL_Event *event)
             println(stdout, aabb_bodies[0].hitbox);
         }
         break;
+
+#ifndef SOMETHING_RELEASE
+        case SDLK_F3: {
+            editor = !editor;
+        }
+        break;
+
+        case SDLK_z: {
+            editor_tool = Editor_Tool::Tiles;
+        }
+        break;
+
+        case SDLK_x: {
+            editor_tool = Editor_Tool::Enemies;
+        }
+        break;
+#endif
         }
     }
     break;
@@ -135,7 +152,33 @@ void Game::handle_event(const SDL_Event *event)
     break;
 
     case SDL_MOUSEBUTTONDOWN: {
+#ifndef SOMETHING_RELEASE
+        if (editor) {
+            // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
+            switch (editor_tool) {
+            case Editor_Tool::Tiles: {
+                Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
+                if (tile != NULL) {
+                    tile->wall = !tile->wall;
+                }
+            }
+            break;
+
+            case Editor_Tool::Enemies: {
+                spawn_enemy(mouse_world);
+            }
+            break;
+
+            case Editor_Tool::Count:
+            default:
+                aids::unreachable();
+            }
+        } else {
+            player.shoot(this);
+        }
+#else
         player.shoot(this);
+#endif
     }
     break;
 
@@ -232,6 +275,68 @@ void Game::render(Renderer *renderer) const
             items[i].render(this, renderer);
         }
         particles.render(renderer);
+
+#ifndef SOMETHING_RELEASE
+        if (editor) {
+            // Tools Panel
+            {
+                const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
+                const auto tools_panel_pos =
+                    screen_size * V2(-0.5f) + V2(TOOLS_PANEL_PADDING);
+
+                // TODO(#100): editor tools panel does not allow to select tools by clicking on their icons
+                // TODO(#101): editor tools panel buttons don't have any icons on them
+
+                for (size_t i = 0; i < static_cast<size_t>(Editor_Tool::Count); ++i) {
+                    const auto tool = static_cast<Editor_Tool>(i);
+                    const auto tool_pos =
+                        tools_panel_pos
+                        + V2(i, static_cast<size_t>(0)).cast_to<float>()
+                        * V2(TOOL_BUTTON_SIZE + TOOLS_PANEL_PADDING);
+                    renderer->fill_aabb(
+                        AABB(tool_pos, V2(TOOL_BUTTON_SIZE)),
+                        tool == editor_tool ? editor_tool_color(tool) : RGBA(1.0f),
+                        atlas.get_uv({0}),
+                        SCREEN_PROGRAM_ASSET);
+                }
+            }
+
+            // Cursor
+            {
+                const auto mouse_screen =
+                    window_to_viewport(window, mouse_window) -
+                    V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
+                const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
+                const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+
+                renderer->fill_aabb(
+                    AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
+                    MOUSE_CURSOR_COLOR,
+                    cursor_texture_uv,
+                    SCREEN_PROGRAM_ASSET);
+            }
+        }
+
+        // Debug Label
+        {
+            // TODO(#102): vars.conf does not support string type
+
+            const char *debug_text = "debug";
+            const auto debug_size = font.text_size(debug_text, DEBUG_TEXT_SCALE);
+            const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
+            const auto debug_position =
+                screen_size * V2(0.5f, -0.5f) -
+                debug_size * V2(1.0f, 0.0f) +
+                V2(DEBUG_TEXT_PADDING) * V2(-1.0f, 1.0f);
+
+            font.render_text(
+                renderer,
+                debug_text,
+                debug_position,
+                DEBUG_TEXT_SCALE,
+                DEBUG_TEXT_COLOR);
+        }
+#endif
     }
     renderer->draw(this);
 }
@@ -274,3 +379,18 @@ void Game::spawn_enemy(V2<float> pos)
         enemies_size += 1;
     }
 }
+
+#ifndef SOMETHING_RELEASE
+RGBA Game::editor_tool_color(Editor_Tool tool) const
+{
+    switch(tool) {
+    case Editor_Tool::Tiles:
+        return RGBA::GREEN();
+    case Editor_Tool::Enemies:
+        return RGBA::RED();
+    case Editor_Tool::Count:
+    default:
+        aids::unreachable("Game::editor_tool_color()");
+    }
+}
+#endif // SOMETHING_RELEASE

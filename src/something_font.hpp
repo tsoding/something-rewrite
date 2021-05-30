@@ -13,6 +13,8 @@ struct Font {
 
     static Font from_file(const char *file_path);
     AABB<GLfloat> char_uv(char c) const;
+    
+    V2<GLfloat> text_size(const char *text, GLfloat scale) const;
 
     void render_text(Renderer *renderer,
                      const char *text,

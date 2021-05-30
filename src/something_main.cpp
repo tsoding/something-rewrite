@@ -67,6 +67,10 @@ int main(int argc, char *argv[])
     }
     defer(SDL_DestroyWindow(window));
 
+    if (SDL_ShowCursor(0) < 0) {
+        panic("SDL ERROR: ", SDL_GetError());
+    }
+
     {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);

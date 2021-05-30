@@ -21,3 +21,4 @@
 - https://opengameart.org/content/mech-stomp-step-sound
 - https://opengameart.org/content/crystals-0
 - https://opengameart.org/content/futuristic-gun
+- https://opengameart.org/content/pizza-cursor
