@@ -258,8 +258,7 @@ void Game::update(Seconds dt)
 
     // Poof
     {
-        poof.update(dt);
-        poof.render(&renderer);
+        poof.update(this, dt);
     }
 
     // Projectiles

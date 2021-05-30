@@ -25,8 +25,7 @@ struct Poof {
     void push(Triangle<float> triangle,
               RGBA shade,
               Triangle<float> uv);
-    void update(Seconds dt);
-    void render(Renderer *renderer) const;
+    void update(Game *game, Seconds dt);
 };
 
 size_t longest_side(Triangle<float> tri)
