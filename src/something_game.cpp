@@ -232,6 +232,13 @@ void Game::render(Renderer *renderer) const
             items[i].render(this, renderer);
         }
         particles.render(renderer);
+
+        renderer->fill_aabb(
+            AABB(mouse_world - V2(MOUSE_CURSOR_SIZE),
+                 V2(MOUSE_CURSOR_SIZE * 2)),
+            MOUSE_CURSOR_COLOR,
+            atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically(),
+            REGULAR_PROGRAM_ASSET);
     }
     renderer->draw(this);
 }
