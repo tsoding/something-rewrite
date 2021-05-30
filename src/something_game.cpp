@@ -264,7 +264,6 @@ void Game::update(Seconds dt)
     // Projectiles
     {
         projectiles.update(this, dt);
-        projectiles.render(&renderer);
     }
 
     // Particles
