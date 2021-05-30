@@ -244,9 +244,8 @@ void Game::update(Seconds dt)
             player.stop(this);
         }
 
-        player.update(this, dt);
         player.point_gun_at(this, mouse_world);
-        player.render(this, &renderer);
+        player.update(this, dt);
     }
 
     // Camera

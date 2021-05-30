@@ -15,49 +15,6 @@ static const anim::Segment jump_anim[Jump_Anim_Size] = {
     {1.0f + Jump_Anim_Intensity, 1.0f,                       0.25f,  sqrtf}
 };
 
-void Player::render(const Game *game, Renderer *renderer) const
-{
-    const auto &body = game->get_aabb_body(body_index);
-
-    // Player body
-    {
-        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-
-        {
-            const float pi = static_cast<float>(M_PI);
-            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
-            if (0.5f <= a && a <= 1.5f) {
-                uv = uv.flip_horizontally();
-            }
-        }
-
-        const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
-        renderer->fill_aabb(player_hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
-    }
-
-    // Player gun
-    {
-        const auto pos = body.center();
-        const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
-        const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
-        renderer->fill_triangle(gun, RGBA::RED(), {}, REGULAR_PROGRAM_ASSET);
-    }
-
-    // Player health
-    {
-        const float health_p = health / PLAYER_MAX_HEALTH;
-
-        const V2 offset =
-            V2(HEALTH_BAR_WIDTH, body.hitbox.size.y) * V2(-0.5f, 0.5f) +
-            V2(0.0f, HEALTH_BAR_PADDING);
-        renderer->fill_aabb(
-            AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
-            HEALTH_BAR_COLOR,
-            game->atlas.get_uv({0}),
-            REGULAR_PROGRAM_ASSET);
-    }
-}
-
 void Player::teleport(Game *game)
 {
     auto &body = game->get_aabb_body(body_index);
@@ -92,7 +49,7 @@ void Player::update(Game *game, Seconds dt)
 {
     auto &body = game->get_aabb_body(body_index);
 
-    // Jump Animation Test
+    // Jump Test
     {
         if (prepare_for_jump &&
                 jump_anim_player.segment_current >= Jump_Anim_Attack) {
@@ -101,6 +58,44 @@ void Player::update(Game *game, Seconds dt)
             prepare_for_jump = false;
         }
         stretch = jump_anim_player.update(dt);
+    }
+
+    // Player body
+    {
+        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+
+        {
+            const float pi = static_cast<float>(M_PI);
+            const float a = fmodulof(gun_angle, 2.0f * pi) / pi;
+            if (0.5f <= a && a <= 1.5f) {
+                uv = uv.flip_horizontally();
+            }
+        }
+
+        const auto player_hitbox = aabb_stretch(body.hitbox, stretch);
+        game->renderer.fill_aabb(player_hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
+    }
+
+    // Player gun
+    {
+        const auto pos = body.center();
+        const auto gun_pos = pos + polar_v2(gun_angle, max(PLAYER_WIDTH, PLAYER_HEIGHT));
+        const auto gun = equilateral_triangle(gun_pos, PLAYER_GUN_SIZE, gun_angle);
+        game->renderer.fill_triangle(gun, RGBA::RED(), {}, REGULAR_PROGRAM_ASSET);
+    }
+
+    // Player health
+    {
+        const float health_p = health / PLAYER_MAX_HEALTH;
+
+        const V2 offset =
+            V2(HEALTH_BAR_WIDTH, body.hitbox.size.y) * V2(-0.5f, 0.5f) +
+            V2(0.0f, HEALTH_BAR_PADDING);
+        game->renderer.fill_aabb(
+            AABB(body.center() + offset, V2(HEALTH_BAR_WIDTH * health_p, HEALTH_BAR_HEIGHT)),
+            HEALTH_BAR_COLOR,
+            game->atlas.get_uv({0}),
+            REGULAR_PROGRAM_ASSET);
     }
 }
 
