@@ -21,9 +21,19 @@ struct Game {
 
     bool quit;
 
+    // TODO: decouple editor from the game
 #ifndef SOMETHING_RELEASE
+    enum class Editor_Tool: size_t {
+        Tiles,
+        Enemies,
+        Count
+    };
+
     // Indicates whether the level editor mode is on
     bool editor;
+    Editor_Tool editor_tool;
+
+    RGBA editor_tool_color(Editor_Tool tool) const;
 #endif
 
     const Uint8 *keyboard;

@@ -24,7 +24,6 @@ void Enemy::update(Game *game, Seconds)
             if (game->projectiles.states[i] == Projectiles::State::Aliv && body.hitbox.contains(game->projectiles.positions[i])) {
                 game->projectiles.states[i] = Projectiles::State::Ded;
                 kill(game);
-                game->spawn_enemy(V2(1947.0f, 1818.5f));
             }
         }
 
