@@ -12,7 +12,7 @@ struct Atlas {
     static Atlas from_config(const char *file_path, int margin);
 
     // TODO(#96): introduce a special type Atlas::Index instead of Index<AABB<float>>
-    // TODO: introduce a special type in vars.conf for Atlas::Index
+    // TODO(#97): introduce a special type in vars.conf for Atlas::Index
     AABB<float> get_uv(Index<AABB<float>> texture_index) const;
     V2<float> get_size(Index<AABB<float>> texture_index, float height) const;
 };
