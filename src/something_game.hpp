@@ -21,7 +21,7 @@ struct Game {
 
     bool quit;
 
-    // TODO: decouple editor from the game
+    // TODO(#99): decouple editor from the game
 #ifndef SOMETHING_RELEASE
     enum class Editor_Tool: size_t {
         Tiles,
