@@ -288,7 +288,7 @@ void Game::update(Seconds dt)
     // Items
     {
         for (size_t i = 0; i < items_size; ++i) {
-            items[i].render(this, &renderer);
+            items[i].update(this);
         }
     }
 

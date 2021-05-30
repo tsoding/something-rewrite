@@ -14,7 +14,7 @@ struct Item
 
     static Item make_tea(V2<float> pos);
 
-    void render(const Game *game, Renderer *renderer) const;
+    void update(Game *game) const;
 };
 
 #endif // SOMETHING_ITEM_HPP_
