@@ -319,7 +319,7 @@ void Game::render(Renderer *renderer) const
 
         // Debug Label
         {
-            // TODO: vars.conf does not support string type
+            // TODO(#102): vars.conf does not support string type
 
             const char *debug_text = "debug";
             const auto debug_size = font.text_size(debug_text, DEBUG_TEXT_SCALE);
