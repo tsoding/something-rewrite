@@ -265,6 +265,25 @@ void Game::render(Renderer *renderer) const
                 cursor_texture_uv,
                 SCREEN_PROGRAM_ASSET);
         }
+
+        {
+            // TODO: vars.conf does not support string type
+
+            const char *debug_text = "debug";
+            const auto debug_size = font.text_size(debug_text, DEBUG_TEXT_SCALE);
+            const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
+            const auto debug_position =
+                screen_size * V2(0.5f, -0.5f) -
+                debug_size * V2(1.0f, 0.0f) +
+                V2(DEBUG_TEXT_PADDING) * V2(-1.0f, 1.0f);
+
+            font.render_text(
+                renderer,
+                debug_text,
+                debug_position,
+                DEBUG_TEXT_SCALE,
+                DEBUG_TEXT_COLOR);
+        }
 #endif
     }
     renderer->draw(this);

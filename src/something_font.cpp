@@ -53,3 +53,8 @@ void Font::render_text(Renderer *renderer, const char *text, V2<GLfloat> positio
             FONT_PROGRAM_ASSET);
     }
 }
+
+V2<GLfloat> Font::text_size(const char *text, GLfloat scale) const
+{
+    return char_size_pix.cast_to<float>() * V2(scale) * V2(strlen(text), static_cast<size_t>(1)).cast_to<float>();
+}

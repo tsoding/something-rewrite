@@ -25,7 +25,7 @@ void Renderer::init()
     programs[PRIDE_PROGRAM_ASSET] =
         Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {HSL_FRAG_SHADER_ASSET});
     programs[FONT_PROGRAM_ASSET] =
-        Program::make({TRIANGLE_CAMERA_VERT_SHADER_ASSET}, {TEXTURE_COLOR_FRAG_SHADER_ASSET}, 1);
+        Program::make({TRIANGLE_SCREEN_VERT_SHADER_ASSET}, {TEXTURE_COLOR_FRAG_SHADER_ASSET}, 1);
     static_assert(COUNT_PROGRAM_ASSETS == 5, "The amount of program assets have changed");
 }
 
