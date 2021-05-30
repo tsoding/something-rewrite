@@ -284,7 +284,7 @@ void Game::render(Renderer *renderer) const
                 const auto tools_panel_pos =
                     screen_size * V2(-0.5f) + V2(TOOLS_PANEL_PADDING);
 
-                // TODO: editor tools panel does not allow to select tools by clicking on their icons
+                // TODO(#100): editor tools panel does not allow to select tools by clicking on their icons
                 // TODO: editor tools panel buttons don't have any icons on them
 
                 for (size_t i = 0; i < static_cast<size_t>(Editor_Tool::Count); ++i) {
