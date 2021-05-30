@@ -15,7 +15,6 @@ struct Enemy {
 
     float direction;
 
-    void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
     void kill(Game *game);

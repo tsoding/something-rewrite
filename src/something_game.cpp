@@ -275,7 +275,6 @@ void Game::update(Seconds dt)
     {
         for (size_t i = 0; i < enemies_size; ++i) {
             enemies[i].update(this, dt);
-            enemies[i].render(this, &renderer);
         }
     }
 
