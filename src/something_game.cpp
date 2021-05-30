@@ -268,8 +268,7 @@ void Game::update(Seconds dt)
 
     // Particles
     {
-        particles.update(dt);
-        particles.render(&renderer);
+        particles.update(this, dt);
     }
 
     // Enemies
