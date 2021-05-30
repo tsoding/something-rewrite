@@ -21,6 +21,11 @@ struct Game {
 
     bool quit;
 
+#ifndef SOMETHING_RELEASE
+    // Indicates whether the level editor mode is on
+    bool editor;
+#endif
+
     const Uint8 *keyboard;
     SDL_Window *window;
 

@@ -125,6 +125,13 @@ void Game::handle_event(const SDL_Event *event)
             println(stdout, aabb_bodies[0].hitbox);
         }
         break;
+
+#ifndef SOMETHING_RELEASE
+        case SDLK_F3: {
+            editor = !editor;
+        }
+        break;
+#endif
         }
     }
     break;
@@ -135,7 +142,18 @@ void Game::handle_event(const SDL_Event *event)
     break;
 
     case SDL_MOUSEBUTTONDOWN: {
+#ifndef SOMETHING_RELEASE
+        if (editor) {
+            Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
+            if (tile != NULL) {
+                tile->wall = !tile->wall;
+            }
+        } else {
+            player.shoot(this);
+        }
+#else
         player.shoot(this);
+#endif
     }
     break;
 
@@ -233,17 +251,21 @@ void Game::render(Renderer *renderer) const
         }
         particles.render(renderer);
 
-        const auto mouse_screen =
-            window_to_viewport(window, mouse_window) -
-            V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
-        const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
-        const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+#ifndef SOMETHING_RELEASE
+        if (editor) {
+            const auto mouse_screen =
+                window_to_viewport(window, mouse_window) -
+                V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
+            const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
+            const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
 
-        renderer->fill_aabb(
-            AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
-            MOUSE_CURSOR_COLOR,
-            cursor_texture_uv,
-            SCREEN_PROGRAM_ASSET);
+            renderer->fill_aabb(
+                AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
+                MOUSE_CURSOR_COLOR,
+                cursor_texture_uv,
+                SCREEN_PROGRAM_ASSET);
+        }
+#endif
     }
     renderer->draw(this);
 }
