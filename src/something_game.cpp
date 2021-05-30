@@ -154,7 +154,7 @@ void Game::handle_event(const SDL_Event *event)
     case SDL_MOUSEBUTTONDOWN: {
 #ifndef SOMETHING_RELEASE
         if (editor) {
-            // TODO: the level editor does not allow to "draw" the tiles by dragging the mouse cursor
+            // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
             switch (editor_tool) {
             case Editor_Tool::Tiles: {
                 Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
