@@ -231,7 +231,7 @@ void Game::update(Seconds dt)
 
     // Tile Grid
     {
-        tile_grid.render(this, &renderer);
+        tile_grid.update(this);
     }
 
     // Player
