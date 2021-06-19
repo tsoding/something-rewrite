@@ -13,6 +13,7 @@
 #include "./something_enemy.hpp"
 #include "./something_item.hpp"
 #include "./something_font.hpp"
+#include "./something_ui.hpp"
 
 struct Game {
     static const size_t AABB_BODIES_CAPACITY = 1024;
@@ -20,6 +21,8 @@ struct Game {
     static const size_t ITEMS_CAPACITY = 1024;
 
     bool quit;
+
+    Ui ui;
 
     // TODO(#99): decouple editor from the game
 #ifndef SOMETHING_RELEASE
@@ -32,7 +35,6 @@ struct Game {
     // Indicates whether the level editor mode is on
     bool editor;
     Editor_Tool editor_tool;
-
     RGBA editor_tool_color(Editor_Tool tool) const;
 #endif
 
@@ -52,6 +54,7 @@ struct Game {
     Particles particles;
 
     V2<Sint32> mouse_window;
+    V2<float> mouse_screen;
     V2<float> mouse_world;
 
     Index<AABB_Body> camera_follow_body;
