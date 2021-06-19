@@ -19,7 +19,7 @@ void Projectiles::update(Game *game, Seconds dt)
                                         uv.pos + uv.size * V2(0.5f),
                                         uv.size.x * 0.5f,
                                         0.0f);
-                explode_triangle(game->poof, tri, COLOR, tri_uv, 1);
+                game->poof.explode_triangle(tri, COLOR, tri_uv, 1);
             }
 
             if (lifetimes[i] <= 0) {
