@@ -14,10 +14,15 @@ struct Font {
     static Font from_file(const char *file_path);
     AABB<GLfloat> char_uv(char c) const;
     
-    V2<GLfloat> text_size(const char *text, GLfloat scale) const;
+    V2<GLfloat> text_size(size_t len, GLfloat scale) const;
 
     void render_text(Renderer *renderer,
                      const char *text,
+                     V2<GLfloat> position,
+                     GLfloat scale,
+                     RGBA color) const;
+    void render_text(Renderer *renderer,
+                     String_View text,
                      V2<GLfloat> position,
                      GLfloat scale,
                      RGBA color) const;

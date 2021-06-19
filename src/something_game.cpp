@@ -324,7 +324,7 @@ void Game::update(Seconds dt)
 
                     case Editor_Tool::Count:
                     default:
-                        aids::unreachable();
+                        aids::UNREACHABLE("incorrect editor tool");
                     }
 
                 }
@@ -348,8 +348,7 @@ void Game::update(Seconds dt)
         {
             // TODO(#102): vars.conf does not support string type
 
-            const char *debug_text = "debug";
-            const auto debug_size = font.text_size(debug_text, DEBUG_TEXT_SCALE);
+            const auto debug_size = font.text_size(DEBUG_TEXT.count, DEBUG_TEXT_SCALE);
             const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
             const auto debug_position =
                 screen_size * V2(0.5f, -0.5f) -
@@ -358,7 +357,7 @@ void Game::update(Seconds dt)
 
             font.render_text(
                 &renderer,
-                debug_text,
+                DEBUG_TEXT,
                 debug_position,
                 DEBUG_TEXT_SCALE,
                 DEBUG_TEXT_COLOR);
@@ -418,7 +417,7 @@ RGBA Game::editor_tool_color(Editor_Tool tool) const
         return RGBA::RED();
     case Editor_Tool::Count:
     default:
-        aids::unreachable("Game::editor_tool_color()");
+        aids::UNREACHABLE(__func__);
     }
 }
 #endif // SOMETHING_RELEASE

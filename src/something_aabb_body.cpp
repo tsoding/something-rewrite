@@ -38,7 +38,7 @@ void AABB_Body::move(Direction direction, float speed)
         vel.x = speed;
         break;
     default:
-        unreachable("AABB_Body::move()");
+        UNREACHABLE(__func__);
     }
 }
 

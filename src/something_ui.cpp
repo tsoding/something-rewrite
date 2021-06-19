@@ -1,7 +1,5 @@
 #include "./something_ui.hpp"
 
-#define unimplemented() todo(__FILE__, ":", __LINE__, ": ", __func__, " unimplemented")
-
 V2<float> Ui::Layout::available_pos() const
 {
     switch (kind) {
@@ -10,7 +8,7 @@ V2<float> Ui::Layout::available_pos() const
     case Kind::Vert:
         return pos + (size + V2(pad)) * V2(0.0f, 1.0f);
     default:
-        unreachable(__FILE__, ":", __LINE__, ": ", __func__);
+        UNREACHABLE(__func__);
     }
 }
 
@@ -26,7 +24,7 @@ void Ui::Layout::push_widget(V2<float> widget_size)
         size.y = size.y + widget_size.y + pad;
         break;
     default:
-        unreachable(__FILE__, ":", __LINE__, ": ", __func__);
+        UNREACHABLE(__func__);
     }
 }
 
@@ -64,7 +62,7 @@ void Ui::begin(V2<float> pos, float pad)
 void Ui::begin_layout(Layout::Kind /*kind*/)
 {
     // TODO(#107): Ui does not support nested layouts
-    unimplemented();
+    TODO(__func__);
 }
 
 bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id)
@@ -116,7 +114,7 @@ bool Ui::screen(Ui::Id id)
 
 void Ui::end_layout()
 {
-    unimplemented();
+    TODO(__func__);
 }
 
 void Ui::end()
