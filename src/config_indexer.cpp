@@ -136,8 +136,7 @@ int main(int argc, char **argv)
                 println(stdout, "const int ", config_value_defs[i].name, " = ", config_values[i].as_int, ";");
                 break;
             case Config_Type::String:
-                // TODO: config_indexer does not escape string literals
-                println(stdout, "const String_View ", config_value_defs[i].name, " = \"", config_values[i].as_string, "\";");
+                println(stdout, "const String_View ", config_value_defs[i].name, " = \"", config_values[i].as_string, "\"_sv;");
                 break;
             case Config_Type::Count:
             default:
