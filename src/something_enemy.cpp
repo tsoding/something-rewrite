@@ -1,21 +1,6 @@
 #include "./something_enemy.hpp"
 #include "./something_projectiles.hpp"
 
-void Enemy::render(const Game *game, Renderer *renderer) const
-{
-    if (state == Alive) {
-        const auto &body = game->get_aabb_body(body_index);
-        const size_t ATLAS_INDEX = 6;
-        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
-
-        if (dummy_idle_direction(game) < 0.0) {
-            uv = uv.flip_horizontally();
-        }
-
-        renderer->fill_aabb(body.hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
-    }
-}
-
 void Enemy::update(Game *game, Seconds)
 {
     if (state == Alive) {
@@ -28,6 +13,15 @@ void Enemy::update(Game *game, Seconds)
         }
 
         body.vel.x = dummy_idle_direction(game) * ENEMY_SPEED;
+
+        const size_t ATLAS_INDEX = 6;
+        auto uv = game->atlas.uvs.data[ATLAS_INDEX].flip_vertically();
+
+        if (dummy_idle_direction(game) < 0.0) {
+            uv = uv.flip_horizontally();
+        }
+
+        game->renderer.fill_aabb(body.hitbox, RGBA(1.0f), uv, REGULAR_PROGRAM_ASSET);
     }
 }
 

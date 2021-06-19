@@ -29,22 +29,15 @@ void Poof::push(Triangle<float> triangle,
     last = (last + 1) % CAPACITY;
 }
 
-void Poof::update(Seconds dt)
+void Poof::update(Game *game, Seconds dt)
 {
     for (size_t i = 0; i < CAPACITY; ++i) {
         if (lifetimes[i] > 0.0f) {
             positions[i] += velocities[i] * V2(dt);
             angles[i] += angle_velocities[i] * dt;
             lifetimes[i] -= dt;
-        }
-    }
-}
 
-void Poof::render(Renderer *renderer) const
-{
-    for (size_t i = 0; i < CAPACITY; ++i) {
-        if (lifetimes[i] > 0.0f) {
-            renderer->fill_triangle(
+            game->renderer.fill_triangle(
                 rotate_triangle(
                     triangles[i] + positions[i],
                     angles[i],

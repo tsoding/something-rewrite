@@ -1,11 +1,11 @@
 #include "./something_item.hpp"
 
-void Item::render(const Game *game, Renderer *renderer) const
+void Item::update(Game *game) const
 {
     if (state == State::Alive) {
         const auto offset = V2(0.0f, sinf(ITEM_IDLE_FREQUENCY * game->time())) * V2(ITEM_IDLE_AMPLITUDE);
 
-        renderer->fill_aabb(
+        game->renderer.fill_aabb(
             AABB(pos + offset - V2(ITEM_SIZE * 0.5f),
                  V2(ITEM_SIZE)),
             RGBA(1.0f),
