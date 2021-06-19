@@ -17,8 +17,7 @@ struct Particles
     size_t count;
 
     void push(V2<float> position);
-    void update(Seconds delta_time);
-    void render(Renderer *renderer) const;
+    void update(Game *game, Seconds delta_time);
 };
 
 #endif // SOMETHING_PARTICLES_HPP_

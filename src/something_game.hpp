@@ -39,6 +39,8 @@ struct Game {
     const Uint8 *keyboard;
     SDL_Window *window;
 
+    Renderer renderer;
+
     Atlas atlas;
     Font font;
 
@@ -68,7 +70,6 @@ struct Game {
     void init(SDL_Window *window);
     void handle_event(const SDL_Event *event);
     void update(Seconds dt);
-    void render(Renderer *renderer) const;
 
     void spawn_enemy(V2<float> pos);
 

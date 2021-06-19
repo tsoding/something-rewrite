@@ -38,7 +38,6 @@ struct Player {
     float stretch;
     float health;
 
-    void render(const Game *game, Renderer *renderer) const;
     void update(Game *game, Seconds dt);
 
     void jump();

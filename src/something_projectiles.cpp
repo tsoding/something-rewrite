@@ -25,15 +25,8 @@ void Projectiles::update(Game *game, Seconds dt)
             if (lifetimes[i] <= 0) {
                 states[i] = State::Ded;
             }
-        }
-    }
-}
 
-void Projectiles::render(Renderer *renderer) const
-{
-    for (size_t i = 0; i < CAPACITY; ++i) {
-        if (states[i] == State::Aliv) {
-            renderer->fill_triangle(
+            game->renderer.fill_triangle(
                 equilateral_triangle(
                     positions[i],
                     RADIUS,

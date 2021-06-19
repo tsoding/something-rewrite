@@ -11,17 +11,12 @@ void Particles::push(V2<float> position)
     }
 }
 
-void Particles::update(Seconds delta_time)
+void Particles::update(Game *game, Seconds delta_time)
 {
     for (size_t i = 0; i < count; ++i) {
         positions[i] += velocities[i] * V2(delta_time);
-    }
-}
 
-void Particles::render(Renderer *renderer) const
-{
-    for (size_t i = 0; i < count; ++i) {
-        renderer->fill_aabb(
+        game->renderer.fill_aabb(
             AABB(positions[i] - V2(SIZE), V2(SIZE + SIZE)),
             COLOR,
             AABB(V2(0.0f), V2(1.0f)),
