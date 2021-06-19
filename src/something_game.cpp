@@ -139,6 +139,16 @@ void Game::handle_event(const SDL_Event *event)
 
         case SDL_MOUSEMOTION: {
             mouse_window = V2(event->motion.x, event->motion.y);
+            mouse_screen =
+                window_to_viewport(window, mouse_window) -
+                V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
+            mouse_world =
+                viewport_to_world(
+                    camera,
+                    window_to_viewport(
+                        window,
+                        mouse_window));
+
         }
         break;
 
@@ -154,29 +164,16 @@ void Game::handle_event(const SDL_Event *event)
         }
         break;
 
+        case SDL_MOUSEBUTTONUP: {
+            ui.mouse_button = false;
+        }
+        break;
+
         case SDL_MOUSEBUTTONDOWN: {
+            ui.mouse_button = true;
+
 #ifndef SOMETHING_RELEASE
-            if (editor) {
-                // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
-                switch (editor_tool) {
-                case Editor_Tool::Tiles: {
-                    Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
-                    if (tile != NULL) {
-                        tile->wall = !tile->wall;
-                    }
-                }
-                break;
-
-                case Editor_Tool::Enemies: {
-                    spawn_enemy(mouse_world);
-                }
-                break;
-
-                case Editor_Tool::Count:
-                default:
-                    aids::unreachable();
-                }
-            } else {
+            if (!editor) {
                 player.shoot(this);
             }
 #else
@@ -219,14 +216,9 @@ void Game::update(Seconds dt)
 {
     renderer.clear();
 
-    // Mouse
+    // Ui
     {
-        mouse_world =
-            viewport_to_world(
-                camera,
-                window_to_viewport(
-                    window,
-                    mouse_window));
+        ui.mouse_pos = mouse_screen;
     }
 
     // Tile Grid
@@ -304,25 +296,43 @@ void Game::update(Seconds dt)
                 // TODO(#100): editor tools panel does not allow to select tools by clicking on their icons
                 // TODO(#101): editor tools panel buttons don't have any icons on them
 
-                for (size_t i = 0; i < static_cast<size_t>(Editor_Tool::Count); ++i) {
-                    const auto tool = static_cast<Editor_Tool>(i);
-                    const auto tool_pos =
-                        tools_panel_pos
-                        + V2(i, static_cast<size_t>(0)).cast_to<float>()
-                        * V2(TOOL_BUTTON_SIZE + TOOLS_PANEL_PADDING);
-                    renderer.fill_aabb(
-                        AABB(tool_pos, V2(TOOL_BUTTON_SIZE)),
-                        tool == editor_tool ? editor_tool_color(tool) : RGBA(1.0f),
-                        atlas.get_uv({0}),
-                        SCREEN_PROGRAM_ASSET);
+                ui.begin(tools_panel_pos, TOOLS_PANEL_PADDING);
+                for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
+                    const auto tool = static_cast<Editor_Tool>(id);
+                    const auto color = tool == editor_tool ? editor_tool_color(tool) : RGBA::WHITE();
+                    if (ui.button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
+                        editor_tool = tool;
+                    }
                 }
+
+                const Ui::Id SCREEN_ID = 6969;
+                if (ui.screen(SCREEN_ID)) {
+                    switch (editor_tool) {
+                    case Editor_Tool::Tiles: {
+                        // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
+                        Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
+                        if (tile != NULL) {
+                            tile->wall = !tile->wall;
+                        }
+                    }
+                    break;
+
+                    case Editor_Tool::Enemies: {
+                        spawn_enemy(mouse_world);
+                    }
+                    break;
+
+                    case Editor_Tool::Count:
+                    default:
+                        aids::unreachable();
+                    }
+
+                }
+                ui.end();
             }
 
             // Cursor
             {
-                const auto mouse_screen =
-                    window_to_viewport(window, mouse_window) -
-                    V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(0.5f);
                 const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
                 const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
 
