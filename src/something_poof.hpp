@@ -29,19 +29,6 @@ struct Poof {
     void render(Renderer *renderer) const;
 };
 
-size_t longest_side(Triangle<float> tri)
-{
-    size_t res = 0;
-    for (size_t i = 1; i < TRIANGLE_VERT_COUNT; ++i) {
-        float a = length(tri.vs[(res + 1) % TRIANGLE_VERT_COUNT] - tri.vs[res]);
-        float b = length(tri.vs[(i + 1) % TRIANGLE_VERT_COUNT] - tri.vs[i]);
-        if (b > a) {
-            res = i;
-        }
-    }
-    return res;
-}
-
 void explode_triangle(Poof &poof, Triangle<float> vert, RGBA shade, Triangle<float> uv,
                       int level)
 {
@@ -51,7 +38,7 @@ void explode_triangle(Poof &poof, Triangle<float> vert, RGBA shade, Triangle<flo
 
     switch (n) {
     case 2: {
-        size_t side = longest_side(vert);
+        size_t side = vert.longest_side();
         const float margin = 0.4f;
         float f = aids::clamp(random01(), margin, 1.0f - margin);
 

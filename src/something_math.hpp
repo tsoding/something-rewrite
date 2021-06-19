@@ -130,6 +130,19 @@ struct Triangle {
     Triangle(V2<T> a, V2<T> b, V2<T> c):
         vs {a, b, c}
     {}
+
+    size_t longest_side()
+    {
+        size_t res = 0;
+        for (size_t i = 1; i < TRIANGLE_VERT_COUNT; ++i) {
+            float a = length(vs[(res + 1) % TRIANGLE_VERT_COUNT] - vs[res]);
+            float b = length(vs[(i + 1)   % TRIANGLE_VERT_COUNT] - vs[i]);
+            if (b > a) {
+                res = i;
+            }
+        }
+        return res;
+    }
 };
 
 static_assert(
