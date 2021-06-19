@@ -38,8 +38,8 @@ void Player::teleport(Game *game)
 
     {
         int level = 2;
-        explode_triangle(game->poof, lower, RGBA::WHITE(), lower_uv, level);
-        explode_triangle(game->poof, upper, RGBA::WHITE(), upper_uv, level);
+        game->poof.explode_triangle(lower, RGBA::WHITE(), lower_uv, level);
+        game->poof.explode_triangle(upper, RGBA::WHITE(), upper_uv, level);
     }
 
     body.hitbox.pos += polar_v2(gun_angle, TELEPORTATION_DISTANCE);
