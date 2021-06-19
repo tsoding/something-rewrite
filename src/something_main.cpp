@@ -118,15 +118,12 @@ int main(int argc, char *argv[])
     defer(delete game);
     game->init(window);
 
-    Renderer *renderer = new Renderer{};
-    defer(delete renderer);
-
     while (!game->quit) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
 #ifndef SOMETHING_RELEASE
             if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_F5) {
-                renderer->reload();
+                game->renderer.reload();
                 // TODO(#87): game does not indicate that vars.conf failed loading
                 reload_config_from_file(VARS_CONF_PATH);
             }
