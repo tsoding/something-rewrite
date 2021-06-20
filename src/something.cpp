@@ -26,7 +26,7 @@ struct Index {
 };
 
 #ifdef SOMETHING_RELEASE
-#include "./something_rgba.hpp"
+#include "./something_color.hpp"
 #include "./config_index.hpp"
 #else
 #include "./config_loader.cpp"

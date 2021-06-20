@@ -304,7 +304,11 @@ void Game::update(Seconds dt)
                     {
                         for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
                             const auto tool = static_cast<Editor_Tool>(id);
-                            const auto color = tool == editor_tool ? editor_tool_color(tool) : RGBA::WHITE();
+                            const auto hue = editor_tool_hue(tool);
+                            const auto color =
+                                tool == editor_tool
+                                ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
+                                : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
                             if (ui.button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
                                 editor_tool = tool;
                             }
@@ -312,6 +316,7 @@ void Game::update(Seconds dt)
                     }
                     ui.end_layout();
 
+#if 0
                     if (DEBUG_BUTTONS_ENABLED) {
                         ui.begin_layout(Ui::Layout::Kind::Horz, TOOLS_PANEL_PADDING);
                         {
@@ -322,6 +327,7 @@ void Game::update(Seconds dt)
                         }
                         ui.end_layout();
                     }
+#endif
                 }
                 ui.end_layout();
 
@@ -428,13 +434,13 @@ void Game::spawn_enemy(V2<float> pos)
 }
 
 #ifndef SOMETHING_RELEASE
-RGBA Game::editor_tool_color(Editor_Tool tool) const
+float Game::editor_tool_hue(Editor_Tool tool) const
 {
     switch(tool) {
     case Editor_Tool::Tiles:
-        return RGBA::GREEN();
+        return 0.25f;
     case Editor_Tool::Enemies:
-        return RGBA::RED();
+        return 0.50f;
     case Editor_Tool::Count:
     default:
         aids::UNREACHABLE(__func__);

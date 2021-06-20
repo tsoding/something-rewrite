@@ -2,7 +2,7 @@
 #define SOMETHING_TRIANGLE_VAO_HPP_
 
 #include "./something_math.hpp"
-#include "./something_rgba.hpp"
+#include "./something_color.hpp"
 #include "./something_camera.hpp"
 
 struct Triangle_VAO {

@@ -1,7 +1,7 @@
 #ifndef SOMETHING_PROJECTILES_HPP_
 #define SOMETHING_PROJECTILES_HPP_
 
-#include "something_rgba.hpp"
+#include "something_color.hpp"
 
 struct Projectiles
 {

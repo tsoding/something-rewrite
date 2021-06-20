@@ -27,6 +27,7 @@ struct Ui {
     bool mouse_button;
 
     Maybe<Id> active_id;
+    Maybe<Id> hot_id;
     Layout layouts[LAYOUTS_CAPACITY];
     size_t layouts_count;
 
@@ -36,7 +37,7 @@ struct Ui {
 
     void begin(V2<float> pos, float pad);
     void begin_layout(Layout::Kind kind, float pad);
-    bool button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id);
+    bool button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id);
     bool screen(Id id);
     void end_layout();
     void end();

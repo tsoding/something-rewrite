@@ -72,7 +72,7 @@ void Ui::begin_layout(Layout::Kind kind, float pad)
     push_layout(next);
 }
 
-bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id)
+bool Ui::button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id)
 {
     auto layout = top_layout();
     assert(layout != nullptr);
@@ -81,21 +81,46 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id
     const auto rect = AABB(pos, size);
 
     bool click = false;
+    float offset = UI_BUTTON_3D_OFFSET;
 
     if (active_id == some(id)) {
-        if (!mouse_button && rect.contains(mouse_pos)) {
+        color.s = min(color.s + UI_ACTIVE, 1.0f);
+        offset = 0.0f;
+
+        if (!mouse_button) {
             active_id.has_value = false;
-            click = true;
+
+            if (rect.contains(mouse_pos)) {
+                click = true;
+            }
+        }
+    } else if (hot_id == some(id)) {
+        color.l = min(color.l + UI_HIGHLIGHT, 1.0f);
+
+        if (!rect.contains(mouse_pos)) {
+            hot_id.has_value = false;
+        } else if (mouse_button && !active_id.has_value) {
+            active_id = some(id);
         }
     } else {
-        if (mouse_button && rect.contains(mouse_pos)) {
-            if (!active_id.has_value) {
-                active_id = some(id);
-            }
+        if (!active_id.has_value && rect.contains(mouse_pos)) {
+            hot_id = some(id);
         }
     }
 
-    renderer->fill_aabb(rect, color, atlas->get_uv({0}), SCREEN_PROGRAM_ASSET);
+    renderer->fill_aabb(
+        rect,
+        HSLA(color.h,
+             color.s,
+             color.l - 0.25,
+             color.a).to_rgba(),
+        atlas->get_uv({0}),
+        SCREEN_PROGRAM_ASSET);
+    renderer->fill_aabb(
+        AABB(pos + V2(-1.0f, 1.0f) * V2(offset), size),
+        color.to_rgba(),
+        atlas->get_uv({0}),
+        SCREEN_PROGRAM_ASSET);
 
     layout->push_widget(size);
 
