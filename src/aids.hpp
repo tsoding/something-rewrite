@@ -21,7 +21,7 @@
 //
 // ============================================================
 //
-// aids — 2.0.0 — std replacement for C++. Designed to aid developers
+// aids — 2.2.0 — std replacement for C++. Designed to aid developers
 // to a better programming experience.
 //
 // https://github.com/rexim/aids
@@ -30,6 +30,14 @@
 //
 // ChangeLog (https://semver.org/ is implied)
 //
+//   2.2.0  add TODO(...) macro
+//          add UNREACHABLE(...) macro
+//          deprecate todo() function
+//          deprecate unreachable() function
+//   2.1.0  add String_View::chop_left()
+//          add String_View::chop_right()
+//          deprecate String_View::chop()
+//          deprecate String_View::chop_back()
 //   2.0.0  don't include the implementations unless AIDS_IMPLEMENTATION is defined
 //   1.4.0  require AIDS_IMPLEMENTATION defined before including aids.hpp
 //   1.3.1  reformat everything with astyle
@@ -342,7 +350,11 @@ struct String_View {
     [[nodiscard]]
     String_View trim(void) const;
 
+    String_View chop_left(size_t n);
+    String_View chop_right(size_t n);
+    [[deprecated("Please use String_View::chop_right() instead, komrade))")]]
     void chop_back(size_t n);
+    [[deprecated("Please use String_View::chop_left() instead, komrade))")]]
     void chop(size_t n);
     void grow(size_t n);
     String_View chop_while(Predicate_Char predicate);
@@ -384,7 +396,7 @@ struct String_View {
 
         if (*view.data == '-') {
             sign = -1;
-            view.chop(1);
+            view.chop_left(1);
         }
 
         while (view.count) {
@@ -392,7 +404,7 @@ struct String_View {
                 return {};
             }
             number = number * 10 + (*view.data - '0');
-            view.chop(1);
+            view.chop_left(1);
         }
 
         return { true, number * sign };
@@ -663,14 +675,18 @@ template <typename... Args>
     exit(1);
 }
 
+#define UNREACHABLE(...) panic(__FILE__, ":", __LINE__, ": unreachable: ", __VA_ARGS__);
+
 template <typename... Args>
-[[noreturn]] void unreachable(Args... args)
+[[noreturn]] [[deprecated("Use UNREACHABLE macro instead")]] void unreachable(Args... args)
 {
     panic("Unreachable: ", args...);
 }
 
+#define TODO(...) panic(__FILE__, ":", __LINE__, ": TODO: ", __VA_ARGS__)
+
 template <typename... Args>
-[[noreturn]] void todo(Args... args)
+[[noreturn]] [[deprecated("Use TODO macro instead")]] void todo(Args... args)
 {
     panic("TODO: ", args...);
 }
@@ -884,6 +900,32 @@ String_View String_View::trim(void) const
     return trim_begin().trim_end();
 }
 
+String_View String_View::chop_left(size_t n)
+{
+    if (n > count) {
+        n = count;
+    }
+
+    String_View result = {n, data};
+    data  += n;
+    count -= n;
+
+    return result;
+}
+
+String_View String_View::chop_right(size_t n)
+{
+    if (n > count) {
+        n = count;
+    }
+
+    String_View result = {n, data + count - n};
+
+    count -= n;
+
+    return result;
+}
+
 void String_View::chop_back(size_t n)
 {
     count -= n < count ? n : count;
@@ -913,7 +955,7 @@ String_View String_View::chop_while(Predicate_Char predicate)
     }
 
     auto result = subview(0, size);
-    chop(size);
+    chop_left(size);
     return result;
 }
 
@@ -924,7 +966,7 @@ String_View String_View::chop_by_delim(char delim)
     size_t i = 0;
     while (i < count && data[i] != delim) i++;
     String_View result = {i, data};
-    chop(i + 1);
+    chop_left(i + 1);
 
     return result;
 }
@@ -974,8 +1016,8 @@ bool String_View::operator<(String_View b) const
         if (*a.data != *b.data) {
             return *a.data < *b.data;
         }
-        a.chop(1);
-        b.chop(1);
+        a.chop_left(1);
+        b.chop_left(1);
     }
 
     return a.count < b.count;

@@ -16,9 +16,12 @@ void print1(FILE *stream, Config_Type type)
     case Config_Type::Int:
         print(stream, "Config_Type::Int");
         break;
+    case Config_Type::String:
+        print(stream, "Config_Type::String");
+        break;
     case Config_Type::Count:
     default:
-        unreachable("print1(Config_Type)");
+        UNREACHABLE(__func__);
     }
 }
 
@@ -111,7 +114,7 @@ int main(int argc, char **argv)
     case Parser::INVALID_VALUE:
         panic(vars_conf_path, ":", parser.line_number, ": could not parse `", parser.invalid_value.value, "` as `", config_type_name(parser.invalid_value.expected_type), "`");
     case Parser::SUCCESS:
-        unreachable("Parser::SUCCESS");
+        UNREACHABLE("Parser::SUCCESS");
     case Parser::FINISHED:
     {}
     }
@@ -132,9 +135,12 @@ int main(int argc, char **argv)
             case Config_Type::Int:
                 println(stdout, "const int ", config_value_defs[i].name, " = ", config_values[i].as_int, ";");
                 break;
+            case Config_Type::String:
+                println(stdout, "const String_View ", config_value_defs[i].name, " = \"", config_values[i].as_string, "\"_sv;");
+                break;
             case Config_Type::Count:
             default:
-                unreachable("baked config_values macros");
+                UNREACHABLE("baked config_values macros");
             }
         }
         println(stdout);

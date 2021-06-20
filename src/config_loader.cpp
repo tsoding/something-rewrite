@@ -58,7 +58,7 @@ bool reload_config_from_file(const char *file_path)
         println(stderr, file_path, ":", parser.line_number, ": could not parse `", parser.invalid_value.value, "` as `", config_type_name(parser.invalid_value.expected_type), "`");
         return false;
     case Parser::SUCCESS:
-        unreachable("Task failed successfully");
+        UNREACHABLE("Task failed successfully");
     case Parser::FINISHED:
     default:
         return true;

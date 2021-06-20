@@ -9,16 +9,18 @@ const char *config_type_name(Config_Type type)
         return "color";
     case Config_Type::Int:
         return "int";
+    case Config_Type::String:
+        return "string";
     case Config_Type::Count:
     default:
-        aids::unreachable("config_type_name");
+        aids::UNREACHABLE(__func__);
     }
 }
 
 bool config_type_by_name(aids::String_View name, Config_Type *type)
 {
     static_assert(
-        static_cast<size_t>(Config_Type::Count) == 3,
+        static_cast<size_t>(Config_Type::Count) == 4,
         "Config_Type defintion was changed. "
         "Adjust the code below and the condition "
         "above to reflect the changes.");
@@ -40,6 +42,11 @@ bool config_type_by_name(aids::String_View name, Config_Type *type)
         return true;
     }
 
+    if (name == "string"_sv) {
+        *type = Config_Type::String;
+        return true;
+    }
+
     return false;
 }
 
@@ -50,7 +57,7 @@ bool parse_config_value(aids::String_View value_sv, Config_Type type, Config_Val
         char buffer[256] = {};
 
         if (value_sv.count >= sizeof(buffer) - 1) {
-            return {};
+            return false;
         }
 
         memcpy(buffer, value_sv.data, value_sv.count);
@@ -59,7 +66,7 @@ bool parse_config_value(aids::String_View value_sv, Config_Type type, Config_Val
         result->as_float = strtof(buffer, &endptr);
 
         if (endptr == buffer) {
-            return {};
+            return false;
         }
     }
     break;
@@ -67,7 +74,7 @@ bool parse_config_value(aids::String_View value_sv, Config_Type type, Config_Val
     case Config_Type::Color: {
         const auto color_u32 = value_sv.from_hex<uint32_t>();
         if (!color_u32.has_value) {
-            return {};
+            return false;
         }
 
         result->as_color = RGBA::from_u32(color_u32.unwrap);
@@ -78,16 +85,31 @@ bool parse_config_value(aids::String_View value_sv, Config_Type type, Config_Val
         const auto value = value_sv.as_integer<int>();
 
         if (!value.has_value) {
-            return {};
+            return false;
         }
 
         result->as_int = value.unwrap;
     }
     break;
 
+    case Config_Type::String: {
+        using namespace aids;
+
+        if (value_sv.chop_left(1) != "\""_sv) {
+            return false;
+        }
+
+        if (value_sv.chop_right(1) != "\""_sv) {
+            return false;
+        }
+
+        result->as_string = value_sv;
+    }
+    break;
+
     case Config_Type::Count:
     default:
-        aids::unreachable("parse_config_value");
+        aids::UNREACHABLE(__func__);
     }
 
     return true;

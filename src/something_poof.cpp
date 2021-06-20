@@ -73,7 +73,7 @@ void Poof::explode_triangle(Triangle<float> vert, RGBA shade, Triangle<float> uv
     }
     break;
     default: {
-        unreachable("explode_triangle()");
+        UNREACHABLE(__func__);
     }
     }
 

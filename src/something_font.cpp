@@ -41,20 +41,24 @@ AABB<GLfloat> Font::char_uv(char c) const
     return char_uv(INVALID);
 }
 
-void Font::render_text(Renderer *renderer, const char *text, V2<GLfloat> position, GLfloat scale, RGBA color) const
+void Font::render_text(Renderer *renderer, String_View text, V2<GLfloat> position, GLfloat scale, RGBA color) const
 {
-    const size_t n = strlen(text);
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < text.count; ++i) {
         renderer->fill_aabb(
             AABB(position + (char_size_pix * V2<size_t>(i, 0)).cast_to<GLfloat>() * V2(scale),
                  char_size_pix.cast_to<GLfloat>() * V2(scale)),
             color,
-            char_uv(text[i]),
+            char_uv(text.data[i]),
             FONT_PROGRAM_ASSET);
     }
 }
 
-V2<GLfloat> Font::text_size(const char *text, GLfloat scale) const
+void Font::render_text(Renderer *renderer, const char *text, V2<GLfloat> position, GLfloat scale, RGBA color) const
 {
-    return char_size_pix.cast_to<float>() * V2(scale) * V2(strlen(text), static_cast<size_t>(1)).cast_to<float>();
+    render_text(renderer, cstr_as_string_view(text), position, scale, color);
+}
+
+V2<GLfloat> Font::text_size(size_t len, GLfloat scale) const
+{
+    return char_size_pix.cast_to<float>() * V2(scale) * V2(len, static_cast<size_t>(1)).cast_to<float>();
 }
