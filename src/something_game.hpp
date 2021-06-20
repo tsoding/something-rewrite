@@ -35,7 +35,7 @@ struct Game {
     // Indicates whether the level editor mode is on
     bool editor;
     Editor_Tool editor_tool;
-    RGBA editor_tool_color(Editor_Tool tool) const;
+    float editor_tool_hue(Editor_Tool tool) const;
 #endif
 
     const Uint8 *keyboard;

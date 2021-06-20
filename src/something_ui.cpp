@@ -72,7 +72,7 @@ void Ui::begin_layout(Layout::Kind kind, float pad)
     push_layout(next);
 }
 
-bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id)
+bool Ui::button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id)
 {
     auto layout = top_layout();
     assert(layout != nullptr);
@@ -83,7 +83,7 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id
     bool click = false;
 
     if (active_id == some(id)) {
-        color = color.invert();
+        color.s = min(color.s + UI_ACTIVE, 1.0f);
 
         if (!mouse_button) {
             active_id.has_value = false;
@@ -93,9 +93,7 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id
             }
         }
     } else if (hot_id == some(id)) {
-        color.r = min(color.r + UI_HIGHLIGHT, 1.0f);
-        color.g = min(color.g + UI_HIGHLIGHT, 1.0f);
-        color.b = min(color.b + UI_HIGHLIGHT, 1.0f);
+        color.l = min(color.l + UI_HIGHLIGHT, 1.0f);
 
         if (!rect.contains(mouse_pos)) {
             hot_id.has_value = false;
@@ -108,7 +106,7 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id
         }
     }
 
-    renderer->fill_aabb(rect, color, atlas->get_uv({0}), SCREEN_PROGRAM_ASSET);
+    renderer->fill_aabb(rect, color.to_rgba(), atlas->get_uv({0}), SCREEN_PROGRAM_ASSET);
 
     layout->push_widget(size);
 
