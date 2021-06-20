@@ -35,7 +35,7 @@ struct Ui {
     Layout *top_layout();
 
     void begin(V2<float> pos, float pad);
-    void begin_layout(Layout::Kind kind);
+    void begin_layout(Layout::Kind kind, float pad);
     bool button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id);
     bool screen(Id id);
     void end_layout();

@@ -8,6 +8,7 @@ enum class Config_Type: size_t {
     Color,
     Int,
     String,
+    Bool,
     Count
 };
 
@@ -20,11 +21,12 @@ union Config_Value {
     float as_float;
     int as_int;
     RGBA as_color;
+    bool as_bool;
     aids::String_View as_string;
 };
 
 static_assert(
-    static_cast<size_t>(Config_Type::Count) == 4,
+    static_cast<size_t>(Config_Type::Count) == 5,
     "Config_Type definition has changed. "
     "Please update Config_Value definition accordingly");
 

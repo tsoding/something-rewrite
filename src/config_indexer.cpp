@@ -19,6 +19,9 @@ void print1(FILE *stream, Config_Type type)
     case Config_Type::String:
         print(stream, "Config_Type::String");
         break;
+    case Config_Type::Bool:
+        print(stream, "Config_Type::Bool");
+        break;
     case Config_Type::Count:
     default:
         UNREACHABLE(__func__);
@@ -137,6 +140,9 @@ int main(int argc, char **argv)
                 break;
             case Config_Type::String:
                 println(stdout, "const String_View ", config_value_defs[i].name, " = \"", config_values[i].as_string, "\"_sv;");
+                break;
+            case Config_Type::Bool:
+                println(stdout, "const bool ", config_value_defs[i].name, " = ", config_values[i].as_bool, ";");
                 break;
             case Config_Type::Count:
             default:

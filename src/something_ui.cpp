@@ -59,16 +59,23 @@ void Ui::begin(V2<float> pos, float pad)
     push_layout(layout);
 }
 
-void Ui::begin_layout(Layout::Kind /*kind*/)
+void Ui::begin_layout(Layout::Kind kind, float pad)
 {
-    // TODO(#107): Ui does not support nested layouts
-    TODO(__func__);
+    auto prev = top_layout();
+    assert(prev != nullptr);
+
+    Layout next = {};
+    next.kind = kind;
+    next.pos = prev->available_pos();
+    next.size = {};
+    next.pad = pad;
+    push_layout(next);
 }
 
 bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id id)
 {
     auto layout = top_layout();
-    assert(layout != NULL);
+    assert(layout != nullptr);
 
     const auto pos = layout->available_pos();
     const auto rect = AABB(pos, size);
@@ -114,7 +121,10 @@ bool Ui::screen(Ui::Id id)
 
 void Ui::end_layout()
 {
-    TODO(__func__);
+    Layout child = pop_layout();
+    Layout *parent = top_layout();
+    assert(parent != nullptr);
+    parent->push_widget(child.size);
 }
 
 void Ui::end()

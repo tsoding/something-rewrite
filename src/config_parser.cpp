@@ -11,6 +11,8 @@ const char *config_type_name(Config_Type type)
         return "int";
     case Config_Type::String:
         return "string";
+    case Config_Type::Bool:
+        return "bool";
     case Config_Type::Count:
     default:
         aids::UNREACHABLE(__func__);
@@ -20,7 +22,7 @@ const char *config_type_name(Config_Type type)
 bool config_type_by_name(aids::String_View name, Config_Type *type)
 {
     static_assert(
-        static_cast<size_t>(Config_Type::Count) == 4,
+        static_cast<size_t>(Config_Type::Count) == 5,
         "Config_Type defintion was changed. "
         "Adjust the code below and the condition "
         "above to reflect the changes.");
@@ -44,6 +46,11 @@ bool config_type_by_name(aids::String_View name, Config_Type *type)
 
     if (name == "string"_sv) {
         *type = Config_Type::String;
+        return true;
+    }
+
+    if (name == "bool"_sv) {
+        *type = Config_Type::Bool;
         return true;
     }
 
@@ -106,6 +113,22 @@ bool parse_config_value(aids::String_View value_sv, Config_Type type, Config_Val
         result->as_string = value_sv;
     }
     break;
+
+    case Config_Type::Bool: {
+        using namespace aids;
+
+        if (value_sv == "true"_sv) {
+            result->as_bool = true;
+            return true;
+        }
+
+        if (value_sv == "false"_sv) {
+            result->as_bool = false;
+            return true;
+        }
+
+        return false;
+    }
 
     case Config_Type::Count:
     default:

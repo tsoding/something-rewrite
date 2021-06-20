@@ -297,13 +297,33 @@ void Game::update(Seconds dt)
                 // TODO(#101): editor tools panel buttons don't have any icons on them
 
                 ui.begin(tools_panel_pos, TOOLS_PANEL_PADDING);
-                for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
-                    const auto tool = static_cast<Editor_Tool>(id);
-                    const auto color = tool == editor_tool ? editor_tool_color(tool) : RGBA::WHITE();
-                    if (ui.button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
-                        editor_tool = tool;
+
+                ui.begin_layout(Ui::Layout::Kind::Vert, TOOLS_PANEL_PADDING);
+                {
+                    ui.begin_layout(Ui::Layout::Kind::Horz, TOOLS_PANEL_PADDING);
+                    {
+                        for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
+                            const auto tool = static_cast<Editor_Tool>(id);
+                            const auto color = tool == editor_tool ? editor_tool_color(tool) : RGBA::WHITE();
+                            if (ui.button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
+                                editor_tool = tool;
+                            }
+                        }
+                    }
+                    ui.end_layout();
+
+                    if (DEBUG_BUTTONS_ENABLED) {
+                        ui.begin_layout(Ui::Layout::Kind::Horz, TOOLS_PANEL_PADDING);
+                        {
+                            for (int i = 0; i < DEBUG_BUTTON_COUNT; ++i) {
+                                const auto id = static_cast<size_t>(Editor_Tool::Count) + i;
+                                ui.button(&renderer, &atlas, DEBUG_BUTTON_COLOR, V2(DEBUG_BUTTON_SIZE), id);
+                            }
+                        }
+                        ui.end_layout();
                     }
                 }
+                ui.end_layout();
 
                 const Ui::Id SCREEN_ID = 6969;
                 if (ui.screen(SCREEN_ID)) {
