@@ -300,7 +300,7 @@ void Game::update(Seconds dt)
 
                 ui.begin_layout(Ui::Layout::Kind::Vert, TOOLS_PANEL_PADDING);
                 {
-                    ui.begin_layout(Ui::Layout::Kind::Horz, TOOLS_PANEL_PADDING);
+                    ui.begin_tool_bar(static_cast<Ui::Id>(editor_tool), TOOLS_PANEL_PADDING);
                     {
                         for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
                             const auto tool = static_cast<Editor_Tool>(id);
@@ -309,25 +309,25 @@ void Game::update(Seconds dt)
                                 tool == editor_tool
                                 ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
                                 : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
-                            if (ui.button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
+                            if (ui.tool_bar_button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
                                 editor_tool = tool;
                             }
                         }
                     }
-                    ui.end_layout();
+                    ui.end_tool_bar();
 
-#if 0
                     if (DEBUG_BUTTONS_ENABLED) {
-                        ui.begin_layout(Ui::Layout::Kind::Horz, TOOLS_PANEL_PADDING);
+                        ui.begin_tool_bar(debug_button, TOOLS_PANEL_PADDING);
                         {
                             for (int i = 0; i < DEBUG_BUTTON_COUNT; ++i) {
                                 const auto id = static_cast<size_t>(Editor_Tool::Count) + i;
-                                ui.button(&renderer, &atlas, DEBUG_BUTTON_COLOR, V2(DEBUG_BUTTON_SIZE), id);
+                                if (ui.tool_bar_button(&renderer, &atlas, HSLA(0.42, 0.5f, 0.5f, 1.0f), V2(DEBUG_BUTTON_SIZE), id)) {
+                                    debug_button = id;
+                                }
                             }
                         }
-                        ui.end_layout();
+                        ui.end_tool_bar();
                     }
-#endif
                 }
                 ui.end_layout();
 
