@@ -49,6 +49,25 @@ Ui::Layout *Ui::top_layout()
     return NULL;
 }
 
+void Ui::render_button(Renderer *renderer, Atlas *atlas, AABB<float> rect, HSLA color, bool pressed)
+{
+    const float offset = pressed ? 0.0f : UI_BUTTON_3D_OFFSET;
+
+    renderer->fill_aabb(
+        rect,
+        HSLA(color.h,
+             color.s,
+             color.l - 0.25,
+             color.a).to_rgba(),
+        atlas->get_uv({0}),
+        SCREEN_PROGRAM_ASSET);
+    renderer->fill_aabb(
+        AABB(rect.pos + V2(-1.0f, 1.0f) * V2(offset), rect.size),
+        color.to_rgba(),
+        atlas->get_uv({0}),
+        SCREEN_PROGRAM_ASSET);
+}
+
 void Ui::begin(V2<float> pos, float pad)
 {
     Layout layout = {};
@@ -72,59 +91,84 @@ void Ui::begin_layout(Layout::Kind kind, float pad)
     push_layout(next);
 }
 
+void Ui::begin_tool_bar(Id tool_cur, float pad)
+{
+    assert(!tool_bar_button_id.has_value && "Nested tool bars are not allowed, sorry");
+    begin_layout(Layout::Kind::Horz, pad);
+    tool_bar_button_id = some(tool_cur);
+}
+
+bool Ui::tool_bar_button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id)
+{
+
+    auto layout = top_layout();
+    assert(layout != nullptr && "Can't render a tool bar button outside of any layout");
+
+    const auto pos = layout->available_pos();
+    const auto rect = AABB(pos, size);
+    assert(tool_bar_button_id.has_value && "Can't render a tool bar button outside of the toolbar");
+    const auto pressed = some(id) == tool_bar_button_id;
+
+    switch (update_state(id, rect)) {
+    case State::Inactive:
+        render_button(renderer, atlas, rect, color, pressed);
+        layout->push_widget(size);
+        return false;
+    case State::Hot:
+        color.l += UI_HIGHLIGHT;
+        render_button(renderer, atlas, rect, color, pressed);
+        layout->push_widget(size);
+        return false;
+    case State::Active:
+        color.s += UI_ACTIVE;
+        render_button(renderer, atlas, rect, color, true);
+        layout->push_widget(size);
+        return false;
+    case State::Fired:
+        render_button(renderer, atlas, rect, color, true);
+        layout->push_widget(size);
+        return true;
+    default:
+        UNREACHABLE(__func__);
+    }
+}
+
+void Ui::end_tool_bar()
+{
+    tool_bar_button_id.has_value = false;
+    end_layout();
+}
+
 bool Ui::button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id)
 {
     auto layout = top_layout();
-    assert(layout != nullptr);
+    assert(layout != nullptr && "Can't render a button outside of any layout");
 
     const auto pos = layout->available_pos();
     const auto rect = AABB(pos, size);
 
-    bool click = false;
-    float offset = UI_BUTTON_3D_OFFSET;
-
-    if (active_id == some(id)) {
-        color.s = min(color.s + UI_ACTIVE, 1.0f);
-        offset = 0.0f;
-
-        if (!mouse_button) {
-            active_id.has_value = false;
-
-            if (rect.contains(mouse_pos)) {
-                click = true;
-            }
-        }
-    } else if (hot_id == some(id)) {
-        color.l = min(color.l + UI_HIGHLIGHT, 1.0f);
-
-        if (!rect.contains(mouse_pos)) {
-            hot_id.has_value = false;
-        } else if (mouse_button && !active_id.has_value) {
-            active_id = some(id);
-        }
-    } else {
-        if (!active_id.has_value && rect.contains(mouse_pos)) {
-            hot_id = some(id);
-        }
+    switch (update_state(id, rect)) {
+    case State::Inactive:
+        render_button(renderer, atlas, rect, color);
+        layout->push_widget(size);
+        return false;
+    case State::Hot:
+        color.l += UI_HIGHLIGHT;
+        render_button(renderer, atlas, rect, color);
+        layout->push_widget(size);
+        return false;
+    case State::Active:
+        color.s += UI_ACTIVE;
+        render_button(renderer, atlas, rect, color, true);
+        layout->push_widget(size);
+        return false;
+    case State::Fired:
+        render_button(renderer, atlas, rect, color);
+        layout->push_widget(size);
+        return true;
+    default:
+        UNREACHABLE(__func__);
     }
-
-    renderer->fill_aabb(
-        rect,
-        HSLA(color.h,
-             color.s,
-             color.l - 0.25,
-             color.a).to_rgba(),
-        atlas->get_uv({0}),
-        SCREEN_PROGRAM_ASSET);
-    renderer->fill_aabb(
-        AABB(pos + V2(-1.0f, 1.0f) * V2(offset), size),
-        color.to_rgba(),
-        atlas->get_uv({0}),
-        SCREEN_PROGRAM_ASSET);
-
-    layout->push_widget(size);
-
-    return click;
 }
 
 bool Ui::screen(Ui::Id id)
@@ -155,4 +199,36 @@ void Ui::end_layout()
 void Ui::end()
 {
     pop_layout();
+}
+
+Ui::State Ui::update_state(Id id, AABB<float> rect)
+{
+    if (active_id == some(id)) {
+        if (!mouse_button) {
+            active_id.has_value = false;
+            if (rect.contains(mouse_pos)) {
+                return State::Fired;
+            }
+
+            return State::Inactive;
+        }
+        return State::Active;
+    } else if (hot_id == some(id)) {
+        if (!rect.contains(mouse_pos)) {
+            hot_id.has_value = false;
+            return State::Inactive;
+        } else if (mouse_button && !active_id.has_value) {
+            active_id = some(id);
+            return State::Active;
+        }
+
+        return State::Hot;
+    }
+
+    if (!active_id.has_value && rect.contains(mouse_pos)) {
+        hot_id = some(id);
+        return State::Hot;
+    }
+
+    return State::Inactive;
 }
