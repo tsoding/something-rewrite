@@ -1,5 +1,5 @@
-#ifndef SOMETHING_RGBA_HPP_
-#define SOMETHING_RGBA_HPP_
+#ifndef SOMETHING_COLOR_HPP_
+#define SOMETHING_COLOR_HPP_
 
 #include "./aids.hpp"
 
@@ -74,4 +74,4 @@ inline void print1(FILE *stream, RGBA rgba)
     aids::print(stream, "RGBA(", rgba.r, "f,", rgba.g, "f,", rgba.b, "f,", rgba.a, "f)");
 }
 
-#endif  // SOMETHING_RGBA_HPP_
+#endif  // SOMETHING_COLOR_HPP_
