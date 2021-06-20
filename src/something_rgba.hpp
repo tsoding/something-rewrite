@@ -62,6 +62,11 @@ struct RGBA {
     {
         return RGBA(r, g, b, alpha);
     }
+
+    RGBA invert() const
+    {
+        return RGBA(1.0f - r, 1.0f - g, 1.0f - b, a);
+    }
 };
 
 inline void print1(FILE *stream, RGBA rgba)

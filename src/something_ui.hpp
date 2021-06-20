@@ -27,6 +27,7 @@ struct Ui {
     bool mouse_button;
 
     Maybe<Id> active_id;
+    Maybe<Id> hot_id;
     Layout layouts[LAYOUTS_CAPACITY];
     size_t layouts_count;
 

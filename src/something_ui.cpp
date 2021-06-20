@@ -83,15 +83,28 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, RGBA color, V2<float> size, Id
     bool click = false;
 
     if (active_id == some(id)) {
-        if (!mouse_button && rect.contains(mouse_pos)) {
+        color = color.invert();
+
+        if (!mouse_button) {
             active_id.has_value = false;
-            click = true;
+
+            if (rect.contains(mouse_pos)) {
+                click = true;
+            }
+        }
+    } else if (hot_id == some(id)) {
+        color.r = min(color.r + UI_HIGHLIGHT, 1.0f);
+        color.g = min(color.g + UI_HIGHLIGHT, 1.0f);
+        color.b = min(color.b + UI_HIGHLIGHT, 1.0f);
+
+        if (!rect.contains(mouse_pos)) {
+            hot_id.has_value = false;
+        } else if (mouse_button && !active_id.has_value) {
+            active_id = some(id);
         }
     } else {
-        if (mouse_button && rect.contains(mouse_pos)) {
-            if (!active_id.has_value) {
-                active_id = some(id);
-            }
+        if (!active_id.has_value && rect.contains(mouse_pos)) {
+            hot_id = some(id);
         }
     }
 
