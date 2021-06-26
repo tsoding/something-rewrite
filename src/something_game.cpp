@@ -31,7 +31,7 @@ void Game::init(SDL_Window *window)
     }
 
     this->atlas = Atlas::from_config("./assets/textures/atlas.conf", 10);
-    this->font = Font::from_file("./assets/textures/charmap-cellphone_white.png");
+    this->font = Font::from_file("./assets/textures/charmap-oldschool_white.png");
 
     this->keyboard = SDL_GetKeyboardState(NULL);
     this->window = window;
@@ -297,71 +297,87 @@ void Game::update(Seconds dt)
                 // TODO(#101): editor tools panel buttons don't have any icons on them
 
                 ui.begin(tools_panel_pos, TOOLS_PANEL_PADDING);
-                ui.begin_layout(Ui::Layout::Kind::Vert, TOOLS_PANEL_PADDING);
                 {
-                    ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
+                    ui.begin_layout(Ui::Layout::Kind::Vert, TOOLS_PANEL_PADDING);
                     {
-                        ui.label(&renderer, &font, "editor: "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
-                        ui.begin_tool_bar(static_cast<Ui::Id>(editor_tool), TOOLS_PANEL_PADDING);
-                        {
-                            for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
-                                const auto tool = static_cast<Editor_Tool>(id);
-                                const auto hue = editor_tool_hue(tool);
-                                const auto color =
-                                    tool == editor_tool
-                                    ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
-                                    : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
-                                if (ui.tool_bar_button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
-                                    editor_tool = tool;
-                                }
-                            }
-                        }
-                        ui.end_tool_bar();
-                    }
-                    ui.end_layout();
-
-                    if (DEBUG_BUTTONS_ENABLED) {
                         ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
                         {
-                            ui.label(&renderer, &font, "debug:  "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
-                            ui.begin_tool_bar(debug_button, TOOLS_PANEL_PADDING);
+                            ui.label(&renderer, &font, "editor: "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
+                            ui.begin_tool_bar(static_cast<Ui::Id>(editor_tool), TOOLS_PANEL_PADDING);
                             {
-                                for (int i = 0; i < DEBUG_BUTTON_COUNT; ++i) {
-                                    const auto id = static_cast<size_t>(Editor_Tool::Count) + i;
-                                    if (ui.tool_bar_button(&renderer, &atlas, HSLA(0.42, 0.5f, 0.5f, 1.0f), V2(DEBUG_BUTTON_SIZE), id)) {
-                                        debug_button = id;
+                                for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
+                                    const auto tool = static_cast<Editor_Tool>(id);
+                                    const auto hue = editor_tool_hue(tool);
+                                    const auto color =
+                                        tool == editor_tool
+                                        ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
+                                        : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
+                                    if (ui.tool_bar_button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
+                                        editor_tool = tool;
                                     }
                                 }
                             }
                             ui.end_tool_bar();
                         }
                         ui.end_layout();
-                    }
-                }
-                ui.end_layout();
 
-                const Ui::Id SCREEN_ID = 6969;
-                if (ui.screen(SCREEN_ID)) {
-                    switch (editor_tool) {
-                    case Editor_Tool::Tiles: {
-                        // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
-                        Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
-                        if (tile != NULL) {
-                            tile->wall = !tile->wall;
+                        if (DEBUG_BUTTONS_ENABLED) {
+                            ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
+                            {
+                                ui.label(&renderer, &font, "debug:  "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
+                                ui.begin_tool_bar(debug_button, TOOLS_PANEL_PADDING);
+                                {
+                                    for (int i = 0; i < DEBUG_BUTTON_COUNT; ++i) {
+                                        const auto id = static_cast<size_t>(Editor_Tool::Count) + i;
+                                        if (ui.tool_bar_button(&renderer, &atlas, HSLA(0.42, 0.5f, 0.5f, 1.0f), V2(DEBUG_BUTTON_SIZE), id)) {
+                                            debug_button = id;
+                                        }
+                                    }
+                                }
+                                ui.end_tool_bar();
+                            }
+                            ui.end_layout();
                         }
                     }
-                    break;
+                    ui.end_layout();
 
-                    case Editor_Tool::Enemies: {
-                        spawn_enemy(mouse_world);
+                    const Ui::Id SCREEN_ID = 6969;
+                    if (ui.screen(SCREEN_ID)) {
+                        switch (editor_tool) {
+                        case Editor_Tool::Tiles: {
+                            // TODO(#98): the level editor does not allow to "draw" the tiles by dragging the mouse cursor
+                            Tile *tile = tile_grid.get_tile(World_Coord(mouse_world));
+                            if (tile != NULL) {
+                                tile->wall = !tile->wall;
+                            }
+                        }
+                        break;
+
+                        case Editor_Tool::Enemies: {
+                            spawn_enemy(mouse_world);
+                        }
+                        break;
+
+                        case Editor_Tool::Count:
+                        default:
+                            aids::UNREACHABLE("incorrect editor tool");
+                        }
+
                     }
-                    break;
 
-                    case Editor_Tool::Count:
-                    default:
-                        aids::UNREACHABLE("incorrect editor tool");
+                    if (ui.hot_id.has_value) {
+                        switch (static_cast<Editor_Tool>(ui.hot_id.unwrap)) {
+                        case Editor_Tool::Tiles:
+                            ui.tooltip(&renderer, &atlas, &font, "Place Tiles"_sv);
+                            break;
+                        case Editor_Tool::Enemies:
+                            ui.tooltip(&renderer, &atlas, &font, "Spawn Enemies"_sv);
+                            break;
+                        case Editor_Tool::Count:
+                        default:
+                        {}
+                        }
                     }
-
                 }
                 ui.end();
             }

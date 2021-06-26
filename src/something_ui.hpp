@@ -56,6 +56,7 @@ struct Ui {
 
     bool button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id id);
     void label(Renderer *renderer, Font *font, String_View text, HSLA color, GLfloat scale);
+    void tooltip(Renderer *renderer, Atlas *atlas, Font *font, String_View text);
     bool screen(Id id);
     void end_layout();
     void end();
