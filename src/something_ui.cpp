@@ -244,3 +244,29 @@ Ui::State Ui::update_state(Id id, AABB<float> rect)
 
     return State::Inactive;
 }
+
+void Ui::tooltip(Renderer *renderer, Atlas *atlas, Font *font, String_View text)
+{
+    // Tooltip Background
+    {
+        const auto rect =
+            AABB(mouse_pos,
+                 font->text_size(text.count, UI_TOOLTIP_SCALE) + V2(UI_TOOLTIP_PADDING * 2.0f));
+        renderer->fill_aabb(
+            rect,
+            UI_TOOLTIP_BACKGROUND,
+            atlas->get_uv({0}),
+            SCREEN_PROGRAM_ASSET);
+    }
+
+    // Tooltip Foreground
+    {
+        const auto text_pos = mouse_pos + V2(UI_TOOLTIP_PADDING);
+        font->render_text(
+            renderer,
+            text,
+            text_pos,
+            UI_TOOLTIP_SCALE,
+            UI_TOOLTIP_FOREGROUND);
+    }
+}
