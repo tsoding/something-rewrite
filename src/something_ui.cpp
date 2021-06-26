@@ -171,6 +171,18 @@ bool Ui::button(Renderer *renderer, Atlas *atlas, HSLA color, V2<float> size, Id
     }
 }
 
+void Ui::label(Renderer *renderer, Font *font, String_View text, HSLA color, GLfloat scale)
+{
+    auto layout = top_layout();
+    assert(layout != nullptr && "Can't render a label outside of any layout");
+
+    const auto pos = layout->available_pos();
+    const auto size = font->text_size(text.count, scale);
+
+    font->render_text(renderer, text, pos, scale, color.to_rgba());
+    layout->push_widget(size);
+}
+
 bool Ui::screen(Ui::Id id)
 {
     bool click = false;
