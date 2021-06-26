@@ -29,6 +29,7 @@ struct Game {
     enum class Editor_Tool: size_t {
         Tiles,
         Enemies,
+        Items,
         Count
     };
 

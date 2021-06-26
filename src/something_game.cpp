@@ -358,6 +358,12 @@ void Game::update(Seconds dt)
                         }
                         break;
 
+                        case Editor_Tool::Items: {
+                            assert(items_size < ITEMS_CAPACITY);
+                            items[items_size++] = Item::make_tea(mouse_world);
+                        }
+                        break;
+
                         case Editor_Tool::Count:
                         default:
                             aids::UNREACHABLE("incorrect editor tool");
@@ -372,6 +378,9 @@ void Game::update(Seconds dt)
                             break;
                         case Editor_Tool::Enemies:
                             ui.tooltip(&renderer, &atlas, &font, "Spawn Enemies"_sv);
+                            break;
+                        case Editor_Tool::Items:
+                            ui.tooltip(&renderer, &atlas, &font, "Spawn Items"_sv);
                             break;
                         case Editor_Tool::Count:
                         default:
@@ -466,6 +475,8 @@ float Game::editor_tool_hue(Editor_Tool tool) const
         return 0.25f;
     case Editor_Tool::Enemies:
         return 0.50f;
+    case Editor_Tool::Items:
+        return 0.75f;
     case Editor_Tool::Count:
     default:
         aids::UNREACHABLE(__func__);
