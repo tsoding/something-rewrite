@@ -36,7 +36,6 @@ struct Game {
     // Indicates whether the level editor mode is on
     bool editor;
     Editor_Tool editor_tool;
-    size_t debug_button;
     float editor_tool_hue(Editor_Tool tool) const;
 #endif
 

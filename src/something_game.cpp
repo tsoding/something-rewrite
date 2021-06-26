@@ -298,46 +298,24 @@ void Game::update(Seconds dt)
 
                 ui.begin(tools_panel_pos, TOOLS_PANEL_PADDING);
                 {
-                    ui.begin_layout(Ui::Layout::Kind::Vert, TOOLS_PANEL_PADDING);
+                    ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
                     {
-                        ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
+                        ui.label(&renderer, &font, "tools: "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
+                        ui.begin_tool_bar(static_cast<Ui::Id>(editor_tool), TOOLS_PANEL_PADDING);
                         {
-                            ui.label(&renderer, &font, "editor: "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
-                            ui.begin_tool_bar(static_cast<Ui::Id>(editor_tool), TOOLS_PANEL_PADDING);
-                            {
-                                for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
-                                    const auto tool = static_cast<Editor_Tool>(id);
-                                    const auto hue = editor_tool_hue(tool);
-                                    const auto color =
-                                        tool == editor_tool
-                                        ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
-                                        : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
-                                    if (ui.tool_bar_button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
-                                        editor_tool = tool;
-                                    }
+                            for (size_t id = 0; id < static_cast<size_t>(Editor_Tool::Count); ++id) {
+                                const auto tool = static_cast<Editor_Tool>(id);
+                                const auto hue = editor_tool_hue(tool);
+                                const auto color =
+                                    tool == editor_tool
+                                    ? HSLA(hue, TOOL_BUTTON_ACTIVE_SAT, 0.5f, 1.0f)
+                                    : HSLA(hue, TOOL_BUTTON_INACTIVE_SAT, 0.5f, 1.0f);
+                                if (ui.tool_bar_button(&renderer, &atlas, color, V2(TOOL_BUTTON_SIZE), id)) {
+                                    editor_tool = tool;
                                 }
                             }
-                            ui.end_tool_bar();
                         }
-                        ui.end_layout();
-
-                        if (DEBUG_BUTTONS_ENABLED) {
-                            ui.begin_layout(Ui::Layout::Kind::Horz, 0.0f);
-                            {
-                                ui.label(&renderer, &font, "debug:  "_sv, HSLA(0.30, 0.5, 0.5, 1.0), 5.0f);
-                                ui.begin_tool_bar(debug_button, TOOLS_PANEL_PADDING);
-                                {
-                                    for (int i = 0; i < DEBUG_BUTTON_COUNT; ++i) {
-                                        const auto id = static_cast<size_t>(Editor_Tool::Count) + i;
-                                        if (ui.tool_bar_button(&renderer, &atlas, HSLA(0.42, 0.5f, 0.5f, 1.0f), V2(DEBUG_BUTTON_SIZE), id)) {
-                                            debug_button = id;
-                                        }
-                                    }
-                                }
-                                ui.end_tool_bar();
-                            }
-                            ui.end_layout();
-                        }
+                        ui.end_tool_bar();
                     }
                     ui.end_layout();
 
