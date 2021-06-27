@@ -135,7 +135,12 @@ void Game::handle_event(const SDL_Event *event)
             break;
 
             case SDLK_c: {
-                console = !console;
+                console_enabled = !console_enabled;
+            }
+            break;
+
+            case SDLK_RETURN: {
+                console.push_line(cstr_as_string_view(fruits[rand() % fruits_count]));
             }
             break;
             }
@@ -178,7 +183,7 @@ void Game::handle_event(const SDL_Event *event)
             ui.mouse_button = true;
 
 #ifndef SOMETHING_RELEASE
-            if (!editor) {
+            if (!editor_enabled) {
                 player.shoot(this);
             }
 #else
@@ -196,7 +201,7 @@ void Game::handle_event(const SDL_Event *event)
         case SDL_KEYDOWN: {
             switch (event->key.keysym.sym) {
             case SDLK_q: {
-                editor = !editor;
+                editor_enabled = !editor_enabled;
             }
             break;
 
@@ -291,7 +296,7 @@ void Game::update(Seconds dt)
 
 #ifndef SOMETHING_RELEASE
     {
-        if (editor) {
+        if (editor_enabled) {
             // Tools Panel
             {
                 const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
@@ -376,19 +381,38 @@ void Game::update(Seconds dt)
 
         }
 
-        if (console) {
+        if (console_enabled) {
             const auto left_top_corner = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(-0.5f, 0.5f);
-            const auto console_pos = left_top_corner - V2(0.0f, CONSOLE_HEIGHT);
-            const auto console_rect = AABB(console_pos, V2(static_cast<float>(SCREEN_WIDTH), CONSOLE_HEIGHT));
-            renderer.fill_aabb(
-                console_rect,
-                CONSOLE_BACKGROUND,
-                atlas.get_uv({0}),
-                SCREEN_PROGRAM_ASSET);
+            const auto console_row_height = font.text_size(1.0f, CONSOLE_SCALE).y;
+            const auto console_height = console_row_height * CONSOLE_ROWS;
+            const auto console_pos = left_top_corner - V2(0.0f, console_height);
+            const auto console_rect = AABB(console_pos, V2(static_cast<float>(SCREEN_WIDTH), console_height));
+
+            // Background
+            {
+                renderer.fill_aabb(
+                    console_rect,
+                    CONSOLE_BACKGROUND,
+                    atlas.get_uv({0}),
+                    SCREEN_PROGRAM_ASSET);
+            }
+
+            // Foreground
+            {
+                for (int i = 0; i < min(CONSOLE_ROWS, static_cast<int>(console.count)); ++i) {
+                    const auto row_pos = console_pos + V2(0.0f, i * console_row_height);
+                    font.render_text(
+                        &renderer,
+                        console.rows[(console.begin + i) % Console::BUFFER_ROWS].as_sv(),
+                        row_pos,
+                        CONSOLE_SCALE,
+                        CONSOLE_FOREGROUND);
+                }
+            }
         }
 
         // Cursor
-        if (editor || console) {
+        if (editor_enabled || console_enabled) {
             const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
             const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
 

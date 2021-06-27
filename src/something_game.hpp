@@ -14,6 +14,7 @@
 #include "./something_item.hpp"
 #include "./something_font.hpp"
 #include "./something_ui.hpp"
+#include "./something_console.hpp"
 
 struct Game {
     static const size_t AABB_BODIES_CAPACITY = 1024;
@@ -34,12 +35,13 @@ struct Game {
     };
 
     // Indicates whether the level editor mode is on
-    bool editor;
+    bool editor_enabled;
     Editor_Tool editor_tool;
     float editor_tool_hue(Editor_Tool tool) const;
 
     // Indicates whether the console is enabled
-    bool console;
+    bool console_enabled;
+    Console console;
 #endif
 
     const Uint8 *keyboard;
