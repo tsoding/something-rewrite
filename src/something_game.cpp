@@ -136,7 +136,7 @@ void Game::handle_event(const SDL_Event *event)
 
 #ifndef SOMETHING_RELEASE
             case SDLK_x: {
-                // TODO: console prompt does not handle the user input properly
+                // TODO(#116): console prompt does not handle the user input properly
                 console_prompt.append_from_sv(cstr_as_string_view(fruits[rand() % fruits_count]));
                 console_prompt.append_from_sv(" "_sv);
             } break;
