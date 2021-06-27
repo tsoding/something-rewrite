@@ -84,7 +84,7 @@ struct HSLA {
         h(h), s(s), l(l), a(a)
     {}
 
-    // TODO: represent colors as 3-4 dimensional vectors
+    // TODO(#115): represent colors as 3-4 dimensional vectors
     // To enable the mathematical vector operations
     RGBA to_rgba() const
     {
