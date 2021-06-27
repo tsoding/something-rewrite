@@ -9,7 +9,9 @@ struct Row {
     char chars[CONSOLE_BUFFER_COLS];
 
     void copy_from_sv(String_View sv);
+    void append_from_sv(String_View sv);
     String_View as_sv() const;
+    void clear();
 };
 
 struct Row_Ring {

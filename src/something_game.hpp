@@ -41,7 +41,8 @@ struct Game {
 
     // Indicates whether the console is enabled
     bool console_enabled;
-    Console console;
+    Row_Ring console_log;
+    Row console_prompt;
 #endif
 
     const Uint8 *keyboard;

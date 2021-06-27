@@ -135,13 +135,19 @@ void Game::handle_event(const SDL_Event *event)
             break;
 
 #ifndef SOMETHING_RELEASE
+            case SDLK_x: {
+                console_prompt.append_from_sv(cstr_as_string_view(fruits[rand() % fruits_count]));
+                console_prompt.append_from_sv(" "_sv);
+            } break;
+
             case SDLK_c: {
                 console_enabled = !console_enabled;
             }
             break;
 
             case SDLK_RETURN: {
-                console.push_line(cstr_as_string_view(fruits[rand() % fruits_count]));
+                console_log.push_line(console_prompt.as_sv());
+                console_prompt.clear();
             }
             break;
 #endif // SOMETHING_RELEASE
@@ -386,7 +392,7 @@ void Game::update(Seconds dt)
         if (console_enabled) {
             const auto left_top_corner = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(-0.5f, 0.5f);
             const auto console_row_height = font.text_size(1.0f, CONSOLE_SCALE).y;
-            const auto console_height = console_row_height * CONSOLE_ROWS;
+            const auto console_height = console_row_height * (CONSOLE_ROWS + 1);
             const auto console_pos = left_top_corner - V2(0.0f, console_height);
             const auto console_rect = AABB(console_pos, V2(static_cast<float>(SCREEN_WIDTH), console_height));
 
@@ -401,12 +407,26 @@ void Game::update(Seconds dt)
 
             // Foreground
             {
-                for (int i = 0; i < min(CONSOLE_ROWS, static_cast<int>(console.count)); ++i) {
-                    const auto row_pos = console_pos + V2(0.0f, i * console_row_height);
+                // Log
+                {
+                    for (int i = 0; i < min(CONSOLE_ROWS, static_cast<int>(console_log.count)); ++i) {
+                        const auto row_pos = console_pos + V2(0.0f, (i + 1) * console_row_height);
+                        font.render_text(
+                            &renderer,
+                            console_log.get(i),
+                            row_pos,
+                            CONSOLE_SCALE,
+                            CONSOLE_FOREGROUND);
+                    }
+                }
+
+                // Prompt
+                {
+                    const auto prompt_pos = console_pos;
                     font.render_text(
                         &renderer,
-                        console.rows[(console.begin + i) % Console::BUFFER_ROWS].as_sv(),
-                        row_pos,
+                        console_prompt.as_sv(),
+                        prompt_pos,
                         CONSOLE_SCALE,
                         CONSOLE_FOREGROUND);
                 }
