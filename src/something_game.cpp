@@ -133,6 +133,11 @@ void Game::handle_event(const SDL_Event *event)
                 println(stdout, aabb_bodies[0].hitbox);
             }
             break;
+
+            case SDLK_c: {
+                console = !console;
+            }
+            break;
             }
         }
         break;
@@ -369,18 +374,31 @@ void Game::update(Seconds dt)
                 ui.end();
             }
 
-            // Cursor
-            {
-                const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
-                const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
-
-                renderer.fill_aabb(
-                    AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
-                    MOUSE_CURSOR_COLOR,
-                    cursor_texture_uv,
-                    SCREEN_PROGRAM_ASSET);
-            }
         }
+
+        if (console) {
+            const auto left_top_corner = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(-0.5f, 0.5f);
+            const auto console_pos = left_top_corner - V2(0.0f, CONSOLE_HEIGHT);
+            const auto console_rect = AABB(console_pos, V2(static_cast<float>(SCREEN_WIDTH), CONSOLE_HEIGHT));
+            renderer.fill_aabb(
+                console_rect,
+                CONSOLE_BACKGROUND,
+                atlas.get_uv({0}),
+                SCREEN_PROGRAM_ASSET);
+        }
+
+        // Cursor
+        if (editor || console) {
+            const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
+            const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+
+            renderer.fill_aabb(
+                AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
+                MOUSE_CURSOR_COLOR,
+                cursor_texture_uv,
+                SCREEN_PROGRAM_ASSET);
+        }
+
 
         // Debug Label
         {

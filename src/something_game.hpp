@@ -37,6 +37,9 @@ struct Game {
     bool editor;
     Editor_Tool editor_tool;
     float editor_tool_hue(Editor_Tool tool) const;
+
+    // Indicates whether the console is enabled
+    bool console;
 #endif
 
     const Uint8 *keyboard;
