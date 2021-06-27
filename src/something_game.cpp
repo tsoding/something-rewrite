@@ -134,6 +134,7 @@ void Game::handle_event(const SDL_Event *event)
             }
             break;
 
+#ifndef SOMETHING_RELEASE
             case SDLK_c: {
                 console_enabled = !console_enabled;
             }
@@ -143,6 +144,7 @@ void Game::handle_event(const SDL_Event *event)
                 console.push_line(cstr_as_string_view(fruits[rand() % fruits_count]));
             }
             break;
+#endif // SOMETHING_RELEASE
             }
         }
         break;
