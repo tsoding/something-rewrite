@@ -133,6 +133,25 @@ void Game::handle_event(const SDL_Event *event)
                 println(stdout, aabb_bodies[0].hitbox);
             }
             break;
+
+#ifndef SOMETHING_RELEASE
+            case SDLK_x: {
+                // TODO(#116): console prompt does not handle the user input properly
+                console_prompt.append_from_sv(cstr_as_string_view(fruits[rand() % fruits_count]));
+                console_prompt.append_from_sv(" "_sv);
+            } break;
+
+            case SDLK_c: {
+                console_enabled = !console_enabled;
+            }
+            break;
+
+            case SDLK_RETURN: {
+                console_log.push_line(console_prompt.as_sv());
+                console_prompt.clear();
+            }
+            break;
+#endif // SOMETHING_RELEASE
             }
         }
         break;
@@ -173,7 +192,7 @@ void Game::handle_event(const SDL_Event *event)
             ui.mouse_button = true;
 
 #ifndef SOMETHING_RELEASE
-            if (!editor) {
+            if (!editor_enabled) {
                 player.shoot(this);
             }
 #else
@@ -191,7 +210,7 @@ void Game::handle_event(const SDL_Event *event)
         case SDL_KEYDOWN: {
             switch (event->key.keysym.sym) {
             case SDLK_q: {
-                editor = !editor;
+                editor_enabled = !editor_enabled;
             }
             break;
 
@@ -286,7 +305,7 @@ void Game::update(Seconds dt)
 
 #ifndef SOMETHING_RELEASE
     {
-        if (editor) {
+        if (editor_enabled) {
             // Tools Panel
             {
                 const auto screen_size = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>();
@@ -369,18 +388,64 @@ void Game::update(Seconds dt)
                 ui.end();
             }
 
-            // Cursor
-            {
-                const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
-                const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+        }
 
+        if (console_enabled) {
+            const auto left_top_corner = V2(SCREEN_WIDTH, SCREEN_HEIGHT).cast_to<float>() * V2(-0.5f, 0.5f);
+            const auto console_row_height = font.text_size(1.0f, CONSOLE_SCALE).y;
+            const auto console_height = console_row_height * (CONSOLE_ROWS + 1);
+            const auto console_pos = left_top_corner - V2(0.0f, console_height);
+            const auto console_rect = AABB(console_pos, V2(static_cast<float>(SCREEN_WIDTH), console_height));
+
+            // Background
+            {
                 renderer.fill_aabb(
-                    AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
-                    MOUSE_CURSOR_COLOR,
-                    cursor_texture_uv,
+                    console_rect,
+                    CONSOLE_BACKGROUND,
+                    atlas.get_uv({0}),
                     SCREEN_PROGRAM_ASSET);
             }
+
+            // Foreground
+            {
+                // Log
+                {
+                    for (int i = 0; i < min(CONSOLE_ROWS, static_cast<int>(console_log.count)); ++i) {
+                        const auto row_pos = console_pos + V2(0.0f, (i + 1) * console_row_height);
+                        font.render_text(
+                            &renderer,
+                            console_log.get(i),
+                            row_pos,
+                            CONSOLE_SCALE,
+                            CONSOLE_FOREGROUND);
+                    }
+                }
+
+                // Prompt
+                {
+                    const auto prompt_pos = console_pos;
+                    font.render_text(
+                        &renderer,
+                        console_prompt.as_sv(),
+                        prompt_pos,
+                        CONSOLE_SCALE,
+                        CONSOLE_FOREGROUND);
+                }
+            }
         }
+
+        // Cursor
+        if (editor_enabled || console_enabled) {
+            const auto cursor_texture_uv = atlas.get_uv({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}).flip_vertically();
+            const auto cursor_size = atlas.get_size({static_cast<size_t>(MOUSE_CURSOR_TEXTURE)}, MOUSE_CURSOR_SIZE);
+
+            renderer.fill_aabb(
+                AABB(mouse_screen - cursor_size * V2(0.0f, 1.0f), cursor_size),
+                MOUSE_CURSOR_COLOR,
+                cursor_texture_uv,
+                SCREEN_PROGRAM_ASSET);
+        }
+
 
         // Debug Label
         {

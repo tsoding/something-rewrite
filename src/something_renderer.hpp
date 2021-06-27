@@ -31,7 +31,7 @@ struct Batch {
 };
 
 struct Renderer {
-    constexpr static size_t CAPACITY = 1024;
+    constexpr static size_t CAPACITY = 1024 * 16;
 
     Triangle_VAO triangle_vao;
 

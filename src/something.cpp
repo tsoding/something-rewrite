@@ -31,6 +31,7 @@ struct Index {
 #else
 #include "./config_loader.cpp"
 #include "./config_parser.cpp"
+#include "./fruits.h"
 #endif // SOMETHING_RELEASE
 
 #include "./something_atlas.cpp"
@@ -54,6 +55,7 @@ struct Index {
 #include "./something_shader.cpp"
 #include "./something_font.cpp"
 #include "./something_ui.cpp"
+#include "./something_console.cpp"
 
 #define AIDS_IMPLEMENTATION
 #include "./aids.hpp"

@@ -6,7 +6,7 @@
 #include "./something_camera.hpp"
 
 struct Triangle_VAO {
-    static const size_t CAPACITY = 1024;
+    static const size_t CAPACITY = 1024 * 16;
 
     GLuint id;
 
