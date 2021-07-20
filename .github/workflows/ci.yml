@@ -94,7 +94,7 @@ jobs:
       - name: release build
         run: |
           build_msys2.bat --release
-        shell: cmd
+        shell: msys2 {0}
         env:
           CC: gcc
           CXX: g++
