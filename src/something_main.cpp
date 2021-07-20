@@ -6,13 +6,20 @@ const Seconds DELTA_TIME_SECS = 1.0f / static_cast<Seconds>(SCREEN_FPS);
 const Milliseconds DELTA_TIME_MS =
     static_cast<Milliseconds>(floorf(DELTA_TIME_SECS * 1000.0f));
 
-void MessageCallback(GLenum source,
-                     GLenum type,
-                     GLuint id,
-                     GLenum severity,
-                     GLsizei length,
-                     const GLchar* message,
-                     const void* userParam)
+// inspired by https://github.com/Velho/ded/commit/44f9223d6ea7278243fa56c5a0c095bba0db4450
+#if defined(__MINGW32__)  || defined(__MINGW64__)
+#define CALLING_METHOD __stdcall
+#else
+#define CALLING_METHOD 
+#endif
+
+void CALLING_METHOD MessageCallback(GLenum source,
+                                    GLenum type,
+                                    GLuint id,
+                                    GLenum severity,
+                                    GLsizei length,
+                                    const GLchar* message,
+                                    const void* userParam)
 {
     (void) source;
     (void) id;
