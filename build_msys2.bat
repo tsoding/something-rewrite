@@ -28,6 +28,8 @@ if defined SOMETHING_RELEASE (
     config_indexer assets/vars.conf >src/config_index.hpp
     %CXX% %CXXFLAGS% %PKGSCFLAGS% -o something.debug.exe src/something.cpp %PKGLIBS% -lopengl32 -static
 )
+dir *.exe
+REM Returns Errorcode. Zero is Noerror.
+EXIT /B %ERRORLEVEL%
 endlocal
 
-dir *.exe
