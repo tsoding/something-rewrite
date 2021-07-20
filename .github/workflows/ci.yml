@@ -93,7 +93,7 @@ jobs:
           PATH: D:\a\_temp\msys\msys64\usr\bin;D:\a\_temp\msys\msys64\${{ matrix.msystem_lower }}\bin;D:\a\_temp\msys
       - name: release build
         run: |
-          build_msys2.bat --release
+          ./build_msys2.bat --release
         shell: msys2 {0}
         env:
           CC: gcc
